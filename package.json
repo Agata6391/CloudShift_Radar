@@ -1,0 +1,16 @@
+{
+  "name": "cloudshift-radar-mvp",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "pnpm --filter @cloudshift-radar/shared build && pnpm --parallel --filter @cloudshift-radar/backend --filter @cloudshift-radar/frontend dev",
+    "dev:frontend": "pnpm --filter @cloudshift-radar/shared build && pnpm --filter @cloudshift-radar/frontend dev",
+    "dev:backend": "pnpm --filter @cloudshift-radar/shared build && pnpm --filter @cloudshift-radar/backend dev",
+    "build": "pnpm --filter @cloudshift-radar/shared build && pnpm --filter @cloudshift-radar/backend build && pnpm --filter @cloudshift-radar/frontend build",
+    "build:frontend": "pnpm --filter @cloudshift-radar/shared build && pnpm --filter @cloudshift-radar/frontend build",
+    "build:backend": "pnpm --filter @cloudshift-radar/shared build && pnpm --filter @cloudshift-radar/backend build",
+    "typecheck": "pnpm --filter @cloudshift-radar/shared typecheck && pnpm --filter @cloudshift-radar/backend typecheck && pnpm --filter @cloudshift-radar/frontend typecheck",
+    "clean": "pnpm --filter @cloudshift-radar/shared clean && pnpm --filter @cloudshift-radar/backend clean && pnpm --filter @cloudshift-radar/frontend clean"
+  }
+}

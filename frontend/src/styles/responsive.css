@@ -1,0 +1,92 @@
+@media (max-width: 1040px) {
+  .app-header {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-links {
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+
+  .home-hero,
+  .two-column,
+  .assessment-grid,
+  .progress-layout,
+  .verdict-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero {
+    min-height: unset;
+  }
+
+  .repo-input-grid,
+  .metric-grid,
+  .tab-grid,
+  .action-grid,
+  .trace-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .step-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .page {
+    width: min(100% - 24px, var(--max-width));
+    padding-top: 28px;
+  }
+
+  .page-intro h1,
+  .hero-copy h1 {
+    font-size: 44px;
+  }
+
+  .hero-subtitle {
+    font-size: 20px;
+  }
+
+  .step-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-header {
+    padding: 12px;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .bob-badge {
+    max-width: 100%;
+  }
+
+  .verdict-hero,
+  .card,
+  .table-card,
+  .progress-card,
+  .bob-analysis-panel {
+    padding: 16px;
+  }
+
+  .verdict-value {
+    font-size: 22px;
+  }
+
+  .detail-list div {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+
+  .flow-actions,
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .button {
+    width: 100%;
+  }
+}

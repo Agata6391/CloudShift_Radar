@@ -1,0 +1,60 @@
+:root {
+  color-scheme: dark;
+  --bg: #071018;
+  --bg-elevated: #0c1722;
+  --bg-panel: #101e2b;
+  --surface: #132434;
+  --surface-strong: #192f44;
+  --line: rgba(161, 197, 224, 0.18);
+  --line-strong: rgba(94, 234, 212, 0.36);
+  --text: #edf7ff;
+  --muted: #9fb3c4;
+  --muted-strong: #c0cfda;
+  --blue: #4ea5ff;
+  --cyan: #39d7e8;
+  --green: #3ddc97;
+  --amber: #f5bd4f;
+  --red: #ff6b6b;
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.32);
+  --radius: 8px;
+  --radius-sm: 6px;
+  --max-width: 1180px;
+  --font:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    linear-gradient(180deg, rgba(10, 28, 42, 0.92), rgba(7, 16, 24, 0.98) 320px),
+    repeating-linear-gradient(90deg, rgba(78, 165, 255, 0.05) 0 1px, transparent 1px 72px),
+    var(--bg);
+  font-family: var(--font);
+  line-height: 1.5;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}

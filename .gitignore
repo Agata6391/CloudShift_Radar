@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.local
+uploads/*
+!uploads/.gitkeep
+scan-results/*
+!scan-results/.gitkeep
+.DS_Store
+Thumbs.db
+*.log
