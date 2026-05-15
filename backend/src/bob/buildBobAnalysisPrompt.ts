@@ -1,7 +1,38 @@
 import type { MigrationContext, RepositoryScanContext } from "@cloudshift-radar/shared";
 
+const SECRET_VALUE_PATTERN =
+  /([a-z0-9_-]*(?:api[_-]?key|secret|token|password|passwd|private[_-]?key|access[_-]?key|session[_-]?key|credential)[a-z0-9_-]*)(["'\s:=]+)([^"'\s,}]+)/gi;
+
+const SECRET_KEY_PATTERN =
+  /(api[_-]?key|secret|token|password|passwd|private[_-]?key|access[_-]?key|session[_-]?key|credential)/i;
+
+function redactSensitiveText(text: string): string {
+  return text.replace(SECRET_VALUE_PATTERN, (_match, key: string, separator: string) => `${key}${separator}[REDACTED]`);
+}
+
+function sanitizeForPrompt(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map((item) => sanitizeForPrompt(item));
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [
+        key,
+        SECRET_KEY_PATTERN.test(key) ? "[REDACTED]" : sanitizeForPrompt(item)
+      ])
+    );
+  }
+
+  if (typeof value === "string") {
+    return redactSensitiveText(value);
+  }
+
+  return value;
+}
+
 function stringifyForPrompt(value: unknown): string {
-  return JSON.stringify(value, null, 2);
+  return redactSensitiveText(JSON.stringify(sanitizeForPrompt(value), null, 2));
 }
 
 export function buildBobAnalysisPrompt(context: MigrationContext, scanContext: RepositoryScanContext): string {

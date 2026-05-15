@@ -8,9 +8,6 @@ import type {
   ScanResult
 } from "@cloudshift-radar/shared";
 import {
-  coerceEnum,
-  coerceNumber,
-  coerceString,
   coerceStringArray,
   confidences,
   expectedStates,
@@ -20,116 +17,151 @@ import {
   severities
 } from "./bobResponseSchema";
 
-function extractTextFromKnownShapes(value: unknown): string | null {
-  if (typeof value === "string") {
-    return value;
-  }
+const PARSE_ERROR = "Bob returned output that could not be parsed as ScanResult JSON.";
 
-  if (!isRecord(value)) {
-    return null;
-  }
-
-  const directCandidates = [value.output, value.text, value.content, value.message, value.response, value.result];
-  for (const candidate of directCandidates) {
-    if (typeof candidate === "string") {
-      return candidate;
-    }
-  }
-
-  if (Array.isArray(value.choices)) {
-    for (const choice of value.choices) {
-      if (isRecord(choice)) {
-        const message = choice.message;
-        if (isRecord(message) && typeof message.content === "string") {
-          return message.content;
-        }
-        if (typeof choice.text === "string") {
-          return choice.text;
-        }
-      }
-    }
-  }
-
-  if (Array.isArray(value.output)) {
-    const text = value.output
-      .map((item) => {
-        if (typeof item === "string") return item;
-        if (isRecord(item) && typeof item.content === "string") return item.content;
-        if (isRecord(item) && Array.isArray(item.content)) {
-          return item.content
-            .map((contentItem) =>
-              isRecord(contentItem) && typeof contentItem.text === "string" ? contentItem.text : ""
-            )
-            .join("\n");
-        }
-        return "";
-      })
-      .join("\n")
-      .trim();
-
-    return text || null;
-  }
-
-  return null;
-}
-
-function extractJsonText(text: string): string {
+function extractFencedJson(text: string): string | null {
   const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
   if (fenced?.[1]) {
     return fenced[1].trim();
   }
 
-  const firstBrace = text.indexOf("{");
-  const lastBrace = text.lastIndexOf("}");
-  if (firstBrace >= 0 && lastBrace > firstBrace) {
-    return text.slice(firstBrace, lastBrace + 1);
+  return null;
+}
+
+function extractFirstJsonObject(text: string): string {
+  const fenced = extractFencedJson(text);
+  if (fenced) {
+    return fenced;
   }
 
-  return text.trim();
+  let start = -1;
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+
+    if (escaped) {
+      escaped = false;
+      continue;
+    }
+
+    if (char === "\\") {
+      escaped = inString;
+      continue;
+    }
+
+    if (char === "\"") {
+      inString = !inString;
+      continue;
+    }
+
+    if (inString) {
+      continue;
+    }
+
+    if (char === "{") {
+      if (depth === 0) {
+        start = index;
+      }
+      depth += 1;
+    }
+
+    if (char === "}") {
+      depth -= 1;
+      if (depth === 0 && start >= 0) {
+        return text.slice(start, index + 1);
+      }
+    }
+  }
+
+  throw new Error(PARSE_ERROR);
 }
 
 function parseBobPayload(rawResponse: unknown): Record<string, unknown> {
-  if (isRecord(rawResponse) && "bobVerdict" in rawResponse) {
-    return rawResponse;
+  if (typeof rawResponse !== "string") {
+    throw new Error(PARSE_ERROR);
   }
 
-  const extractedText = extractTextFromKnownShapes(rawResponse);
-  if (!extractedText) {
-    throw new Error("Bob response did not include JSON content.");
-  }
-
-  const jsonText = extractJsonText(extractedText);
+  const jsonText = extractFirstJsonObject(rawResponse.trim());
   const parsed = JSON.parse(jsonText) as unknown;
 
   if (!isRecord(parsed)) {
-    throw new Error("Bob response JSON must be an object.");
+    throw new Error(PARSE_ERROR);
   }
 
   return parsed;
 }
 
+function requireString(record: Record<string, unknown>, key: string): string {
+  const value = record[key];
+  if (typeof value !== "string" || !value.trim()) {
+    throw new Error(PARSE_ERROR);
+  }
+
+  return value;
+}
+
+function requireNumber(record: Record<string, unknown>, key: string): number {
+  const value = record[key];
+  const parsed = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(parsed)) {
+    throw new Error(PARSE_ERROR);
+  }
+
+  return Math.max(0, Math.min(100, Math.round(parsed)));
+}
+
+function requireArray(record: Record<string, unknown>, key: string): unknown[] {
+  const value = record[key];
+  if (!Array.isArray(value)) {
+    throw new Error(PARSE_ERROR);
+  }
+
+  return value;
+}
+
+function requireRecord(record: Record<string, unknown>, key: string): Record<string, unknown> {
+  const value = record[key];
+  if (!isRecord(value)) {
+    throw new Error(PARSE_ERROR);
+  }
+
+  return value;
+}
+
+function requireEnum<T extends string>(record: Record<string, unknown>, key: string, allowed: readonly T[]): T {
+  const value = record[key];
+  if (typeof value !== "string" || !allowed.includes(value as T)) {
+    throw new Error(PARSE_ERROR);
+  }
+
+  return value as T;
+}
+
 function normalizeFindings(value: unknown): Finding[] {
   if (!Array.isArray(value)) {
-    return [];
+    throw new Error(PARSE_ERROR);
   }
 
   return value.filter(isRecord).map((item, index) => {
-    const severity = coerceEnum(item.severity, severities, "Medium");
-    const confidence = coerceEnum(item.confidence, confidences, "Medium");
+    const severity = requireEnum(item, "severity", severities);
+    const confidence = requireEnum(item, "confidence", confidences);
     return {
-      id: coerceString(item.id, `finding_${String(index + 1).padStart(3, "0")}`),
-      title: coerceString(item.title, "Migration risk identified by Bob"),
-      category: coerceString(item.category, "Architecture"),
-      provider: coerceString(item.provider, "Unknown"),
-      service: coerceString(item.service, "Unknown"),
+      id: typeof item.id === "string" && item.id.trim() ? item.id : `finding_${String(index + 1).padStart(3, "0")}`,
+      title: requireString(item, "title"),
+      category: requireString(item, "category"),
+      provider: requireString(item, "provider"),
+      service: requireString(item, "service"),
       affectedFiles: coerceStringArray(item.affectedFiles),
       severity,
       confidence,
-      resolutionLevel: coerceEnum(item.resolutionLevel, resolutionLevels, "L5"),
-      bobRationale: coerceString(item.bobRationale, "Bob identified this as a migration readiness risk."),
-      businessImpact: coerceString(item.businessImpact, "Potential business impact requires validation."),
-      migrationImpact: coerceString(item.migrationImpact, "Potential migration impact requires validation."),
-      recommendedAction: coerceString(item.recommendedAction, "Review and remediate before migration."),
+      resolutionLevel: requireEnum(item, "resolutionLevel", resolutionLevels),
+      bobRationale: requireString(item, "bobRationale"),
+      businessImpact: requireString(item, "businessImpact"),
+      migrationImpact: requireString(item, "migrationImpact"),
+      recommendedAction: requireString(item, "recommendedAction"),
       requiresHumanReview:
         typeof item.requiresHumanReview === "boolean"
           ? item.requiresHumanReview
@@ -140,39 +172,40 @@ function normalizeFindings(value: unknown): Finding[] {
 
 function normalizeFeatureSurvival(value: unknown): FeatureSurvivalItem[] {
   if (!Array.isArray(value)) {
-    return [];
+    throw new Error(PARSE_ERROR);
   }
 
   return value.filter(isRecord).map((item) => ({
-    feature: coerceString(item.feature, "Unspecified feature"),
-    dependency: coerceString(item.dependency, "Unknown dependency"),
-    expectedState: coerceEnum(item.expectedState, expectedStates, "Unknown"),
-    bobRationale: coerceString(item.bobRationale, "Bob could not fully determine feature survival."),
-    recommendedAction: coerceString(item.recommendedAction, "Validate this feature during migration rehearsal.")
+    feature: requireString(item, "feature"),
+    dependency: requireString(item, "dependency"),
+    expectedState: requireEnum(item, "expectedState", expectedStates),
+    bobRationale: requireString(item, "bobRationale"),
+    recommendedAction: requireString(item, "recommendedAction")
   }));
 }
 
 function normalizeHumanReview(value: unknown): HumanReviewItem[] {
   if (!Array.isArray(value)) {
-    return [];
+    throw new Error(PARSE_ERROR);
   }
 
   return value.filter(isRecord).map((item, index) => ({
-    findingId: coerceString(item.findingId, `review_${index + 1}`),
-    title: coerceString(item.title, "Bob escalation for human review"),
-    reason: coerceString(
-      item.reason,
-      "Bob escalated this item because severity and uncertainty make automated classification unsafe."
-    ),
-    severity: coerceEnum(item.severity, severities, "High"),
-    confidence: coerceEnum(item.confidence, confidences, "Low"),
-    suggestedReviewer: coerceString(item.suggestedReviewer, "Senior Engineer"),
-    nextAction: coerceString(item.nextAction, "Assign owner and review before migration planning.")
+    findingId: typeof item.findingId === "string" && item.findingId.trim() ? item.findingId : `review_${index + 1}`,
+    title: requireString(item, "title"),
+    reason: requireString(item, "reason"),
+    severity: requireEnum(item, "severity", severities),
+    confidence: requireEnum(item, "confidence", confidences),
+    suggestedReviewer: requireString(item, "suggestedReviewer"),
+    nextAction: requireString(item, "nextAction")
   }));
 }
 
 function normalizeActionPlan(value: unknown): ActionPlan {
-  const item: Record<string, unknown> = isRecord(value) ? value : {};
+  if (!isRecord(value)) {
+    throw new Error(PARSE_ERROR);
+  }
+
+  const item: Record<string, unknown> = value;
   return {
     fixBeforeMigration: coerceStringArray(item.fixBeforeMigration),
     validateBeforeMigration: coerceStringArray(item.validateBeforeMigration),
@@ -183,12 +216,13 @@ function normalizeActionPlan(value: unknown): ActionPlan {
 }
 
 function normalizeTrace(value: unknown): BobReasoningTrace {
-  const item: Record<string, unknown> = isRecord(value) ? value : {};
+  if (!isRecord(value)) {
+    throw new Error(PARSE_ERROR);
+  }
+
+  const item: Record<string, unknown> = value;
   return {
-    architectureSummary: coerceString(
-      item.architectureSummary,
-      "Bob reviewed repository structure, configuration, and detected service dependencies."
-    ),
+    architectureSummary: requireString(item, "architectureSummary"),
     cloudDependencyReasoning: coerceStringArray(item.cloudDependencyReasoning),
     riskClassificationRationale: coerceStringArray(item.riskClassificationRationale),
     confidenceRationale: coerceStringArray(item.confidenceRationale),
@@ -208,8 +242,7 @@ export function normalizeBobResponse(
   try {
     payload = parseBobPayload(rawResponse);
   } catch (error) {
-    const detail = error instanceof Error ? error.message : "Unknown parse error";
-    throw new Error(`Bob response could not be normalized into a ScanResult: ${detail}`);
+    throw new Error(PARSE_ERROR);
   }
 
   return {
@@ -218,21 +251,18 @@ export function normalizeBobResponse(
     currentProvider: context.currentProvider,
     targetProvider: context.targetProvider,
     applicationType: context.applicationType,
-    bobVerdict: coerceString(payload.bobVerdict, "Requires Human Review"),
-    bobSummary: coerceString(
-      payload.bobSummary,
-      "Bob completed the repository analysis but returned a limited summary."
-    ),
-    bobConfidence: coerceString(payload.bobConfidence, "Medium"),
-    readinessScore: coerceNumber(payload.readinessScore, 50),
-    recommendedDecision: coerceEnum(payload.recommendedDecision, recommendedDecisions, "Requires Human Review"),
-    businessRiskLevel: coerceString(payload.businessRiskLevel, "Unknown"),
-    technicalComplexity: coerceString(payload.technicalComplexity, "Unknown"),
-    findings: normalizeFindings(payload.findings),
-    featureSurvivalMap: normalizeFeatureSurvival(payload.featureSurvivalMap),
-    humanReviewQueue: normalizeHumanReview(payload.humanReviewQueue),
-    actionPlan: normalizeActionPlan(payload.actionPlan),
-    bobReasoningTrace: normalizeTrace(payload.bobReasoningTrace),
+    bobVerdict: requireString(payload, "bobVerdict"),
+    bobSummary: requireString(payload, "bobSummary"),
+    bobConfidence: requireString(payload, "bobConfidence"),
+    readinessScore: requireNumber(payload, "readinessScore"),
+    recommendedDecision: requireEnum(payload, "recommendedDecision", recommendedDecisions),
+    businessRiskLevel: requireString(payload, "businessRiskLevel"),
+    technicalComplexity: requireString(payload, "technicalComplexity"),
+    findings: normalizeFindings(requireArray(payload, "findings")),
+    featureSurvivalMap: normalizeFeatureSurvival(requireArray(payload, "featureSurvivalMap")),
+    humanReviewQueue: normalizeHumanReview(requireArray(payload, "humanReviewQueue")),
+    actionPlan: normalizeActionPlan(requireRecord(payload, "actionPlan")),
+    bobReasoningTrace: normalizeTrace(requireRecord(payload, "bobReasoningTrace")),
     createdAt: new Date().toISOString()
   };
 }

@@ -11,17 +11,25 @@ CloudShift Radar owns the repository ZIP upload flow, safe scanner, backend API,
 Bob is not a secondary tab or decorative assistant. In this MVP, Bob is the main reasoning layer:
 
 - The scanner extracts raw technical signals.
-- The backend sends the migration context and scan context to Bob.
+- The backend sends summarized migration context and scan context to Bob Shell.
 - Bob classifies findings by severity, confidence, and resolution level.
 - Bob decides which items need human review.
 - Bob generates the readiness score, recommended decision, and final verdict.
 - The dashboard presents Bob's executive and technical analysis.
 
-Real scan routes require Bob API configuration. If configuration is missing, the backend returns:
+Real scan routes require Bob Shell configuration. If configuration is missing, the backend returns:
 
 ```json
 {
-  "error": "Bob API is required for this assessment. Configure BOB_API_KEY and BOB_API_URL."
+  "error": "Bob Shell is required for this assessment. Configure BOBSHELL_API_KEY and BOB_SHELL_COMMAND."
+}
+```
+
+If Bob Shell is not installed or cannot be executed, the backend returns:
+
+```json
+{
+  "error": "Bob Shell executable was not found. Install Bob Shell or configure BOB_SHELL_COMMAND."
 }
 ```
 
@@ -35,8 +43,38 @@ The frontend never receives or exposes the Bob API key.
 - Node.js + Fastify backend
 - Shared TypeScript types
 - Plain CSS
-- `undici` for server-side Bob API calls
+- IBM Bob Shell invoked server-side in non-interactive mode
 - `yauzl` for safe ZIP inspection and extraction
+
+## Bob Shell Integration
+
+1. Install Bob Shell.
+2. Create an IBM Bob API key with Inference scope.
+3. Copy the API key value when it is created.
+4. Add it to `.env` as `BOBSHELL_API_KEY`.
+5. Set `BOB_PROVIDER=shell`.
+6. Set `BOB_SHELL_COMMAND=bob`, or `BOB_SHELL_COMMAND=bob.cmd` on Windows if needed.
+7. Accept the license once before running scans:
+
+```bash
+bob --accept-license -p "Explain this project"
+```
+
+8. Run the app:
+
+```bash
+corepack enable
+pnpm install
+pnpm dev
+```
+
+The backend invokes Bob Shell server-side with:
+
+```bash
+bob --auth-method api-key --hide-intermediary-output -p "<prompt>"
+```
+
+The key is passed through the child process environment as `BOBSHELL_API_KEY`; it is never passed as a command argument and is never exposed to the frontend. Real scans require Bob Shell. Mock data is only available through explicit frontend UI preview mode.
 
 ## Setup
 
@@ -47,13 +85,18 @@ cp .env.example .env
 pnpm dev
 ```
 
-Add Bob credentials to `.env` before running a real scan:
+Add Bob Shell configuration to `.env` before running a real scan:
 
 ```bash
-BOB_API_KEY=your_key
-BOB_API_URL=https://your-bob-endpoint.example.com
-BOB_MODEL=optional_model_name
+BOB_PROVIDER=shell
+BOBSHELL_API_KEY=your_key
+BOB_SHELL_COMMAND=bob
+BOB_TIMEOUT_MS=60000
+PORT=4000
+FRONTEND_URL=http://localhost:5173
 ```
+
+On Windows, `BOB_SHELL_COMMAND` may need to be set to `bob.cmd` depending on how Bob Shell is installed.
 
 ## pnpm Commands
 
@@ -79,15 +122,15 @@ The default frontend runs on `http://localhost:5173`. The backend runs on `http:
 ## Backend API Routes
 
 - `GET /api/health`
-  - Returns `{ "ok": true, "bobConfigured": true | false }`
-  - Does not expose secret values
+  - Returns Bob Shell provider/configuration status without secrets
+  - Example: `{ "ok": true, "bobProvider": "shell", "bobConfigured": true, "bobCommandConfigured": true }`
 - `POST /api/scans`
   - Accepts multipart form data with migration context and repository ZIP
-  - Requires Bob configuration
-  - Validates, extracts, scans, sends context to Bob, stores result, returns `ScanResult`
+  - Requires Bob Shell configuration
+  - Validates, extracts, scans, sends summarized context to Bob Shell, stores result, returns `ScanResult`
 - `POST /api/scans/demo`
-  - Sends included demo scan context to Bob
-  - Requires Bob configuration
+  - Sends included demo scan context to Bob Shell
+  - Requires Bob Shell configuration
   - Does not silently fall back to mock data
 - `GET /api/scans/:scanId`
   - Returns stored scan result JSON
@@ -95,9 +138,9 @@ The default frontend runs on `http://localhost:5173`. The backend runs on `http:
 ## Environment Variables
 
 ```bash
-BOB_API_KEY=
-BOB_API_URL=
-BOB_MODEL=
+BOB_PROVIDER=shell
+BOBSHELL_API_KEY=
+BOB_SHELL_COMMAND=bob
 BOB_TIMEOUT_MS=60000
 PORT=4000
 FRONTEND_URL=http://localhost:5173
@@ -105,8 +148,8 @@ FRONTEND_URL=http://localhost:5173
 
 Rules:
 
-- Never put `BOB_API_KEY` in frontend code.
-- Do not create `VITE_BOB_API_KEY`.
+- Never put `BOBSHELL_API_KEY` in frontend code.
+- Do not create `VITE_BOBSHELL_API_KEY` or `VITE_BOB_API_KEY`.
 - Do not commit real keys.
 - Backend reads Bob credentials from server-side environment variables only.
 - Frontend calls only backend API routes.
@@ -125,15 +168,21 @@ Uploaded repositories are untrusted. The backend:
 - Ignores folders such as `node_modules`, `vendor`, `dist`, `build`, `.git`, `.next`, `.cache`, `coverage`, `venv`, and `__pycache__`.
 - Scans only approved file types such as `.env`, `.env.example`, `Dockerfile`, `docker-compose.yml`, `package.json`, `requirements.txt`, `pom.xml`, `build.gradle`, `application.yml`, README files, JS/TS/Python/Java/JSON/YAML/Terraform/Markdown files.
 
-## Bob API Integration
+The scanner produces summarized signals only. The Bob prompt includes migration context, repository file tree, detected technical signals, environment gaps, hardcoded infrastructure, and preliminary findings. It does not send raw full repository files to Bob, and prompt construction redacts common key, secret, token, password, and credential patterns before invoking Bob Shell.
 
-The backend adapter in `backend/src/bob/bobClient.ts` sends the dynamically built assessment prompt to `BOB_API_URL` with:
+## Bob Output Normalization
 
-- `Authorization: Bearer ${BOB_API_KEY}`
-- Optional `BOB_MODEL`
-- Timeout from `BOB_TIMEOUT_MS`
+Bob Shell must return valid JSON matching the expected `ScanResult` assessment shape. `normalizeBobResponse.ts` accepts raw stdout, extracts the first JSON object if Bob prints surrounding text, validates required fields, and normalizes optional arrays safely.
 
-Because Bob API response shapes may vary, `normalizeBobResponse.ts` accepts common response styles, extracts JSON from plain text when needed, validates key fields, and normalizes the output into the shared `ScanResult` shape.
+If Bob output cannot be parsed, the backend returns:
+
+```json
+{
+  "error": "Bob returned output that could not be parsed as ScanResult JSON."
+}
+```
+
+No mock data is used as a fallback for real scan routes.
 
 ## Bob Analysis Trace
 
@@ -173,6 +222,6 @@ The UI includes a disabled "Connect GitHub repository" card marked Coming Soon. 
 
 - The scanner uses pattern-based text analysis rather than full AST analysis.
 - Demo scan context is representative, not a bundled full sample application.
-- Bob endpoint shape is intentionally adapter-based because the final Bob API contract may vary.
+- Bob Shell must be installed and licensed on the backend machine before real scans can run.
 - The frontend supports explicit mock preview mode for UI development only.
 - Stored scan results are JSON files in `scan-results/`, not a production database.

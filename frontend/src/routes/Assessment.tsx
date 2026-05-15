@@ -76,8 +76,8 @@ export function Assessment({ onNavigate, onScanComplete }: AssessmentProps) {
 
       {bobConfigured === false ? (
         <Card className="error-card">
-          <h3>Bob API configuration required</h3>
-          <p>Bob API is required for this assessment. Configure BOB_API_KEY and BOB_API_URL.</p>
+          <h3>Bob Shell configuration required</h3>
+          <p>Server-side Bob Shell configuration is missing. Real scans require Bob Shell before assessment.</p>
         </Card>
       ) : null}
 

@@ -4,7 +4,7 @@ import path from "node:path";
 import type { FastifyInstance } from "fastify";
 import type { MigrationContext, RepositoryScanContext } from "@cloudshift-radar/shared";
 import type { AppEnv } from "../config/env";
-import { BOB_CONFIGURATION_ERROR, assertBobConfigured } from "../config/env";
+import { BOB_CONFIGURATION_ERROR, BOB_EXECUTABLE_ERROR, assertBobConfigured } from "../config/env";
 import { buildBobAnalysisPrompt } from "../bob/buildBobAnalysisPrompt";
 import { callBobApi } from "../bob/bobClient";
 import { normalizeBobResponse } from "../bob/normalizeBobResponse";
@@ -44,6 +44,25 @@ async function analyzeWithBob(
   return scanResult;
 }
 
+function bobErrorStatus(message: string): number {
+  if (message === BOB_CONFIGURATION_ERROR || message === BOB_EXECUTABLE_ERROR) {
+    return 503;
+  }
+
+  if (message.includes("could not be parsed as ScanResult JSON") || message.includes("empty output")) {
+    return 502;
+  }
+
+  return 502;
+}
+
+function sendBobError(reply: { status: (statusCode: number) => { send: (payload: unknown) => unknown } }, error: unknown) {
+  const message = error instanceof Error ? error.message : "Bob Shell assessment failed.";
+  return reply.status(bobErrorStatus(message)).send({
+    error: message
+  });
+}
+
 export async function registerScanRoutes(server: FastifyInstance, env: AppEnv) {
   server.post("/api/scans", async (request, reply) => {
     try {
@@ -81,9 +100,13 @@ export async function registerScanRoutes(server: FastifyInstance, env: AppEnv) {
     await fs.rm(extractionDir, { recursive: true, force: true });
     await extractZip(zipBuffer, extractionDir);
     const scanContext = await scanRepository(extractionDir);
-    const result = await analyzeWithBob(migrationContext, scanContext, scanId, env);
 
-    return reply.send(result);
+    try {
+      const result = await analyzeWithBob(migrationContext, scanContext, scanId, env);
+      return reply.send(result);
+    } catch (error) {
+      return sendBobError(reply, error);
+    }
   });
 
   server.post("/api/scans/demo", async (request, reply) => {
@@ -105,9 +128,13 @@ export async function registerScanRoutes(server: FastifyInstance, env: AppEnv) {
 
     const scanId = randomUUID();
     const scanContext = loadDemoRepositoryScanContext();
-    const result = await analyzeWithBob(migrationContext, scanContext, scanId, env);
 
-    return reply.send(result);
+    try {
+      const result = await analyzeWithBob(migrationContext, scanContext, scanId, env);
+      return reply.send(result);
+    } catch (error) {
+      return sendBobError(reply, error);
+    }
   });
 
   server.get<{ Params: { scanId: string } }>("/api/scans/:scanId", async (request, reply) => {
