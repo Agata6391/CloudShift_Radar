@@ -48,9 +48,35 @@
     padding-top: 28px;
   }
 
-  .page-intro h1,
-  .hero-copy h1 {
+  /* Hero page title remains large on mobile - only for elements WITHOUT .internal-page-title */
+  .hero-page-title,
+  .page-intro h1:not(.internal-page-title),
+  .hero-copy h1:not(.internal-page-title) {
     font-size: 44px;
+  }
+
+  /* Internal page titles scale proportionally on mobile - higher specificity */
+  .page-intro .internal-page-title,
+  .internal-page-title {
+    font-size: 32px;
+  }
+
+  /* Primary module title scales down slightly */
+  .primary-module-title,
+  .verdict-copy h1,
+  .verdict-copy h2 {
+    font-size: 20px;
+  }
+
+  /* Dominant module value scales down */
+  .dominant-module-value,
+  .verdict-value {
+    font-size: 28px;
+  }
+
+  /* Tab section titles scale down */
+  .tab-section-title {
+    font-size: 18px;
   }
 
   .hero-subtitle {

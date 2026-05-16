@@ -228,7 +228,7 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
     <div className="page analysis-page">
       <section className="page-intro">
         <span className="eyebrow">Analysis Running</span>
-        <h1>{analysisState === "running" ? "Bob is analyzing your migration risk" : "Analysis Status"}</h1>
+        <h1 className="internal-page-title">{analysisState === "running" ? "Bob is analyzing your migration risk" : "Analysis Status"}</h1>
         <p>
           {analysisState === "running"
             ? "CloudShift Radar is scanning repository signals, mapping infrastructure dependencies, and asking Bob to generate a migration readiness verdict."

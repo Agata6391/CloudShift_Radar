@@ -23,13 +23,13 @@ export function BobOverviewTab({ result }: BobOverviewTabProps) {
       <Card className="wide-card">
         <div className="section-heading">
           <span>Overview</span>
-          <h2>Migration readiness</h2>
+          <h2 className="tab-section-title">Migration readiness</h2>
         </div>
         <p>{result.bobSummary}</p>
       </Card>
 
       <Card>
-        <h3>Risk distribution</h3>
+        <h3 className="card-title">Risk distribution</h3>
         <div className="risk-stack">
           <span><StatusPill tone="low">Low risk</StatusPill> {result.findings.filter((item) => item.severity === "Low").length}</span>
           <span><StatusPill tone="medium">Medium risk</StatusPill> {result.findings.filter((item) => item.severity === "Medium").length}</span>
@@ -39,7 +39,7 @@ export function BobOverviewTab({ result }: BobOverviewTabProps) {
       </Card>
 
       <Card>
-        <h3>Scan coverage</h3>
+        <h3 className="card-title">Scan coverage</h3>
         <div className="risk-stack">
           <span>Files scanned: {new Set(result.findings.flatMap((finding) => finding.affectedFiles)).size}</span>
           <span>Dependency files: {result.findings.filter((finding) => finding.category.toLowerCase().includes("dependency")).length}</span>
@@ -49,7 +49,7 @@ export function BobOverviewTab({ result }: BobOverviewTabProps) {
       </Card>
 
       <Card>
-        <h3>Main blockers</h3>
+        <h3 className="card-title">Main blockers</h3>
         <ul className="clean-list">
           {topBlockers.map((blocker) => (
             <li key={blocker.id}>{blocker.title}</li>
@@ -58,12 +58,12 @@ export function BobOverviewTab({ result }: BobOverviewTabProps) {
       </Card>
 
       <Card>
-        <h3>Recommended next step</h3>
+        <h3 className="card-title">Recommended next step</h3>
         <p>{result.actionPlan.fixBeforeMigration[0] || "Review high-risk findings, validate human review items, and re-run the scan after remediation."}</p>
       </Card>
 
       <Card>
-        <h3>Bob confidence explanation</h3>
+        <h3 className="card-title">Bob confidence explanation</h3>
         <BobConfidenceMeter confidence={result.bobConfidence} />
         <p>Bob has high confidence in SDK and endpoint evidence, with lower confidence where ownership or runtime contracts are not visible in the repository.</p>
       </Card>
