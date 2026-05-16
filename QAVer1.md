@@ -564,7 +564,7 @@ if (validationResult.validationErrors) {
 **Impact:** Users don't see why validation failed.
 
 **Fix Required:** Display validation errors in UI.
-
+<--Fixed-->
 ---
 
 ### 26. Network Error Handling in AnalysisRunning 🟡 Medium
@@ -589,7 +589,7 @@ try {
 **Impact:** App hangs if network fails during analysis.
 
 **Fix Required:** Add network error handling to polling logic.
-
+<--Fixed-->
 ---
 
 ## Hackathon Submission Risks
@@ -616,7 +616,7 @@ try {
 
 **Estimated Fix Time:** 15 minutes
 
----
+<--ALREADY FIXED - No action required-->
 
 ### 28. Demo Stability Without Bob 🔴 Critical
 
@@ -660,7 +660,7 @@ try {
 
 **Estimated Fix Time:** 10 minutes (part of #27)
 
----
+<--fixed-->
 
 ### 30. Incomplete Flow for Hackathon Demo 🟡 Medium
 
