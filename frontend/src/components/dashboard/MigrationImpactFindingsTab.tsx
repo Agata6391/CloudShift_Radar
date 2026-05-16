@@ -59,7 +59,7 @@ export function MigrationImpactFindingsTab({ result }: MigrationImpactFindingsTa
       <div className="table-card">
         <div className="section-heading">
           <span>Bob feature survival map</span>
-          <h2>What survives the migration</h2>
+          <h2 className="tab-section-title">What survives the migration</h2>
         </div>
         <div className="table-scroll">
           <table>
@@ -91,7 +91,7 @@ export function MigrationImpactFindingsTab({ result }: MigrationImpactFindingsTa
       <Card className="wide-card">
         <div className="section-heading">
           <span>Findings</span>
-          <h2>Findings & Feature Status</h2>
+          <h2 className="tab-section-title">Findings & Feature Status</h2>
         </div>
         <p>
           Technical issues detected by Bob and their impact on application features.

@@ -54,7 +54,7 @@ export function Results({ latestResult, previewMode }: ResultsProps) {
       <section className="report-header">
         <div>
           <span className="eyebrow">Report Dashboard</span>
-          <h1>CloudShift Radar Report</h1>
+          <h1 className="internal-page-title">CloudShift Radar Report</h1>
           <p>{result.projectName}</p>
           <p>{result.currentProvider} &rarr; {result.targetProvider}</p>
         </div>

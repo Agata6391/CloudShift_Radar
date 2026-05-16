@@ -11,8 +11,8 @@ export function BobVerdictHero({ result }: BobVerdictHeroProps) {
     <section className="verdict-hero">
       <div className="verdict-copy">
         <BobBadge />
-        <h1>Bob Readiness Verdict</h1>
-        <div className="verdict-value">{result.bobVerdict}</div>
+        <h2 className="primary-module-title">Bob Readiness Verdict</h2>
+        <div className="verdict-value dominant-module-value">{result.bobVerdict}</div>
         <p className="verdict-summary">{result.bobSummary}</p>
         <p>
           Bob does not recommend production migration yet. Critical AWS dependencies remain coupled to storage,

@@ -181,7 +181,7 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
     <div className="page assessment-page">
       <section className="page-intro">
         <span className="eyebrow">Project Input</span>
-        <h1>Set up your migration scan</h1>
+        <h1 className="internal-page-title">Set up your migration scan</h1>
         <p>Upload your project and define the source and destination environment.</p>
       </section>
 
