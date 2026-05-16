@@ -52,3 +52,15 @@ export async function getScan(scanId: string): Promise<ScanResult> {
   const response = await fetch(`/api/scans/${encodeURIComponent(scanId)}`);
   return parseJsonResponse<ScanResult>(response);
 }
+
+export async function exportScan(scanId: string, format: "json" | "csv" | "markdown"): Promise<Blob> {
+  const response = await fetch(`/api/scans/${encodeURIComponent(scanId)}/export?format=${format}`);
+  
+  if (!response.ok) {
+    const payload = await response.json().catch(() => ({}));
+    const message = typeof payload.error === "string" ? payload.error : "Export failed.";
+    throw new Error(message);
+  }
+  
+  return response.blob();
+}

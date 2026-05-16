@@ -13,6 +13,7 @@ import { extractZip } from "../scanner/extractZip";
 import { scanRepository } from "../scanner/scanRepository";
 import { getScanResult, storeScanResult } from "../storage/scanResultStore";
 import { validateZip } from "../security/validateZip";
+import { generateCSV, generateMarkdown, generateJSON } from "../export/exportFormats";
 
 const UPLOADS_DIR = path.resolve(process.cwd(), "..", "uploads");
 
@@ -147,4 +148,56 @@ export async function registerScanRoutes(server: FastifyInstance, env: AppEnv) {
 
     return reply.send(result);
   });
+
+  server.get<{ Params: { scanId: string }; Querystring: { format?: string } }>(
+    "/api/scans/:scanId/export",
+    async (request, reply) => {
+      const { scanId } = request.params;
+      const format = request.query.format || "json";
+
+      const result = await getScanResult(scanId);
+      if (!result) {
+        return reply.status(404).send({
+          error: "Scan result not found."
+        });
+      }
+
+      const validFormats = ["json", "csv", "markdown", "md"];
+      if (!validFormats.includes(format.toLowerCase())) {
+        return reply.status(400).send({
+          error: `Invalid format. Supported formats: ${validFormats.join(", ")}`
+        });
+      }
+
+      let content: string;
+      let contentType: string;
+      let filename: string;
+      const sanitizedProjectName = result.projectName.replace(/[^a-zA-Z0-9-_]/g, "_");
+      const timestamp = new Date().toISOString().split("T")[0];
+
+      switch (format.toLowerCase()) {
+        case "csv":
+          content = generateCSV(result);
+          contentType = "text/csv";
+          filename = `cloudshift-radar-${sanitizedProjectName}-${timestamp}.csv`;
+          break;
+        case "markdown":
+        case "md":
+          content = generateMarkdown(result);
+          contentType = "text/markdown";
+          filename = `cloudshift-radar-${sanitizedProjectName}-${timestamp}.md`;
+          break;
+        case "json":
+        default:
+          content = generateJSON(result);
+          contentType = "application/json";
+          filename = `cloudshift-radar-${sanitizedProjectName}-${timestamp}.json`;
+          break;
+      }
+
+      reply.header("Content-Type", contentType);
+      reply.header("Content-Disposition", `attachment; filename="${filename}"`);
+      return reply.send(content);
+    }
+  );
 }
