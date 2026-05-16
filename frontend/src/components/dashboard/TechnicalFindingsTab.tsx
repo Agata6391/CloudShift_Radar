@@ -14,6 +14,12 @@ function severityTone(severity: Severity) {
   return "low";
 }
 
+/**
+ * TechnicalFindingsTab - Alternative view focusing on technical details
+ * Note: This component provides a technical-focused view of findings.
+ * The main "Findings" tab uses MigrationImpactFindingsTab which shows migration impact.
+ * Both components display the same underlying data (ScanResult.findings) with different emphasis.
+ */
 export function TechnicalFindingsTab({ result }: TechnicalFindingsTabProps) {
   const [filter, setFilter] = useState<"All" | Severity | "Review">("All");
   const filteredFindings = result.findings.filter((finding) => {
@@ -24,11 +30,11 @@ export function TechnicalFindingsTab({ result }: TechnicalFindingsTabProps) {
 
   return (
     <div className="impact-findings">
-      {/* Findings Section */}
+      {/* Technical Details View */}
       <Card className="wide-card">
         <div className="section-heading">
           <span>Bob rationale by finding</span>
-          <h2>Technical Findings</h2>
+          <h2>Technical Details</h2>
         </div>
         <p>
           Technical issues detected by Bob with detailed analysis and recommendations.

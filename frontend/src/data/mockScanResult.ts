@@ -40,7 +40,7 @@ export const mockScanResult: ScanResult = {
       businessImpact: "Background jobs and cache-backed flows may fail during migration validation.",
       migrationImpact: "Target environment must provide Redis-compatible configuration before cutover.",
       featureImpact: "Background jobs are at risk until Redis is remapped to the destination environment.",
-      technicalComplexity: "Low",
+      technicalComplexity: "low",
       recommendedAction: "Replace provider-specific Redis endpoint with target environment configuration."
     },
     {
@@ -68,7 +68,7 @@ export const mockScanResult: ScanResult = {
       businessImpact: "Incomplete email configuration could block deployments or notification flows.",
       migrationImpact: "The application may fail health checks if email secrets are absent in the target runtime.",
       featureImpact: "Email notifications need startup safeguards before migration validation.",
-      technicalComplexity: "Medium",
+      technicalComplexity: "medium",
       recommendedAction: "Make email provider initialization optional or environment-gated."
     },
     {
@@ -96,7 +96,7 @@ export const mockScanResult: ScanResult = {
       businessImpact: "Customer upload workflows are likely to fail if object storage is moved without an abstraction.",
       migrationImpact: "Code paths using S3 client APIs need provider-neutral storage behavior.",
       featureImpact: "File uploads are at risk until storage access is abstracted.",
-      technicalComplexity: "High",
+      technicalComplexity: "high",
       recommendedAction: "Introduce a storage provider abstraction before migration."
     },
     {
@@ -124,7 +124,7 @@ export const mockScanResult: ScanResult = {
       businessImpact: "Matchmaking availability may block a production migration.",
       migrationImpact: "A replacement architecture or isolation layer is required before target-cloud migration.",
       featureImpact: "Matchmaking is blocked until a destination-compatible architecture exists.",
-      technicalComplexity: "Very High",
+      technicalComplexity: "high",
       recommendedAction: "Redesign matchmaking infrastructure or isolate this dependency before migration."
     },
     {
@@ -155,7 +155,7 @@ export const mockScanResult: ScanResult = {
       businessImpact: "Unknown queue ownership could interrupt order processing or background workflows.",
       migrationImpact: "Migration blast radius cannot be estimated safely without senior review.",
       featureImpact: "Background jobs need human validation before migration planning.",
-      technicalComplexity: "Unknown",
+      technicalComplexity: undefined,
       recommendedAction: "Assign senior engineer review before estimating migration impact."
     },
     {
@@ -186,7 +186,7 @@ export const mockScanResult: ScanResult = {
       businessImpact: "Billing reconciliation could fail silently after migration.",
       migrationImpact: "Webhook fallback behavior must be validated with production owners.",
       featureImpact: "Billing webhook behavior needs manual validation before migration.",
-      technicalComplexity: "Unknown",
+      technicalComplexity: undefined,
       recommendedAction: "Assign senior backend and product review to document billing fallback behavior."
     }
   ],

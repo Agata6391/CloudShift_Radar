@@ -289,6 +289,35 @@ function findFeatureImpact(
   });
 }
 
+function normalizeTechnicalComplexity(value: unknown): Finding["technicalComplexity"] {
+  if (typeof value !== "string") {
+    return undefined;
+  }
+
+  const normalized = value.trim().toLowerCase();
+
+  if (normalized === "low" || normalized.includes("low") || normalized.includes("simple")) {
+    return "low";
+  }
+
+  if (
+    normalized === "high" ||
+    normalized.includes("high") ||
+    normalized.includes("very high") ||
+    normalized.includes("complex") ||
+    normalized.includes("architecture")
+  ) {
+    return "high";
+  }
+
+  if (normalized === "medium" || normalized.includes("medium") || normalized.includes("moderate")) {
+    return "medium";
+  }
+
+  // Unknown or invalid values return undefined
+  return undefined;
+}
+
 function riskFromSeverity(severity: Finding["severity"]): Finding["risk"] {
   return severity === "Low" ? "Low" : severity;
 }
@@ -347,7 +376,7 @@ function normalizeFindings(value: unknown, featureSurvivalMap: FeatureSurvivalIt
       businessImpact: requireString(item, "businessImpact"),
       migrationImpact,
       featureImpact: optionalString(item, "featureImpact") || migrationImpact,
-      technicalComplexity: optionalString(item, "technicalComplexity"),
+      technicalComplexity: normalizeTechnicalComplexity(item.technicalComplexity),
       recommendedAction: requireString(item, "recommendedAction"),
       requiresHumanReview:
         typeof item.requiresHumanReview === "boolean"

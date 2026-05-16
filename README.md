@@ -1,8 +1,8 @@
-# 🚀 Cloud_Radar
+# 🚀 CloudShift Radar
 
 > **Know what will break before you migrate**
 
-Cloud_Radar is an advanced AI-powered cloud migration assessment tool that combines static code analysis with IBM Bob AI to provide detailed, actionable recommendations for migrating legacy applications to cloud-native architectures.
+CloudShift Radar is an advanced AI-powered cloud migration assessment tool that combines static code analysis with IBM Bob AI to provide detailed, actionable recommendations for migrating legacy applications to cloud-native architectures.
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6.3-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.3.1-61dafb.svg)](https://reactjs.org/)
@@ -36,11 +36,11 @@ Cloud_Radar is an advanced AI-powered cloud migration assessment tool that combi
 
 ## 🎯 Overview
 
-**Cloud_Radar** (CloudShift Radar MVP) is designed for CTOs, technical leads, DevOps engineers, and development teams who need to assess the viability of migrating legacy applications to the cloud. By scanning repository code (via ZIP uploads or demo scenarios), Cloud_Radar detects infrastructure patterns, identifies potential migration blockers, and leverages IBM Bob AI to generate intelligent migration verdicts.
+**CloudShift Radar** is designed for CTOs, technical leads, DevOps engineers, and development teams who need to assess the viability of migrating legacy applications to the cloud. By scanning repository code (via ZIP uploads or demo scenarios), CloudShift Radar detects infrastructure patterns, identifies potential migration blockers, and leverages IBM Bob AI to generate intelligent migration verdicts.
 
 ### Value Proposition
 
-Traditional cloud migration assessments are time-consuming, error-prone, and often miss critical issues until deployment. Cloud_Radar provides:
+Traditional cloud migration assessments are time-consuming, error-prone, and often miss critical issues until deployment. CloudShift Radar provides:
 
 - **Proactive Risk Detection**: Identify what will break before you migrate
 - **AI-Powered Analysis**: IBM Bob AI analyzes technical findings and provides actionable verdicts
@@ -70,7 +70,7 @@ Traditional cloud migration assessments are time-consuming, error-prone, and oft
 
 ### 📊 Interactive Dashboard
 - Migration readiness scoring (0-100)
-- Detailed technical findings with severity levels
+- Detailed findings with severity levels and migration impact
 - Feature survival predictions
 - Bob AI reasoning traces and confidence metrics
 - Human review queue for critical items
@@ -89,11 +89,11 @@ Traditional cloud migration assessments are time-consuming, error-prone, and oft
 
 ## 🏗️ Architecture
 
-Cloud_Radar is built as a **monorepo** using pnpm workspaces, consisting of three main packages:
+CloudShift Radar is built as a **monorepo** using pnpm workspaces, consisting of three main packages:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                     Cloud_Radar                         │
+│                   CloudShift Radar                      │
 ├─────────────────────────────────────────────────────────┤
 │                                                         │
 │  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐  │
@@ -156,7 +156,7 @@ Cloud_Radar is built as a **monorepo** using pnpm workspaces, consisting of thre
 
 ## 🔒 Security Model
 
-Cloud_Radar follows a **zero-execution security model** to ensure uploaded code is never run:
+CloudShift Radar follows a **zero-execution security model** to ensure uploaded code is never run:
 
 ### What We DON'T Do
 - ❌ Execute uploaded code
@@ -196,7 +196,7 @@ Before you begin, ensure you have the following installed:
 2. **Clone the repository**:
    ```bash
    git clone <repository-url>
-   cd Cloud_Radar
+   cd CloudShift_Radar
    ```
 
 3. **Install dependencies**:
@@ -304,7 +304,7 @@ Upload and scan a real repository from a ZIP file.
     "reasoning": "...",
     "recommendations": ["..."]
   },
-  "findings": { ... },
+  "findings": [...],
   "metrics": { ... }
 }
 ```
@@ -342,7 +342,7 @@ Check system status and Bob configuration.
 ## 📁 Project Structure
 
 ```
-Cloud_Radar/
+CloudShift_Radar/
 ├── backend/                    # Fastify API + Scanner
 │   ├── src/
 │   │   ├── server.ts          # Main server entry point
@@ -386,7 +386,7 @@ Cloud_Radar/
 ├── shared/                     # Shared TypeScript types
 │   ├── src/
 │   │   ├── index.ts
-│   │   └── scan.ts            # Scan result types
+│   │   └── scan.ts            # Scan result types (Finding, ScanResult, etc.)
 │   ├── package.json
 │   └── tsconfig.json
 │
@@ -427,11 +427,11 @@ Navigate to `backend/` or `frontend/` and run:
 
 ## 🤖 Bob AI Integration
 
-IBM Bob is the **AI reasoning engine** at the heart of Cloud_Radar, not just a decorative feature. Bob analyzes technical findings and generates intelligent migration verdicts.
+IBM Bob is the **AI reasoning engine** at the heart of CloudShift Radar, not just a decorative feature. Bob analyzes technical findings and generates intelligent migration verdicts.
 
 ### How Bob Works
 
-1. **Context Building**: Cloud_Radar collects technical findings from static analysis
+1. **Context Building**: CloudShift Radar collects findings from static analysis
 2. **Prompt Generation**: Findings are formatted into a structured prompt with security redaction
 3. **AI Analysis**: Bob Shell processes the prompt and generates reasoning
 4. **Decision Making**: Bob provides one of five possible decisions:
@@ -559,7 +559,7 @@ Please report issues with:
 
 ## 📞 Support
 
-For questions, issues, or feature requests, please [open an issue](https://github.com/your-org/Cloud_Radar/issues) on GitHub.
+For questions, issues, or feature requests, please [open an issue](https://github.com/your-org/CloudShift_Radar/issues) on GitHub.
 
 ---
 

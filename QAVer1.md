@@ -422,7 +422,7 @@ export interface ScanResult {
 **Impact:** Cannot support progressive validation flow.
 
 **Fix Required:** Add validation state fields to schema.
-
+<---fixed  -->
 ---
 
 ### 19. Finding Schema Missing Technical Complexity 🟢 Low
@@ -445,7 +445,7 @@ export interface Finding {
 **Impact:** Cannot display technical complexity in UI.
 
 **Fix Required:** Add `technicalComplexity` field to Finding interface.
-
+<---fixed  -->
 ---
 
 ### 20. Schema Alignment with Bob Response ✅ Correct
@@ -477,7 +477,7 @@ export interface Finding {
 **Impact:** Minor branding inconsistency.
 
 **Fix Required:** Standardize on "CloudShift Radar" everywhere.
-
+<---fixed  -->
 ---
 
 ### 22. Bob Naming Consistency ✅ Correct
@@ -506,7 +506,7 @@ export interface Finding {
 **Impact:** Confusion about data structure.
 
 **Fix Required:** Standardize on "findings" or clarify the distinction.
-
+<---fixed  -->
 ---
 
 ## Error/Fallback Inconsistencies
@@ -542,7 +542,7 @@ if (isDemoMode) {
 
 **Fix Required:** Add fallback to saved results when Bob is unavailable.
 
----
+<--Fixed-->
 
 ### 25. Frontend Validation Error Handling Incomplete 🟡 Medium
 
