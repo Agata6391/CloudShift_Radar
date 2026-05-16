@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { MigrationContext } from "@cloudshift-radar/shared";
-import { getHealth } from "../api/client";
+import type { MigrationContext, ValidationResult } from "@cloudshift-radar/shared";
+import { getHealth, validateZip } from "../api/client";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import type { Route } from "../utils/navigation";
@@ -36,6 +36,7 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
   const [customDescription, setCustomDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [validationState, setValidationState] = useState<ValidationState>("incomplete");
+  const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
   const [bobConfigured, setBobConfigured] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -73,24 +74,34 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
     applicationType: applicationType === "Custom" ? customDescription.trim() : applicationType
   };
 
-  const validateProject = () => {
+  const validateProject = async () => {
     if (!selectedFile) return;
     setValidationState("validating");
+    setValidationResult(null);
 
-    window.setTimeout(() => {
-      if (!selectedFile.name.toLowerCase().endsWith(".zip")) {
+    try {
+      const result = await validateZip(selectedFile);
+      setValidationResult(result);
+      
+      if (result.valid) {
+        // Check if there are warnings
+        setValidationState(result.warnings.length > 0 ? "warning" : "success");
+      } else {
         setValidationState("error");
-        return;
       }
-
-      if (selectedFile.size === 0) {
-        setValidationState("error");
-        return;
-      }
-
-      const lowerName = selectedFile.name.toLowerCase();
-      setValidationState(lowerName.includes("env") || lowerName.includes("lock") ? "success" : "warning");
-    }, 900);
+    } catch (error) {
+      setValidationState("error");
+      setValidationResult({
+        valid: false,
+        errors: [{
+          code: "VALIDATION_FAILED",
+          message: error instanceof Error ? error.message : "Validation failed",
+          severity: "error"
+        }],
+        warnings: [],
+        validatedAt: new Date().toISOString()
+      });
+    }
   };
 
   const handlePrimaryAction = () => {
@@ -245,34 +256,43 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
               </ul>
             </>
           ) : null}
-          {validationState === "success" ? (
+          {validationState === "success" && validationResult ? (
             <>
               <p><strong>Project validated successfully.</strong> CloudShift Radar found the required files to start the analysis.</p>
-              <ul className="clean-list">
-                <li>Files detected</li>
-                <li>Dependency files found</li>
-                <li>Environment files found</li>
-              </ul>
+              {validationResult.metadata ? (
+                <ul className="clean-list">
+                  <li>{validationResult.metadata.totalFiles} files detected</li>
+                  <li>Languages: {validationResult.metadata.detectedLanguages.join(", ") || "Unknown"}</li>
+                  {validationResult.metadata.hasPackageJson && <li>Package.json found</li>}
+                  {validationResult.metadata.hasDockerfile && <li>Dockerfile found</li>}
+                  {validationResult.metadata.hasTerraform && <li>Terraform files found</li>}
+                </ul>
+              ) : (
+                <ul className="clean-list">
+                  <li>Repository structure validated</li>
+                </ul>
+              )}
               <p>Estimated analysis time: 2-4 minutes</p>
             </>
           ) : null}
-          {validationState === "warning" ? (
+          {validationState === "warning" && validationResult ? (
             <>
               <p><strong>Project validated with warnings.</strong> CloudShift Radar can continue, but some information may be incomplete.</p>
               <ul className="clean-list">
-                <li>Missing .env.example file</li>
-                <li>Missing lock file</li>
+                {validationResult.warnings.map((warning, idx) => (
+                  <li key={idx}>{warning.message}</li>
+                ))}
               </ul>
-              <p>The migration report may have lower confidence for environment variables and dependency resolution.</p>
+              <p>The migration report may have lower confidence for some aspects.</p>
             </>
           ) : null}
-          {validationState === "error" ? (
+          {validationState === "error" && validationResult ? (
             <>
               <p><strong>Project validation failed.</strong> CloudShift Radar could not process this package.</p>
               <ul className="clean-list">
-                <li>Invalid ZIP file</li>
-                <li>No readable project structure detected</li>
-                <li>Package may be corrupted</li>
+                {validationResult.errors.map((error, idx) => (
+                  <li key={idx}>{error.message}</li>
+                ))}
               </ul>
             </>
           ) : null}
