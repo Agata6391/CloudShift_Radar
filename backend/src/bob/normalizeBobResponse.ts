@@ -103,6 +103,11 @@ function requireString(record: Record<string, unknown>, key: string): string {
   return value;
 }
 
+function optionalString(record: Record<string, unknown>, key: string): string | undefined {
+  const value = record[key];
+  return typeof value === "string" && value.trim() ? value : undefined;
+}
+
 function requireNumber(record: Record<string, unknown>, key: string): number {
   const value = record[key];
   const parsed = typeof value === "number" ? value : Number(value);
@@ -140,14 +145,40 @@ function requireEnum<T extends string>(record: Record<string, unknown>, key: str
   return value as T;
 }
 
-function normalizeFindings(value: unknown): Finding[] {
+function findFeatureImpact(item: Record<string, unknown>, featureSurvivalMap: FeatureSurvivalItem[]) {
+  const searchable = [
+    optionalString(item, "title"),
+    optionalString(item, "category"),
+    optionalString(item, "service"),
+    optionalString(item, "provider")
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return featureSurvivalMap.find((feature) => {
+    const featureText = `${feature.feature} ${feature.dependency}`.toLowerCase();
+    return featureText
+      .split(/\s+|\/+/)
+      .filter((token) => token.length > 2)
+      .some((token) => searchable.includes(token));
+  });
+}
+
+function normalizeFindings(value: unknown, featureSurvivalMap: FeatureSurvivalItem[]): Finding[] {
   if (!Array.isArray(value)) {
     throw new Error(PARSE_ERROR);
   }
 
-  return value.filter(isRecord).map((item, index) => {
+  return value.map((entry, index) => {
+    if (!isRecord(entry)) {
+      throw new Error(PARSE_ERROR);
+    }
+
+    const item = entry;
     const severity = requireEnum(item, "severity", severities);
     const confidence = requireEnum(item, "confidence", confidences);
+    const featureImpact = findFeatureImpact(item, featureSurvivalMap);
     return {
       id: typeof item.id === "string" && item.id.trim() ? item.id : `finding_${String(index + 1).padStart(3, "0")}`,
       title: requireString(item, "title"),
@@ -158,6 +189,11 @@ function normalizeFindings(value: unknown): Finding[] {
       severity,
       confidence,
       resolutionLevel: requireEnum(item, "resolutionLevel", resolutionLevels),
+      affectedFeature: optionalString(item, "affectedFeature") || featureImpact?.feature || "Unknown feature area",
+      featureSurvivalState:
+        typeof item.featureSurvivalState === "string" && (expectedStates as readonly string[]).includes(item.featureSurvivalState)
+          ? (item.featureSurvivalState as Finding["featureSurvivalState"])
+          : featureImpact?.expectedState || "Unknown",
       bobRationale: requireString(item, "bobRationale"),
       businessImpact: requireString(item, "businessImpact"),
       migrationImpact: requireString(item, "migrationImpact"),
@@ -165,7 +201,9 @@ function normalizeFindings(value: unknown): Finding[] {
       requiresHumanReview:
         typeof item.requiresHumanReview === "boolean"
           ? item.requiresHumanReview
-          : (severity === "High" || severity === "Critical") && confidence === "Low"
+          : (severity === "High" || severity === "Critical") && confidence === "Low",
+      humanReviewReason: optionalString(item, "humanReviewReason"),
+      suggestedReviewer: optionalString(item, "suggestedReviewer")
     };
   });
 }
@@ -175,13 +213,19 @@ function normalizeFeatureSurvival(value: unknown): FeatureSurvivalItem[] {
     throw new Error(PARSE_ERROR);
   }
 
-  return value.filter(isRecord).map((item) => ({
-    feature: requireString(item, "feature"),
-    dependency: requireString(item, "dependency"),
-    expectedState: requireEnum(item, "expectedState", expectedStates),
-    bobRationale: requireString(item, "bobRationale"),
-    recommendedAction: requireString(item, "recommendedAction")
-  }));
+  return value.map((entry) => {
+    if (!isRecord(entry)) {
+      throw new Error(PARSE_ERROR);
+    }
+
+    return {
+      feature: requireString(entry, "feature"),
+      dependency: requireString(entry, "dependency"),
+      expectedState: requireEnum(entry, "expectedState", expectedStates),
+      bobRationale: requireString(entry, "bobRationale"),
+      recommendedAction: requireString(entry, "recommendedAction")
+    };
+  });
 }
 
 function normalizeHumanReview(value: unknown): HumanReviewItem[] {
@@ -189,15 +233,21 @@ function normalizeHumanReview(value: unknown): HumanReviewItem[] {
     throw new Error(PARSE_ERROR);
   }
 
-  return value.filter(isRecord).map((item, index) => ({
-    findingId: typeof item.findingId === "string" && item.findingId.trim() ? item.findingId : `review_${index + 1}`,
-    title: requireString(item, "title"),
-    reason: requireString(item, "reason"),
-    severity: requireEnum(item, "severity", severities),
-    confidence: requireEnum(item, "confidence", confidences),
-    suggestedReviewer: requireString(item, "suggestedReviewer"),
-    nextAction: requireString(item, "nextAction")
-  }));
+  return value.map((entry, index) => {
+    if (!isRecord(entry)) {
+      throw new Error(PARSE_ERROR);
+    }
+
+    return {
+      findingId: typeof entry.findingId === "string" && entry.findingId.trim() ? entry.findingId : `review_${index + 1}`,
+      title: requireString(entry, "title"),
+      reason: requireString(entry, "reason"),
+      severity: requireEnum(entry, "severity", severities),
+      confidence: requireEnum(entry, "confidence", confidences),
+      suggestedReviewer: requireString(entry, "suggestedReviewer"),
+      nextAction: requireString(entry, "nextAction")
+    };
+  });
 }
 
 function normalizeActionPlan(value: unknown): ActionPlan {
@@ -206,6 +256,7 @@ function normalizeActionPlan(value: unknown): ActionPlan {
   }
 
   const item: Record<string, unknown> = value;
+
   return {
     fixBeforeMigration: coerceStringArray(item.fixBeforeMigration),
     validateBeforeMigration: coerceStringArray(item.validateBeforeMigration),
@@ -245,6 +296,8 @@ export function normalizeBobResponse(
     throw new Error(PARSE_ERROR);
   }
 
+  const featureSurvivalMap = normalizeFeatureSurvival(requireArray(payload, "featureSurvivalMap"));
+
   return {
     scanId,
     projectName: context.projectName,
@@ -258,8 +311,8 @@ export function normalizeBobResponse(
     recommendedDecision: requireEnum(payload, "recommendedDecision", recommendedDecisions),
     businessRiskLevel: requireString(payload, "businessRiskLevel"),
     technicalComplexity: requireString(payload, "technicalComplexity"),
-    findings: normalizeFindings(requireArray(payload, "findings")),
-    featureSurvivalMap: normalizeFeatureSurvival(requireArray(payload, "featureSurvivalMap")),
+    findings: normalizeFindings(requireArray(payload, "findings"), featureSurvivalMap),
+    featureSurvivalMap,
     humanReviewQueue: normalizeHumanReview(requireArray(payload, "humanReviewQueue")),
     actionPlan: normalizeActionPlan(requireRecord(payload, "actionPlan")),
     bobReasoningTrace: normalizeTrace(requireRecord(payload, "bobReasoningTrace")),

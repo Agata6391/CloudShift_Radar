@@ -1,7 +1,6 @@
 export type DashboardTab =
   | "overview"
-  | "findings"
-  | "survival"
+  | "migrationImpact"
   | "humanReview"
   | "actionPlan"
   | "report"
@@ -14,8 +13,7 @@ interface DashboardTabsProps {
 
 const tabs: Array<{ id: DashboardTab; label: string }> = [
   { id: "overview", label: "Bob Overview" },
-  { id: "findings", label: "Technical Findings" },
-  { id: "survival", label: "Feature Survival" },
+  { id: "migrationImpact", label: "Migration Impact Findings" },
   { id: "humanReview", label: "Human Review" },
   { id: "actionPlan", label: "Action Plan" },
   { id: "report", label: "Migration Report" },

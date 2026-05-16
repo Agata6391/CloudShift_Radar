@@ -25,6 +25,8 @@ export const mockScanResult: ScanResult = {
       severity: "High",
       confidence: "High",
       resolutionLevel: "L1",
+      affectedFeature: "Background jobs",
+      featureSurvivalState: "High risk",
       requiresHumanReview: false,
       bobRationale:
         "Bob classified this as a configuration-level migration risk because the dependency can likely be redirected to a target Redis endpoint without code redesign.",
@@ -42,6 +44,8 @@ export const mockScanResult: ScanResult = {
       severity: "Medium",
       confidence: "High",
       resolutionLevel: "L2",
+      affectedFeature: "Email notifications",
+      featureSurvivalState: "Partially working",
       requiresHumanReview: false,
       bobRationale:
         "Bob classified this as a minor code change because startup behavior should be made environment-gated before migration validation.",
@@ -59,6 +63,8 @@ export const mockScanResult: ScanResult = {
       severity: "High",
       confidence: "High",
       resolutionLevel: "L3",
+      affectedFeature: "File uploads",
+      featureSurvivalState: "High risk",
       requiresHumanReview: false,
       bobRationale:
         "Bob classified this as refactor-level risk because upload behavior is coupled directly to AWS SDK APIs and should be abstracted before changing providers.",
@@ -76,6 +82,8 @@ export const mockScanResult: ScanResult = {
       severity: "Critical",
       confidence: "High",
       resolutionLevel: "L4",
+      affectedFeature: "Matchmaking",
+      featureSurvivalState: "Blocked",
       requiresHumanReview: false,
       bobRationale:
         "Bob classified this as architecture-level risk because the feature depends on AWS-specific infrastructure that cannot be replaced with a simple config or localized code change.",
@@ -93,7 +101,12 @@ export const mockScanResult: ScanResult = {
       severity: "Critical",
       confidence: "Low",
       resolutionLevel: "L5",
+      affectedFeature: "Background jobs",
+      featureSurvivalState: "Unknown",
       requiresHumanReview: true,
+      humanReviewReason:
+        "Bob escalated this because the queue bridge is severe and low-confidence, with unclear runtime ownership.",
+      suggestedReviewer: "Senior Backend Engineer",
       bobRationale:
         "Bob escalated this to human review because the migration impact is potentially critical but the ownership and runtime behavior are ambiguous.",
       businessImpact: "Unknown queue ownership could interrupt order processing or background workflows.",
@@ -110,7 +123,12 @@ export const mockScanResult: ScanResult = {
       severity: "High",
       confidence: "Low",
       resolutionLevel: "L5",
+      affectedFeature: "Billing webhook",
+      featureSurvivalState: "Unknown",
       requiresHumanReview: true,
+      humanReviewReason:
+        "Bob escalated this because revenue-impacting fallback behavior is severe and unclear from repository context.",
+      suggestedReviewer: "Senior Backend Engineer + Product Owner",
       bobRationale:
         "Bob escalated this because fallback routing affects revenue workflows, but the code path does not reveal ownership or target-cloud behavior.",
       businessImpact: "Billing reconciliation could fail silently after migration.",

@@ -28,11 +28,15 @@ export interface Finding {
   severity: Severity;
   confidence: Confidence;
   resolutionLevel: ResolutionLevel;
+  affectedFeature: string;
+  featureSurvivalState: ExpectedMigrationState;
   bobRationale: string;
   businessImpact: string;
   migrationImpact: string;
   recommendedAction: string;
   requiresHumanReview: boolean;
+  humanReviewReason?: string;
+  suggestedReviewer?: string;
 }
 
 export interface FeatureSurvivalItem {

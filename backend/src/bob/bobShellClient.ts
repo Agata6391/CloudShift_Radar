@@ -9,6 +9,18 @@ export interface BobShellClientInput {
   prompt: string;
 }
 
+function workspaceRoot(): string {
+  return path.basename(process.cwd()) === "backend" ? path.resolve(process.cwd(), "..") : process.cwd();
+}
+
+function resolveBobCommand(command: string): string {
+  if (path.isAbsolute(command) || !/[\\/]/.test(command)) {
+    return command;
+  }
+
+  return path.resolve(workspaceRoot(), command);
+}
+
 export async function callBobShell(input: BobShellClientInput, env: AppEnv): Promise<string> {
   assertBobConfigured(env);
 
@@ -22,11 +34,12 @@ export async function callBobShell(input: BobShellClientInput, env: AppEnv): Pro
   try {
     await fs.writeFile(promptPath, input.prompt, "utf-8");
     const prompt = await fs.readFile(promptPath, "utf-8");
+    const bobCommand = resolveBobCommand(env.bobShellCommand);
 
     return await new Promise<string>((resolve, reject) => {
       const child = spawn(
-        env.bobShellCommand,
-        ["--auth-method", "api-key", "--hide-intermediary-output", "-p", prompt],
+        bobCommand,
+        ["--auth-method", "apikey", "--hide-intermediary-output", "-p", prompt],
         {
           cwd: tempDir,
           env: {
@@ -85,6 +98,15 @@ export async function callBobShell(input: BobShellClientInput, env: AppEnv): Pro
         clearTimeout(timeout);
 
         if (code !== 0) {
+          if (/hide-intermediary-output|unknown option|unrecognized option/i.test(stderr)) {
+            reject(
+              new Error(
+                "Bob Shell does not support --hide-intermediary-output. Update Bob Shell or configure a compatible version."
+              )
+            );
+            return;
+          }
+
           reject(new Error(`Bob Shell exited with code ${code}. ${stderr.trim()}`.trim()));
           return;
         }

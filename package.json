@@ -11,6 +11,8 @@
     "build:frontend": "pnpm --filter @cloudshift-radar/shared build && pnpm --filter @cloudshift-radar/frontend build",
     "build:backend": "pnpm --filter @cloudshift-radar/shared build && pnpm --filter @cloudshift-radar/backend build",
     "typecheck": "pnpm --filter @cloudshift-radar/shared typecheck && pnpm --filter @cloudshift-radar/backend typecheck && pnpm --filter @cloudshift-radar/frontend typecheck",
+    "setup:bob": "pnpm add -D ./vendor/bobshell.tgz",
+    "check:bob": "bob --auth-method apikey -p \"Explain this project\"",
     "clean": "pnpm --filter @cloudshift-radar/shared clean && pnpm --filter @cloudshift-radar/backend clean && pnpm --filter @cloudshift-radar/frontend clean"
   }
 }

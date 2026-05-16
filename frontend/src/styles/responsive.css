@@ -24,7 +24,8 @@
   .metric-grid,
   .tab-grid,
   .action-grid,
-  .trace-grid {
+  .trace-grid,
+  .impact-summary-grid {
     grid-template-columns: 1fr;
   }
 

@@ -38,7 +38,9 @@ function stringifyForPrompt(value: unknown): string {
 export function buildBobAnalysisPrompt(context: MigrationContext, scanContext: RepositoryScanContext): string {
   return `You are Bob, the AI modernization analyst for CloudShift Radar.
 
-Analyze the following repository scan context and produce a migration readiness assessment.
+Analyze the repository scan context and produce a migration readiness assessment.
+
+The scanner only provides raw technical signals. You produce the final assessment.
 
 Your task:
 1. Identify cloud migration blockers.
@@ -48,6 +50,21 @@ Your task:
 5. Generate a migration readiness score.
 6. Recommend whether the team should proceed, proceed with caution, prepare first, block migration, or require human review.
 7. Explain your reasoning clearly.
+
+For every finding, include:
+- technical issue
+- affected provider/service
+- affected files
+- severity
+- confidence
+- resolution level
+- affected feature or feature area
+- feature survival state
+- business impact
+- migration impact
+- recommended action
+- Bob rationale
+- whether human review is required
 
 Migration context:
 Project name: ${context.projectName}
@@ -80,7 +97,7 @@ Use these resolution levels:
 Use this rule:
 High severity + low confidence = Human Review Required
 
-Return only valid JSON with this structure:
+Return only valid JSON matching the ScanResult type with this structure:
 
 {
   "bobVerdict": "Prepare First",
@@ -101,11 +118,15 @@ Return only valid JSON with this structure:
       "severity": "High",
       "confidence": "High",
       "resolutionLevel": "L3",
+      "affectedFeature": "File uploads",
+      "featureSurvivalState": "High risk",
       "bobRationale": "...",
       "businessImpact": "...",
       "migrationImpact": "...",
       "recommendedAction": "...",
-      "requiresHumanReview": false
+      "requiresHumanReview": false,
+      "humanReviewReason": "...",
+      "suggestedReviewer": "Senior Backend Engineer"
     }
   ],
   "featureSurvivalMap": [

@@ -4,8 +4,7 @@ import { BobVerdictHero } from "../components/dashboard/BobVerdictHero";
 import { MetricCard } from "../components/dashboard/MetricCard";
 import { DashboardTabs, type DashboardTab } from "../components/dashboard/DashboardTabs";
 import { BobOverviewTab } from "../components/dashboard/BobOverviewTab";
-import { TechnicalFindingsTab } from "../components/dashboard/TechnicalFindingsTab";
-import { FeatureSurvivalTab } from "../components/dashboard/FeatureSurvivalTab";
+import { MigrationImpactFindingsTab } from "../components/dashboard/MigrationImpactFindingsTab";
 import { HumanReviewTab } from "../components/dashboard/HumanReviewTab";
 import { ActionPlanTab } from "../components/dashboard/ActionPlanTab";
 import { MigrationReportTab } from "../components/dashboard/MigrationReportTab";
@@ -42,8 +41,7 @@ export function Results({ latestResult, previewMode }: ResultsProps) {
 
       <section className="tab-surface">
         {activeTab === "overview" ? <BobOverviewTab result={result} /> : null}
-        {activeTab === "findings" ? <TechnicalFindingsTab result={result} /> : null}
-        {activeTab === "survival" ? <FeatureSurvivalTab result={result} /> : null}
+        {activeTab === "migrationImpact" ? <MigrationImpactFindingsTab result={result} /> : null}
         {activeTab === "humanReview" ? <HumanReviewTab result={result} /> : null}
         {activeTab === "actionPlan" ? <ActionPlanTab actionPlan={result.actionPlan} /> : null}
         {activeTab === "report" ? <MigrationReportTab result={result} /> : null}

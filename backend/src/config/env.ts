@@ -6,7 +6,7 @@ dotenv.config({ path: rootEnvPath });
 dotenv.config();
 
 export interface AppEnv {
-  bobProvider: "shell";
+  bobProvider: string;
   bobShellApiKey?: string;
   bobShellCommand: string;
   bobTimeoutMs: number;
@@ -15,7 +15,10 @@ export interface AppEnv {
 }
 
 export const BOB_CONFIGURATION_ERROR =
-  "Bob Shell is required for this assessment. Configure BOBSHELL_API_KEY and BOB_SHELL_COMMAND.";
+  "Bob Shell is required for this assessment. Configure BOBSHELL_API_KEY.";
+
+export const BOB_PROVIDER_ERROR =
+  "Bob Shell provider is required for this assessment. Set BOB_PROVIDER=shell.";
 
 export const BOB_EXECUTABLE_ERROR =
   "Bob Shell executable was not found. Install Bob Shell or configure BOB_SHELL_COMMAND.";
@@ -27,9 +30,9 @@ function numberFromEnv(value: string | undefined, fallback: number): number {
 
 export function loadEnv(): AppEnv {
   return {
-    bobProvider: "shell",
+    bobProvider: process.env.BOB_PROVIDER?.trim() || "shell",
     bobShellApiKey: process.env.BOBSHELL_API_KEY,
-    bobShellCommand: process.env.BOB_SHELL_COMMAND || "bob",
+    bobShellCommand: process.env.BOB_SHELL_COMMAND?.trim() || "bob",
     bobTimeoutMs: numberFromEnv(process.env.BOB_TIMEOUT_MS, 60000),
     port: numberFromEnv(process.env.PORT, 4000),
     frontendUrl: process.env.FRONTEND_URL || "http://localhost:5173"
@@ -37,7 +40,7 @@ export function loadEnv(): AppEnv {
 }
 
 export function isBobConfigured(env: AppEnv): boolean {
-  return Boolean(env.bobShellApiKey && env.bobShellCommand);
+  return env.bobProvider === "shell" && Boolean(env.bobShellApiKey && env.bobShellCommand);
 }
 
 export function isBobCommandConfigured(env: AppEnv): boolean {
@@ -48,6 +51,10 @@ export function assertBobConfigured(env: AppEnv): asserts env is AppEnv & {
   bobShellApiKey: string;
   bobShellCommand: string;
 } {
+  if (env.bobProvider !== "shell") {
+    throw new Error(BOB_PROVIDER_ERROR);
+  }
+
   if (!isBobConfigured(env)) {
     throw new Error(BOB_CONFIGURATION_ERROR);
   }

@@ -1,5 +1,6 @@
 import { createWriteStream, promises as fs } from "node:fs";
 import path from "node:path";
+import type { Readable } from "node:stream";
 import yauzl from "yauzl";
 import {
   MAX_EXTRACTED_FILE_BYTES,
@@ -30,7 +31,7 @@ function openZip(buffer: Buffer): Promise<yauzl.ZipFile> {
   });
 }
 
-function openReadStream(zipFile: yauzl.ZipFile, entry: yauzl.Entry): Promise<NodeJS.ReadableStream> {
+function openReadStream(zipFile: yauzl.ZipFile, entry: yauzl.Entry): Promise<Readable> {
   return new Promise((resolve, reject) => {
     zipFile.openReadStream(entry, (error, stream) => {
       if (error || !stream) {
@@ -42,7 +43,7 @@ function openReadStream(zipFile: yauzl.ZipFile, entry: yauzl.Entry): Promise<Nod
   });
 }
 
-function writeEntry(stream: NodeJS.ReadableStream, targetPath: string): Promise<number> {
+function writeEntry(stream: Readable, targetPath: string): Promise<number> {
   return new Promise((resolve, reject) => {
     let written = 0;
     const output = createWriteStream(targetPath, { flags: "wx" });

@@ -4,7 +4,7 @@ import path from "node:path";
 import type { FastifyInstance } from "fastify";
 import type { MigrationContext, RepositoryScanContext } from "@cloudshift-radar/shared";
 import type { AppEnv } from "../config/env";
-import { BOB_CONFIGURATION_ERROR, BOB_EXECUTABLE_ERROR, assertBobConfigured } from "../config/env";
+import { BOB_CONFIGURATION_ERROR, BOB_EXECUTABLE_ERROR, BOB_PROVIDER_ERROR, assertBobConfigured } from "../config/env";
 import { buildBobAnalysisPrompt } from "../bob/buildBobAnalysisPrompt";
 import { callBobApi } from "../bob/bobClient";
 import { normalizeBobResponse } from "../bob/normalizeBobResponse";
@@ -45,7 +45,7 @@ async function analyzeWithBob(
 }
 
 function bobErrorStatus(message: string): number {
-  if (message === BOB_CONFIGURATION_ERROR || message === BOB_EXECUTABLE_ERROR) {
+  if (message === BOB_CONFIGURATION_ERROR || message === BOB_EXECUTABLE_ERROR || message === BOB_PROVIDER_ERROR) {
     return 503;
   }
 
@@ -67,9 +67,9 @@ export async function registerScanRoutes(server: FastifyInstance, env: AppEnv) {
   server.post("/api/scans", async (request, reply) => {
     try {
       assertBobConfigured(env);
-    } catch {
+    } catch (error) {
       return reply.status(503).send({
-        error: BOB_CONFIGURATION_ERROR
+        error: error instanceof Error ? error.message : BOB_CONFIGURATION_ERROR
       });
     }
 
@@ -112,9 +112,9 @@ export async function registerScanRoutes(server: FastifyInstance, env: AppEnv) {
   server.post("/api/scans/demo", async (request, reply) => {
     try {
       assertBobConfigured(env);
-    } catch {
+    } catch (error) {
       return reply.status(503).send({
-        error: BOB_CONFIGURATION_ERROR
+        error: error instanceof Error ? error.message : BOB_CONFIGURATION_ERROR
       });
     }
 

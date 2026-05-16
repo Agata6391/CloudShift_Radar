@@ -6,7 +6,7 @@ interface MigrationReportTabProps {
 }
 
 export function MigrationReportTab({ result }: MigrationReportTabProps) {
-  const topBlockers = result.findings.slice(0, 5);
+  const topMigrationImpactFindings = result.findings.slice(0, 5);
 
   return (
     <Card className="report-card">
@@ -36,25 +36,14 @@ export function MigrationReportTab({ result }: MigrationReportTabProps) {
       </section>
 
       <section>
-        <h3>Top blockers</h3>
+        <h3>Top migration impact findings</h3>
         <ul className="clean-list">
-          {topBlockers.map((finding) => (
-            <li key={finding.id}>{finding.title}</li>
+          {topMigrationImpactFindings.map((finding) => (
+            <li key={finding.id}>
+              {finding.title} - {finding.affectedFeature} is {finding.featureSurvivalState.toLowerCase()}.
+            </li>
           ))}
         </ul>
-      </section>
-
-      <section>
-        <h3>Feature survival summary</h3>
-        <p>
-          Bob expects basic auth to survive with validation, while uploads, background jobs, and matchmaking need
-          remediation before migration readiness can be trusted.
-        </p>
-      </section>
-
-      <section>
-        <h3>Technical findings</h3>
-        <p>Every finding includes severity, confidence, affected files, resolution level, and Bob rationale in the technical dashboard.</p>
       </section>
 
       <section>

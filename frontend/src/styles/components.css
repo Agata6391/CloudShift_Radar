@@ -575,6 +575,66 @@ td {
   gap: 16px;
 }
 
+.impact-findings {
+  display: grid;
+  gap: 16px;
+}
+
+.impact-card {
+  display: grid;
+  gap: 16px;
+}
+
+.impact-summary-grid {
+  display: grid;
+  grid-template-columns: 130px minmax(220px, 1.6fr) repeat(6, minmax(130px, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+.impact-summary-grid div {
+  display: grid;
+  gap: 6px;
+}
+
+.impact-summary-grid span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.impact-summary-grid strong {
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.impact-title strong {
+  color: var(--cyan);
+}
+
+.impact-details {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.impact-details summary {
+  width: max-content;
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: rgba(57, 215, 232, 0.1);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 800;
+  list-style-position: inside;
+}
+
+.impact-details[open] summary {
+  margin-bottom: 14px;
+}
+
 .review-card-header {
   display: flex;
   justify-content: space-between;

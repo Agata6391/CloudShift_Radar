@@ -21,7 +21,7 @@ Real scan routes require Bob Shell configuration. If configuration is missing, t
 
 ```json
 {
-  "error": "Bob Shell is required for this assessment. Configure BOBSHELL_API_KEY and BOB_SHELL_COMMAND."
+  "error": "Bob Shell is required for this assessment. Configure BOBSHELL_API_KEY."
 }
 ```
 
@@ -53,7 +53,7 @@ The frontend never receives or exposes the Bob API key.
 3. Copy the API key value when it is created.
 4. Add it to `.env` as `BOBSHELL_API_KEY`.
 5. Set `BOB_PROVIDER=shell`.
-6. Set `BOB_SHELL_COMMAND=bob`, or `BOB_SHELL_COMMAND=bob.cmd` on Windows if needed.
+6. Set `BOB_SHELL_COMMAND` for your install location.
 7. Accept the license once before running scans:
 
 ```bash
@@ -71,10 +71,37 @@ pnpm dev
 The backend invokes Bob Shell server-side with:
 
 ```bash
-bob --auth-method api-key --hide-intermediary-output -p "<prompt>"
+bob --auth-method apikey --hide-intermediary-output -p "<prompt>"
 ```
 
 The key is passed through the child process environment as `BOBSHELL_API_KEY`; it is never passed as a command argument and is never exposed to the frontend. Real scans require Bob Shell. Mock data is only available through explicit frontend UI preview mode.
+
+Bob Shell may be installed from a downloaded IBM package using pnpm. The included setup script assumes a placeholder package path:
+
+```bash
+pnpm setup:bob
+```
+
+`./vendor/bobshell.tgz` is a placeholder path. Replace it with the actual Bob Shell package file downloaded from IBM if the file name differs.
+
+Command path examples:
+
+```bash
+# Windows local package install
+BOB_SHELL_COMMAND=.\node_modules\.bin\bob.cmd
+
+# Linux/macOS local package install
+BOB_SHELL_COMMAND=./node_modules/.bin/bob
+
+# Global install fallback
+BOB_SHELL_COMMAND=bob
+```
+
+You can verify Bob Shell with:
+
+```bash
+pnpm check:bob
+```
 
 ## Setup
 
@@ -90,13 +117,13 @@ Add Bob Shell configuration to `.env` before running a real scan:
 ```bash
 BOB_PROVIDER=shell
 BOBSHELL_API_KEY=your_key
-BOB_SHELL_COMMAND=bob
+BOB_SHELL_COMMAND=.\node_modules\.bin\bob.cmd
 BOB_TIMEOUT_MS=60000
 PORT=4000
 FRONTEND_URL=http://localhost:5173
 ```
 
-On Windows, `BOB_SHELL_COMMAND` may need to be set to `bob.cmd` depending on how Bob Shell is installed.
+On Linux/macOS with a local package install, use `BOB_SHELL_COMMAND=./node_modules/.bin/bob`. For a global install, use `BOB_SHELL_COMMAND=bob`.
 
 ## pnpm Commands
 
@@ -108,6 +135,8 @@ pnpm build
 pnpm build:frontend
 pnpm build:backend
 pnpm typecheck
+pnpm setup:bob
+pnpm check:bob
 pnpm clean
 ```
 
@@ -117,7 +146,7 @@ The default frontend runs on `http://localhost:5173`. The backend runs on `http:
 
 - `/` - Product home with Bob-first positioning
 - `/assessment` - Three-step migration context and repository input flow
-- `/results` - Bob verdict, metrics, findings, feature survival, human review, action plan, migration report, and Bob reasoning trace
+- `/results` - Bob verdict, metrics, Migration Impact Findings, human review, action plan, migration report, and Bob reasoning trace
 
 ## Backend API Routes
 
@@ -140,7 +169,7 @@ The default frontend runs on `http://localhost:5173`. The backend runs on `http:
 ```bash
 BOB_PROVIDER=shell
 BOBSHELL_API_KEY=
-BOB_SHELL_COMMAND=bob
+BOB_SHELL_COMMAND=.\node_modules\.bin\bob.cmd
 BOB_TIMEOUT_MS=60000
 PORT=4000
 FRONTEND_URL=http://localhost:5173
@@ -149,7 +178,8 @@ FRONTEND_URL=http://localhost:5173
 Rules:
 
 - Never put `BOBSHELL_API_KEY` in frontend code.
-- Do not create `VITE_BOBSHELL_API_KEY` or `VITE_BOB_API_KEY`.
+- Do not create `VITE_BOBSHELL_API_KEY`, `VITE_BOB_API_KEY`, or `VITE_BOB_API_URL`.
+- `BOB_API_KEY`, `BOB_API_URL`, and `BOB_MODEL` are not used by this integration.
 - Do not commit real keys.
 - Backend reads Bob credentials from server-side environment variables only.
 - Frontend calls only backend API routes.
@@ -183,6 +213,21 @@ If Bob output cannot be parsed, the backend returns:
 ```
 
 No mock data is used as a fallback for real scan routes.
+
+## Results Dashboard
+
+Technical Findings and Feature Survival are merged into **Migration Impact Findings**. Each Bob finding now carries both the technical issue and the affected feature area.
+
+Each finding has a **See details** collapsible panel containing:
+
+- Bob rationale
+- Affected files
+- Business impact
+- Migration impact
+- Feature survival state
+- Recommended action
+- Suggested reviewer when Bob escalates the item
+- Human review reason when applicable
 
 ## Bob Analysis Trace
 
