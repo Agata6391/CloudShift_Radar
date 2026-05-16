@@ -114,11 +114,13 @@ export async function registerScanRoutes(server: FastifyInstance, env: AppEnv) {
       
       const validationResult = await validateRepository(extractionDir);
       
-      if (!validationResult.valid) {
+      if (!validationResult.canProceed) {
         // Clean up on validation failure
         await fs.rm(extractionDir, { recursive: true, force: true });
         return reply.status(400).send({
           error: "Repository validation failed",
+          validationState: validationResult.validationState,
+          canProceed: validationResult.canProceed,
           validation: validationResult
         });
       }
@@ -187,7 +189,9 @@ export async function registerScanRoutes(server: FastifyInstance, env: AppEnv) {
 
       const message = error instanceof Error ? error.message : "Validation failed";
       return reply.status(400).send({
+        validationState: "invalid" as const,
         valid: false,
+        canProceed: false,
         errors: [{
           code: "VALIDATION_FAILED",
           message,

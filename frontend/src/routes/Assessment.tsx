@@ -92,7 +92,9 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
     } catch (error) {
       setValidationState("error");
       setValidationResult({
+        validationState: "invalid",
         valid: false,
+        canProceed: false,
         errors: [{
           code: "VALIDATION_FAILED",
           message: error instanceof Error ? error.message : "Validation failed",
@@ -124,14 +126,16 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
 
   const ctaLabel = (() => {
     if (validationState === "validating") return "Validating...";
-    if (validationState === "success") return "Start analysis";
-    if (validationState === "warning") return "Start analysis with warnings";
+    if (validationState === "success") return "Validation Complete - Start Analysis";
+    if (validationState === "warning") return "Validation Complete - Start Analysis";
     if (validationState === "error" && selectedFile && !selectedFile.name.toLowerCase().endsWith(".zip")) {
-      return "Upload another file";
+      return "Upload Another File";
     }
-    if (validationState === "error") return "Validate again";
-    return "Validate project";
+    if (validationState === "error") return "Retry Validation";
+    return "Upload & Validate Repository";
   })();
+
+  const showSpinner = validationState === "validating";
 
   return (
     <div className="page assessment-page">
@@ -229,6 +233,7 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
 
           <div className="progressive-action">
             <Button disabled={!formComplete || validationState === "validating"} onClick={handlePrimaryAction}>
+              {showSpinner && <span className="spinner">⏳</span>}
               {ctaLabel}
             </Button>
           </div>

@@ -123,7 +123,7 @@ if (isDemoMode) {
 **Impact:** May cause routing confusion during development.
 
 **Fix Required:** Align route naming between frontend and backend.
-
+<----bob o se equivoco  ?---->
 ---
 
 ## Backend Flow Inconsistencies
@@ -145,7 +145,7 @@ if (isDemoMode) {
 **Impact:** Cannot show progressive validation UI as designed.
 
 **Fix Required:** Extract validation logic into separate endpoint.
-
+<---fixed---->
 ---
 
 ### 5. No Progressive Validation Response 🟠 High
@@ -170,7 +170,7 @@ if (isDemoMode) {
 
 **Fix Required:** Add validation state fields to response schema.
 
----
+<---fixed---->
 
 ### 6. Demo Mode Doesn't Support Saved Results 🔴 Critical - Hackathon Blocker
 
@@ -197,7 +197,7 @@ if (isDemoMode) {
 
 **Fix Required:** Check for saved results before calling Bob in demo mode.
 
----
+<---ready--->
 
 ## Frontend Flow Inconsistencies
 
@@ -222,7 +222,7 @@ const response = await fetch('/api/scan/validate', {
 
 **Fix Required:** Replace setTimeout with real API call to validation endpoint.
 
----
+<--- fixed--->
 
 ### 8. No Separate Validation Screen ✅ Correct
 
@@ -278,7 +278,7 @@ const response = await fetch('/api/scan/validate', {
 **Impact:** Dashboard structure doesn't match requirements.
 
 **Fix Required:** Merge technical findings into Migration Impact tab.
-
+<---fixed--->
 ---
 
 ### 11. Separate Feature Survival Tab Exists 🔴 Critical
@@ -297,7 +297,7 @@ const response = await fetch('/api/scan/validate', {
 **Impact:** Dashboard structure doesn't match requirements.
 
 **Fix Required:** Merge feature survival into Migration Impact tab.
-
+<---fixed--->
 ---
 
 ### 12. Dashboard Tabs Don't Match Requirements ✅ Correct
@@ -370,7 +370,7 @@ const response = await fetch('/api/scan/validate', {
 **Impact:** Inconsistent UI patterns across tabs.
 
 **Fix Required:** Move recommended action into collapsible details.
-
+<----fixed----->
 ---
 
 ### 17. Missing Technical Complexity in Collapsible 🟢 Low
@@ -395,7 +395,7 @@ const response = await fetch('/api/scan/validate', {
 **Impact:** Users don't see technical complexity information.
 
 **Fix Required:** Add technical complexity to collapsible details.
-
+<---fixed  -->
 ---
 
 ## ScanResult Schema Inconsistencies

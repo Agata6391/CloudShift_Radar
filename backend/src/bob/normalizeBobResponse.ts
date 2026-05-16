@@ -347,6 +347,7 @@ function normalizeFindings(value: unknown, featureSurvivalMap: FeatureSurvivalIt
       businessImpact: requireString(item, "businessImpact"),
       migrationImpact,
       featureImpact: optionalString(item, "featureImpact") || migrationImpact,
+      technicalComplexity: optionalString(item, "technicalComplexity"),
       recommendedAction: requireString(item, "recommendedAction"),
       requiresHumanReview:
         typeof item.requiresHumanReview === "boolean"

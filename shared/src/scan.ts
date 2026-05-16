@@ -49,6 +49,7 @@ export interface Finding {
   businessImpact: string;
   migrationImpact: string;
   featureImpact?: string;
+  technicalComplexity?: string;
   recommendedAction: string;
   requiresHumanReview: boolean;
   humanReviewReason?: string;
@@ -181,6 +182,8 @@ export interface RepositoryScanContext {
   preliminaryFindings: PreliminaryFinding[];
 }
 
+export type ValidationState = "validating" | "valid" | "invalid";
+
 export interface ValidationError {
   code: string;
   message: string;
@@ -201,7 +204,9 @@ export interface RepositoryMetadata {
 }
 
 export interface ValidationResult {
+  validationState: ValidationState;
   valid: boolean;
+  canProceed: boolean;
   errors: ValidationError[];
   warnings: ValidationError[];
   metadata?: RepositoryMetadata;
