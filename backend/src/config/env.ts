@@ -33,7 +33,7 @@ export function loadEnv(): AppEnv {
     bobProvider: process.env.BOB_PROVIDER?.trim() || "shell",
     bobShellApiKey: process.env.BOBSHELL_API_KEY,
     bobShellCommand: process.env.BOB_SHELL_COMMAND?.trim() || "bob",
-    bobTimeoutMs: numberFromEnv(process.env.BOB_TIMEOUT_MS, 180000),
+    bobTimeoutMs: numberFromEnv(process.env.BOB_TIMEOUT_MS, 60000),
     port: numberFromEnv(process.env.PORT, 4000),
     frontendUrl: process.env.FRONTEND_URL || "http://localhost:5173"
   };

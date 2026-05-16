@@ -6,9 +6,9 @@ interface NavigationProps {
 }
 
 const links: Array<{ label: string; route: Route }> = [
-  { label: "Product", route: "/" },
-  { label: "Assessment", route: "/assessment" },
-  { label: "Results", route: "/results" }
+  { label: "Login", route: "/login" },
+  { label: "Project Input", route: "/project-input" },
+  { label: "Report Dashboard", route: "/report-dashboard" }
 ];
 
 export function Navigation({ activeRoute, onNavigate }: NavigationProps) {
@@ -23,7 +23,7 @@ export function Navigation({ activeRoute, onNavigate }: NavigationProps) {
           {link.label}
         </button>
       ))}
-      <button className="nav-link bob-nav" onClick={() => onNavigate("/results")}>
+      <button className="nav-link bob-nav" onClick={() => onNavigate("/report-dashboard")}>
         Bob Analysis
       </button>
     </nav>

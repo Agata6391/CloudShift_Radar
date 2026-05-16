@@ -35,6 +35,16 @@ If Bob Shell is not installed or cannot be executed, the backend returns:
 
 The frontend never receives or exposes the Bob API key.
 
+## Approved Final Flow
+
+CloudShift Radar follows this MVP flow:
+
+```text
+Login -> Project Input -> Analysis Running -> Report Dashboard
+```
+
+File validation is inline inside Project Input. The same primary CTA moves through `Validate project`, `Validating...`, `Start analysis`, `Start analysis with warnings`, `Validate again`, and `Upload another file`.
+
 ## Tech Stack
 
 - pnpm workspaces
@@ -71,7 +81,7 @@ pnpm dev
 The backend invokes Bob Shell server-side with:
 
 ```bash
-bob --auth-method apikey --hide-intermediary-output -p "<prompt>"
+bob --auth-method api-key --hide-intermediary-output -p "<prompt>"
 ```
 
 The key is passed through the child process environment as `BOBSHELL_API_KEY`; it is never passed as a command argument and is never exposed to the frontend. Real scans require Bob Shell. Mock data is only available through explicit frontend UI preview mode.
@@ -145,9 +155,10 @@ The default frontend runs on `http://localhost:5173`. The backend runs on `http:
 
 ## Site Map
 
-- `/` - Product home with Bob-first positioning
-- `/assessment` - Three-step migration context and repository input flow
-- `/results` - Bob verdict, metrics, Migration Impact Findings, human review, action plan, migration report, and Bob reasoning trace
+- `/login` - Mock login for the MVP flow
+- `/project-input` - Project ZIP upload, migration path, application type, and inline package validation
+- `/analysis-running` - Progress view while CloudShift Radar scans the package and Bob generates the assessment
+- `/report-dashboard` - Bob verdict, persistent metrics, and dashboard tabs
 
 ## Backend API Routes
 
@@ -171,7 +182,7 @@ The default frontend runs on `http://localhost:5173`. The backend runs on `http:
 BOB_PROVIDER=shell
 BOBSHELL_API_KEY=
 BOB_SHELL_COMMAND=.\node_modules\.bin\bob.cmd
-BOB_TIMEOUT_MS= define
+BOB_TIMEOUT_MS=60000
 PORT=4000
 FRONTEND_URL=http://localhost:5173
 ```
@@ -215,33 +226,28 @@ If Bob output cannot be parsed, the backend returns:
 
 No mock data is used as a fallback for real scan routes.
 
-## Results Dashboard
+## Report Dashboard
 
-Technical Findings and Feature Survival are merged into **Migration Impact Findings**. Each Bob finding now carries both the technical issue and the affected feature area.
+The Report Dashboard keeps summary metrics visible above the tabs. The tabs are:
+
+- Overview
+- Findings
+- Human Review
+- AI Summary
+
+Technical Findings and Feature Survival are consolidated in **Findings**. Each Bob finding carries the technical issue, affected feature, feature status, risk, short summary, and Bob notes.
 
 Each finding has a **See details** collapsible panel containing:
 
-- Bob rationale
-- Affected files
-- Business impact
-- Migration impact
-- Feature survival state
+- Detected files
+- Technical issue
+- Feature impact
 - Recommended action
+- Bob notes
 - Suggested reviewer when Bob escalates the item
 - Human review reason when applicable
 
-## Bob Analysis Trace
-
-The results dashboard includes a Bob Reasoning Trace tab with:
-
-- Session summary
-- Repository architecture interpretation
-- Cloud dependency reasoning
-- Risk classification rationale
-- Confidence rationale
-- Human review rationale
-- Recommended modernization notes
-- Trace timeline
+Recommended action lives inside the collapsible details area and is not shown on the closed finding card. The useful parts of the former action plan, migration report, and Bob reasoning trace are folded into Overview, Findings, Human Review, and AI Summary.
 
 This is intended to make Bob's modernization reasoning inspectable for CTOs, PMs, tech leads, developers, and DevOps engineers.
 

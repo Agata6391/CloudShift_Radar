@@ -25,8 +25,16 @@
   .tab-grid,
   .action-grid,
   .trace-grid,
-  .impact-summary-grid {
+  .impact-summary-grid,
+  .login-layout,
+  .project-input-layout,
+  .analysis-running-grid,
+  .report-header {
     grid-template-columns: 1fr;
+  }
+
+  .validation-card {
+    position: static;
   }
 
   .step-grid {
@@ -50,6 +58,11 @@
   }
 
   .step-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid,
+  .app-type-options {
     grid-template-columns: 1fr;
   }
 

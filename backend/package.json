@@ -8,7 +8,7 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
-    "check:bob": "bob --accept-license --auth-method api-key -p \"Say OK\""
+    "check:bob": "tsx src/bob/checkBobShell.ts"
   },
   "dependencies": {
     "@cloudshift-radar/shared": "workspace:*",

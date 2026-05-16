@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import type { ScanResult } from "@cloudshift-radar/shared";
 import { AppShell } from "./components/layout/AppShell";
+import { AnalysisRunning } from "./routes/AnalysisRunning";
 import { Assessment } from "./routes/Assessment";
+import type { ProjectInputPayload } from "./routes/Assessment";
 import { Home } from "./routes/Home";
 import { Results } from "./routes/Results";
 import { getCurrentRoute, navigateTo, type Route } from "./utils/navigation";
-import { mockScanResult } from "./data/mockScanResult";
 
 const RESULT_STORAGE_KEY = "cloudshift-radar.latestResult";
 const PREVIEW_STORAGE_KEY = "cloudshift-radar.previewMode";
@@ -27,6 +28,7 @@ export default function App() {
   const [route, setRoute] = useState<Route>(getCurrentRoute());
   const [latestResult, setLatestResult] = useState<ScanResult | null>(() => readStoredResult());
   const [previewMode, setPreviewMode] = useState(() => window.sessionStorage.getItem(PREVIEW_STORAGE_KEY) === "true");
+  const [pendingScan, setPendingScan] = useState<ProjectInputPayload | null>(null);
 
   useEffect(() => {
     const handleRouteChange = () => setRoute(getCurrentRoute());
@@ -43,18 +45,26 @@ export default function App() {
     window.sessionStorage.setItem(PREVIEW_STORAGE_KEY, String(preview));
     setLatestResult(result);
     setPreviewMode(preview);
-    navigateTo("/results");
+    navigateTo("/report-dashboard");
   };
 
-  const previewDemo = () => {
-    handleScanComplete(mockScanResult, true);
+  const handleStartAnalysis = (payload: ProjectInputPayload) => {
+    setPendingScan(payload);
+    navigateTo("/analysis-running");
   };
 
   return (
     <AppShell activeRoute={route} onNavigate={navigate}>
-      {route === "/" ? <Home onNavigate={navigate} onPreviewDemo={previewDemo} /> : null}
-      {route === "/assessment" ? <Assessment onNavigate={navigate} onScanComplete={handleScanComplete} /> : null}
-      {route === "/results" ? <Results latestResult={latestResult} previewMode={previewMode} /> : null}
+      {route === "/" || route === "/login" ? <Home onNavigate={navigate} /> : null}
+      {route === "/project-input" || route === "/assessment" ? (
+        <Assessment onNavigate={navigate} onStartAnalysis={handleStartAnalysis} />
+      ) : null}
+      {route === "/analysis-running" ? (
+        <AnalysisRunning pendingScan={pendingScan} onComplete={handleScanComplete} onNavigate={navigate} />
+      ) : null}
+      {route === "/report-dashboard" || route === "/results" ? (
+        <Results latestResult={latestResult} previewMode={previewMode} />
+      ) : null}
     </AppShell>
   );
 }

@@ -10,7 +10,7 @@ interface HeaderProps {
 export function Header({ activeRoute, onNavigate }: HeaderProps) {
   return (
     <header className="app-header">
-      <button className="brand" onClick={() => onNavigate("/")} aria-label="CloudShift Radar home">
+      <button className="brand" onClick={() => onNavigate("/login")} aria-label="CloudShift Radar login">
         <span className="brand-mark">CS</span>
         <span>
           <strong>CloudShift Radar</strong>

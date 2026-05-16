@@ -79,10 +79,10 @@ Your task:
 5. Generate a migration readiness score from 0 to 100.
 6. Recommend one decision:
    - "Proceed"
-   - "Proceed with caution"
+   - "Proceed with Caution"
    - "Prepare First"
    - "Block Migration"
-   - "Requires Human Review"
+   - "Human Review Required"
 
 For every finding, include:
 - technical issue
@@ -92,28 +92,12 @@ For every finding, include:
 - confidence
 - resolution level
 - affected feature or feature area
-- feature status
-- risk level
-- short summary
+- feature survival state
 - business impact
 - migration impact
 - recommended action
-- Bob notes
+- Bob rationale
 - whether human review is required
-
-Use these feature status values:
-- Ready
-- Needs changes
-- At risk
-- Blocked
-- Needs human review
-
-Use these risk values:
-- Low
-- Medium
-- High
-- Critical
-- Needs review
 
 Migration context:
 Project name: ${context.projectName}
@@ -178,12 +162,8 @@ Return this exact JSON structure:
       "severity": "High",
       "confidence": "High",
       "resolutionLevel": "L3",
-      "risk": "High",
       "affectedFeature": "File uploads",
-      "featureStatus": "At risk",
-      "shortSummary": "Short combined technical and feature impact summary.",
-      "technicalIssue": "Short technical issue.",
-      "bobNotes": "Short Bob notes.",
+      "featureSurvivalState": "High risk",
       "bobRationale": "Short rationale.",
       "businessImpact": "Short business impact.",
       "migrationImpact": "Short migration impact.",

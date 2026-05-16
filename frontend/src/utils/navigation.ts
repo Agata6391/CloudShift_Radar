@@ -1,6 +1,21 @@
-export type Route = "/" | "/assessment" | "/results";
+export type Route =
+  | "/"
+  | "/login"
+  | "/project-input"
+  | "/analysis-running"
+  | "/report-dashboard"
+  | "/assessment"
+  | "/results";
 
-const validRoutes = new Set<Route>(["/", "/assessment", "/results"]);
+const validRoutes = new Set<Route>([
+  "/",
+  "/login",
+  "/project-input",
+  "/analysis-running",
+  "/report-dashboard",
+  "/assessment",
+  "/results"
+]);
 
 export function getCurrentRoute(): Route {
   const path = window.location.pathname as Route;

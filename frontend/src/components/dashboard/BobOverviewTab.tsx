@@ -8,50 +8,58 @@ interface BobOverviewTabProps {
 }
 
 export function BobOverviewTab({ result }: BobOverviewTabProps) {
-  const topBlockers = [
-    "AWS S3 SDK used directly for uploads",
-    "AWS GameLift dependency controls matchmaking",
-    "Redis endpoint points to AWS ElastiCache",
-    "Legacy queue bridge has unclear ownership",
-    "Runtime dependency on SendGrid may block startup"
-  ];
+  const topBlockers = result.findings
+    .filter((finding) => finding.severity === "Critical" || finding.severity === "High")
+    .slice(0, 3);
+  const environmentFiles = new Set(
+    result.findings.flatMap((finding) => finding.affectedFiles.filter((file) => file.includes(".env")))
+  );
+  const configFiles = new Set(
+    result.findings.flatMap((finding) => finding.affectedFiles.filter((file) => /\.(json|ya?ml|tf|gradle|xml)$/i.test(file)))
+  );
 
   return (
     <div className="tab-grid">
       <Card className="wide-card">
         <div className="section-heading">
-          <span>Bob executive summary</span>
-          <h2>Bob reviewed the repository scan context and does not recommend production migration yet.</h2>
+          <span>Overview</span>
+          <h2>Migration readiness</h2>
         </div>
-        <p>
-          The analysis found critical dependencies still coupled to AWS services, including S3, ElastiCache, and
-          GameLift. If migrated today, authentication and basic database-backed APIs may continue working, but
-          uploads, background jobs, and matchmaking are likely to fail. Recommended decision: prepare migration first
-          and assign senior review to unresolved blockers.
-        </p>
+        <p>{result.bobSummary}</p>
       </Card>
 
       <Card>
-        <h3>Bob top migration blockers</h3>
+        <h3>Risk distribution</h3>
+        <div className="risk-stack">
+          <span><StatusPill tone="low">Low risk</StatusPill> {result.findings.filter((item) => item.severity === "Low").length}</span>
+          <span><StatusPill tone="medium">Medium risk</StatusPill> {result.findings.filter((item) => item.severity === "Medium").length}</span>
+          <span><StatusPill tone="high">High risk</StatusPill> {result.findings.filter((item) => item.severity === "High").length}</span>
+          <span><StatusPill tone="critical">Human review</StatusPill> {result.findings.filter((item) => item.requiresHumanReview).length}</span>
+        </div>
+      </Card>
+
+      <Card>
+        <h3>Scan coverage</h3>
+        <div className="risk-stack">
+          <span>Files scanned: {new Set(result.findings.flatMap((finding) => finding.affectedFiles)).size}</span>
+          <span>Dependency files: {result.findings.filter((finding) => finding.category.toLowerCase().includes("dependency")).length}</span>
+          <span>Environment files: {environmentFiles.size}</span>
+          <span>Config files: {configFiles.size}</span>
+        </div>
+      </Card>
+
+      <Card>
+        <h3>Main blockers</h3>
         <ul className="clean-list">
           {topBlockers.map((blocker) => (
-            <li key={blocker}>{blocker}</li>
+            <li key={blocker.id}>{blocker.title}</li>
           ))}
         </ul>
       </Card>
 
       <Card>
-        <h3>Bob risk breakdown</h3>
-        <div className="risk-stack">
-          <span><StatusPill tone="critical">Critical</StatusPill> {result.findings.filter((item) => item.severity === "Critical").length}</span>
-          <span><StatusPill tone="high">High</StatusPill> {result.findings.filter((item) => item.severity === "High").length}</span>
-          <span><StatusPill tone="medium">Medium</StatusPill> {result.findings.filter((item) => item.severity === "Medium").length}</span>
-        </div>
-      </Card>
-
-      <Card>
-        <h3>Bob recommended next step</h3>
-        <p>Prepare migration first, resolve direct cloud-service coupling, and assign senior review to unresolved L5 items.</p>
+        <h3>Recommended next step</h3>
+        <p>{result.actionPlan.fixBeforeMigration[0] || "Review high-risk findings, validate human review items, and re-run the scan after remediation."}</p>
       </Card>
 
       <Card>

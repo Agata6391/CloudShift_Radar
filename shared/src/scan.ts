@@ -18,6 +18,15 @@ export type ExpectedMigrationState =
   | "Blocked"
   | "Unknown";
 
+export type FeatureStatus =
+  | "Ready"
+  | "Needs changes"
+  | "At risk"
+  | "Blocked"
+  | "Needs human review";
+
+export type RiskValue = "Low" | "Medium" | "High" | "Critical" | "Needs review";
+
 export interface Finding {
   id: string;
   title: string;
@@ -25,14 +34,21 @@ export interface Finding {
   provider: string;
   service: string;
   affectedFiles: string[];
+  detectedFiles?: string[];
   severity: Severity;
   confidence: Confidence;
   resolutionLevel: ResolutionLevel;
+  risk: RiskValue;
   affectedFeature: string;
-  featureSurvivalState: ExpectedMigrationState;
+  featureStatus: FeatureStatus;
+  featureSurvivalState?: ExpectedMigrationState;
+  shortSummary: string;
+  technicalIssue: string;
+  bobNotes: string;
   bobRationale: string;
   businessImpact: string;
   migrationImpact: string;
+  featureImpact?: string;
   recommendedAction: string;
   requiresHumanReview: boolean;
   humanReviewReason?: string;
@@ -53,8 +69,27 @@ export interface HumanReviewItem {
   reason: string;
   severity: Severity;
   confidence: Confidence;
+  affectedFeature?: string;
   suggestedReviewer: string;
   nextAction: string;
+  recommendedValidation?: string;
+}
+
+export interface ReportSummary {
+  migrationReadiness: string;
+  migrationReadyFiles: number;
+  lowMediumRisk: number;
+  highRisk: number;
+  needsHumanReview: number;
+  generatedDate: string;
+  analysisStatus: string;
+}
+
+export interface AISummary {
+  scanScope: string[];
+  mainConclusion: string;
+  suggestedMigrationApproach: string[];
+  technicalLog: string[];
 }
 
 export interface ActionPlan {
@@ -93,6 +128,8 @@ export interface ScanResult {
   humanReviewQueue: HumanReviewItem[];
   actionPlan: ActionPlan;
   bobReasoningTrace: BobReasoningTrace;
+  reportSummary?: ReportSummary;
+  aiSummary?: AISummary;
   createdAt: string;
 }
 
