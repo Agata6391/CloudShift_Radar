@@ -9,3 +9,5 @@ scan-results/*
 .DS_Store
 Thumbs.db
 *.log
+echo
+test.zip
