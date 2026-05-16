@@ -71,9 +71,7 @@ export async function callBobShell(
   const bobCommand = resolveBobCommand(env.bobShellCommand);
   const isWindows = process.platform === "win32";
 
-  console.log("[BobShell] prompt chars:", input.prompt.length);
-  console.log("[BobShell] command:", bobCommand);
-  console.log("[BobShell] platform:", process.platform);
+ 
 
   return await new Promise<string>((resolve, reject) => {
     const bobArgs = [
@@ -132,7 +130,7 @@ export async function callBobShell(
 
     child.stdout.on("data", (chunk: string) => {
   stdout += chunk;
-  console.log("[BobShell stdout]", chunk);
+ 
 
   const extractedJson = extractJsonFromBobOutput(stdout);
 
