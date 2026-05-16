@@ -8,7 +8,9 @@ import { BobOverviewTab } from "../components/dashboard/BobOverviewTab";
 import { MigrationImpactFindingsTab } from "../components/dashboard/MigrationImpactFindingsTab";
 import { HumanReviewTab } from "../components/dashboard/HumanReviewTab";
 import { AISummaryTab } from "../components/dashboard/AISummaryTab";
+import { ExportMenu } from "../components/dashboard/ExportMenu";
 import { mockScanResult } from "../data/mockScanResult";
+import "../styles/export.css";
 
 interface ResultsProps {
   latestResult: ScanResult | null;
@@ -61,6 +63,9 @@ export function Results({ latestResult, previewMode }: ResultsProps) {
           <strong>Generated</strong>
           <span>Generated date</span>
           <strong>{formatDate(result.createdAt)}</strong>
+          <div style={{ marginTop: "1rem" }}>
+            <ExportMenu scanId={result.scanId} projectName={result.projectName} />
+          </div>
         </div>
       </section>
 
