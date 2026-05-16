@@ -28,6 +28,7 @@ CloudShift Radar is an advanced AI-powered cloud migration assessment tool that 
 - [Project Structure](#-project-structure)
 - [Available Scripts](#-available-scripts)
 - [Bob AI Integration](#-bob-ai-integration)
+- [IBM Bob Hackathon Compliance](#-ibm-bob-hackathon-compliance)
 - [Export Formats](#-export-formats)
 - [MVP Limitations](#-mvp-limitations)
 - [Future Roadmap](#-future-roadmap)
@@ -249,8 +250,8 @@ Before you begin, ensure you have the following installed:
 
 - **Node.js** 18+ (compatible with pnpm 9.15.4+)
 - **pnpm** 9.15.4 or higher
-- **IBM Bob Shell** (optional - system works with fallback if unavailable)
-- **IBM Bob API Key** with Inference scope (optional)
+- **IBM Bob Shell** (required for full AI reasoning - graceful fallback available for demos)
+- **IBM Bob API Key** with Inference scope (required for Bob Shell integration)
 
 ### Installation
 
@@ -455,6 +456,10 @@ Check system status and Bob configuration.
 
 ```
 CloudShift_Radar/
+├── bob_sessions/               # IBM Bob IDE task session reports (Hackathon evidence)
+│   ├── README.md              # Instructions for task session exports
+│   └── .gitkeep               # Ensures folder is tracked by git
+│
 ├── backend/                    # Fastify API + Scanner
 │   ├── src/
 │   │   ├── server.ts          # Main server entry point
@@ -628,6 +633,47 @@ pnpm check:bob
 # Test Bob with a simple prompt
 bob -p "Analyze this migration scenario"
 ```
+
+---
+
+## 🏆 IBM Bob Hackathon Compliance
+
+CloudShift Radar was built specifically for the **IBM Bob Hackathon** and leverages IBM Bob as a core component throughout the development and runtime lifecycle.
+
+### Hackathon Requirements
+
+This project fulfills the IBM Bob Hackathon requirements by:
+
+1. **IBM Bob IDE Usage**: IBM Bob IDE was used as a required development tool throughout the project lifecycle for:
+   - Code generation and refactoring
+   - Architecture design decisions
+   - Problem-solving and debugging
+   - Documentation creation
+   - Task session reports exported to `/bob_sessions` folder
+
+2. **IBM Bob Shell Integration**: IBM Bob Shell serves as the **AI reasoning engine** at runtime, providing:
+   - **Migration Verdict**: Five-tier decision framework (Proceed, Proceed with Caution, Prepare First, Block Migration, Requires Human Review)
+   - **Confidence Level**: High, Medium, or Low confidence in the assessment
+   - **Reasoning Trace**: Step-by-step explanation of Bob's analysis process
+   - **Feature Impact Analysis**: Prediction of which features will survive migration
+   - **Human Review Flags**: Identification of complex scenarios requiring expert evaluation
+   - **Recommended Action Plan**: Prioritized steps for successful migration
+
+3. **Static Analysis + AI Reasoning**: CloudShift Radar performs local static analysis to detect migration signals (cloud patterns, hardcoded infrastructure, environment gaps), then sends these findings to IBM Bob Shell for intelligent reasoning and verdict generation.
+
+4. **Demo Fallback Mode**: The cached demo results exist **only** for reliability during repeated demonstrations and Bobcoin preservation. They are not a replacement for Bob's AI reasoning—they are pre-generated Bob responses saved for demo consistency.
+
+### Bob IDE vs Bob Shell
+
+| Tool | Role in CloudShift Radar | Usage Context |
+|------|--------------------------|---------------|
+| **IBM Bob IDE** | Required hackathon development tool and judging evidence source | Development time: code generation, refactoring, architecture decisions, documentation |
+| **IBM Bob Shell** | Runtime AI reasoning integration used by the backend API | Runtime: analyzes static analysis findings and generates migration verdicts |
+| **Cached Demo Fallback** | Reliability layer for repeated demos (pre-generated Bob responses) | Demo mode only: prevents Bobcoin waste during repeated demonstrations |
+
+### Judging Evidence
+
+All IBM Bob IDE task session reports and consumption summaries are stored in the `/bob_sessions` folder as required for hackathon judging. These exports demonstrate how IBM Bob IDE was used throughout the development process.
 
 ---
 
