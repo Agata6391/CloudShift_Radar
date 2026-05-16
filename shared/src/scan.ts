@@ -180,3 +180,30 @@ export interface RepositoryScanContext {
   hardcodedInfrastructure: HardcodedInfrastructure[];
   preliminaryFindings: PreliminaryFinding[];
 }
+
+export interface ValidationError {
+  code: string;
+  message: string;
+  severity: "error" | "warning";
+  details?: string;
+}
+
+export interface RepositoryMetadata {
+  totalFiles: number;
+  totalSize: number;
+  detectedLanguages: string[];
+  hasPackageJson: boolean;
+  hasRequirementsTxt: boolean;
+  hasDockerfile: boolean;
+  hasTerraform: boolean;
+  hasKubernetes: boolean;
+  maxDirectoryDepth: number;
+}
+
+export interface ValidationResult {
+  valid: boolean;
+  errors: ValidationError[];
+  warnings: ValidationError[];
+  metadata?: RepositoryMetadata;
+  validatedAt: string;
+}

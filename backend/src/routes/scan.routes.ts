@@ -11,6 +11,7 @@ import { normalizeBobResponse } from "../bob/normalizeBobResponse";
 import { loadDemoRepositoryScanContext } from "../demo/loadDemoRepository";
 import { extractZip } from "../scanner/extractZip";
 import { scanRepository } from "../scanner/scanRepository";
+import { validateRepository } from "../scanner/validateRepository";
 import { getScanResult, storeScanResult } from "../storage/scanResultStore";
 import { validateZip } from "../security/validateZip";
 import { generateCSV, generateMarkdown, generateJSON } from "../export/exportFormats";
@@ -107,6 +108,63 @@ export async function registerScanRoutes(server: FastifyInstance, env: AppEnv) {
       return reply.send(result);
     } catch (error) {
       return sendBobError(reply, error);
+    }
+  });
+
+  server.post("/api/scans/validate", async (request, reply) => {
+    let zipBuffer: Buffer | null = null;
+    let zipFilename = "";
+
+    // Extract ZIP file from multipart form
+    for await (const part of request.parts()) {
+      if (part.type === "file") {
+        zipFilename = part.filename;
+        zipBuffer = await part.toBuffer();
+        break; // Only need the ZIP file
+      }
+    }
+
+    if (!zipBuffer) {
+      return reply.status(400).send({
+        error: "Repository ZIP file is required."
+      });
+    }
+
+    const tempId = randomUUID();
+    const tempDir = path.join(UPLOADS_DIR, `validate-${tempId}`);
+
+    try {
+      // 1. Basic ZIP validation
+      validateZip(zipBuffer, zipFilename);
+
+      // 2. Extract to temporary directory
+      await fs.rm(tempDir, { recursive: true, force: true });
+      await extractZip(zipBuffer, tempDir);
+
+      // 3. Validate repository structure
+      const validationResult = await validateRepository(tempDir);
+
+      // 4. Clean up temporary directory
+      await fs.rm(tempDir, { recursive: true, force: true });
+
+      // 5. Return validation result
+      return reply.send(validationResult);
+
+    } catch (error) {
+      // Ensure cleanup on error
+      await fs.rm(tempDir, { recursive: true, force: true }).catch(() => {});
+
+      const message = error instanceof Error ? error.message : "Validation failed";
+      return reply.status(400).send({
+        valid: false,
+        errors: [{
+          code: "VALIDATION_FAILED",
+          message,
+          severity: "error" as const
+        }],
+        warnings: [],
+        validatedAt: new Date().toISOString()
+      });
     }
   });
 
