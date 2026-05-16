@@ -16,6 +16,7 @@ interface AssessmentProps {
 }
 
 type ValidationState = "incomplete" | "ready" | "validating" | "success" | "warning" | "error" | "invalid";
+type HealthCheckState = "checking" | "configured" | "not-configured" | "error";
 
 const cloudOptions = ["AWS", "GCP", "Azure", "Other"];
 const applicationTypes = ["Frontend", "Backend", "Full-stack", "Custom"];
@@ -37,12 +38,19 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [validationState, setValidationState] = useState<ValidationState>("incomplete");
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
-  const [bobConfigured, setBobConfigured] = useState<boolean | null>(null);
+  const [healthCheckState, setHealthCheckState] = useState<HealthCheckState>("checking");
+  const [validationProgress, setValidationProgress] = useState(0);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
+    setHealthCheckState("checking");
     getHealth()
-      .then((health) => setBobConfigured(health.bobConfigured))
-      .catch(() => setBobConfigured(false));
+      .then((health) => {
+        setHealthCheckState(health.bobConfigured ? "configured" : "not-configured");
+      })
+      .catch(() => {
+        setHealthCheckState("error");
+      });
   }, []);
 
   const formComplete = useMemo(() => {
@@ -78,10 +86,19 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
     if (!selectedFile) return;
     setValidationState("validating");
     setValidationResult(null);
+    setValidationProgress(0);
+
+    // Simulate progressive validation steps
+    const progressInterval = setInterval(() => {
+      setValidationProgress((prev) => Math.min(prev + 15, 90));
+    }, 300);
 
     try {
       const result = await validateZip(selectedFile);
+      clearInterval(progressInterval);
+      setValidationProgress(100);
       setValidationResult(result);
+      setRetryCount(0); // Reset retry count on success
       
       if (result.valid) {
         // Check if there are warnings
@@ -95,15 +112,25 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
         }
       }
     } catch (error) {
+      clearInterval(progressInterval);
+      setValidationProgress(0);
       setValidationState("error");
+      
+      // Provide detailed error information
+      const errorMessage = error instanceof Error ? error.message : "Validation failed";
+      const isNetworkError = error instanceof TypeError && errorMessage.includes("fetch");
+      
       setValidationResult({
         validationState: "invalid",
         valid: false,
         canProceed: false,
         errors: [{
-          code: "VALIDATION_FAILED",
-          message: error instanceof Error ? error.message : "Validation failed",
-          severity: "error"
+          code: isNetworkError ? "NETWORK_ERROR" : "VALIDATION_FAILED",
+          message: isNetworkError
+            ? "Unable to connect to the server. Please check your connection and try again."
+            : errorMessage,
+          severity: "error",
+          details: isNetworkError ? "The validation service may be unavailable." : undefined
         }],
         warnings: [],
         validatedAt: new Date().toISOString()
@@ -122,8 +149,13 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
     if ((validationState === "error" || validationState === "invalid") && selectedFile && !selectedFile.name.toLowerCase().endsWith(".zip")) {
       setSelectedFile(null);
       setValidationState("incomplete");
+      setValidationResult(null);
       fileInputRef.current?.click();
       return;
+    }
+
+    if (validationState === "error" || validationState === "invalid") {
+      setRetryCount((prev) => prev + 1);
     }
 
     validateProject();
@@ -131,16 +163,19 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
 
   const ctaLabel = (() => {
     if (validationState === "validating") return "Validating...";
-    if (validationState === "success") return "Validation Complete - Start Analysis";
-    if (validationState === "warning") return "Validation Complete - Start Analysis";
+    if (validationState === "success") return "✓ Start Analysis";
+    if (validationState === "warning") return "⚠ Start Analysis (with warnings)";
     if ((validationState === "error" || validationState === "invalid") && selectedFile && !selectedFile.name.toLowerCase().endsWith(".zip")) {
       return "Upload Another File";
     }
-    if (validationState === "error" || validationState === "invalid") return "Retry Validation";
+    if (validationState === "error" || validationState === "invalid") {
+      return retryCount > 0 ? `Retry Validation (Attempt ${retryCount + 1})` : "Retry Validation";
+    }
     return "Upload & Validate Repository";
   })();
 
   const showSpinner = validationState === "validating";
+  const canStartAnalysis = (validationState === "success" || validationState === "warning") && healthCheckState === "configured";
 
   return (
     <div className="page assessment-page">
@@ -150,10 +185,30 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
         <p>Upload your project and define the source and destination environment.</p>
       </section>
 
-      {bobConfigured === false ? (
+      {healthCheckState === "checking" ? (
+        <Card className="info-card">
+          <h3>⏳ Checking system status...</h3>
+          <p>Verifying Bob Shell configuration and backend connectivity.</p>
+        </Card>
+      ) : null}
+
+      {healthCheckState === "error" ? (
         <Card className="error-card">
-          <h3>Bob Shell configuration required</h3>
-          <p>Bob Shell is required for this assessment. Configure BOBSHELL_API_KEY before running a real scan.</p>
+          <h3>⚠️ Unable to connect to backend</h3>
+          <p>The backend service is not responding. Please ensure the server is running and try refreshing the page.</p>
+          <Button variant="secondary" onClick={() => window.location.reload()}>
+            Refresh Page
+          </Button>
+        </Card>
+      ) : null}
+
+      {healthCheckState === "not-configured" ? (
+        <Card className="error-card">
+          <h3>⚙️ Bob Shell configuration required</h3>
+          <p>Bob Shell is required for this assessment. Configure BOBSHELL_API_KEY in your environment before running a real scan.</p>
+          <p style={{ marginTop: "0.5rem", fontSize: "0.9em", opacity: 0.8 }}>
+            The system will use demo fallback data if Bob is unavailable during analysis.
+          </p>
         </Card>
       ) : null}
 
@@ -259,10 +314,27 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
           {validationState === "validating" ? (
             <>
               <p>Validating project package...</p>
+              <div className="validation-progress">
+                <div className="progress-bar">
+                  <div className="progress-fill" style={{ width: `${validationProgress}%` }} />
+                </div>
+                <span className="progress-label">{validationProgress}%</span>
+              </div>
               <ul className="clean-list">
-                {validationSteps.map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
+                {validationSteps.map((step, idx) => {
+                  const stepProgress = ((idx + 1) / validationSteps.length) * 100;
+                  const isComplete = validationProgress >= stepProgress;
+                  const isCurrent = validationProgress >= (idx / validationSteps.length) * 100 &&
+                                   validationProgress < stepProgress;
+                  return (
+                    <li key={step} style={{
+                      opacity: isComplete ? 1 : isCurrent ? 0.8 : 0.5,
+                      fontWeight: isCurrent ? 'bold' : 'normal'
+                    }}>
+                      {isComplete ? '✓' : isCurrent ? '⏳' : '○'} {step}
+                    </li>
+                  );
+                })}
               </ul>
             </>
           ) : null}
@@ -298,28 +370,52 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
           ) : null}
           {validationState === "error" && validationResult ? (
             <>
-              <p><strong>Project validation failed.</strong> CloudShift Radar could not process this package.</p>
+              <p><strong>⚠️ Project validation failed.</strong> CloudShift Radar could not process this package.</p>
               <ul className="clean-list">
                 {validationResult.errors.map((error, idx) => (
-                  <li key={idx}>{error.message}</li>
+                  <li key={idx}>
+                    <strong>{error.code}:</strong> {error.message}
+                    {error.details && (
+                      <div style={{ marginLeft: '1rem', fontSize: '0.9em', color: '#666', marginTop: '0.25rem' }}>
+                        {error.details}
+                      </div>
+                    )}
+                  </li>
                 ))}
               </ul>
+              {retryCount > 0 && (
+                <p style={{ marginTop: '1rem', fontSize: '0.9em', opacity: 0.8 }}>
+                  Retry attempts: {retryCount}
+                </p>
+              )}
+              <p style={{ marginTop: '1rem' }}>
+                Click "Retry Validation" to try again, or upload a different file.
+              </p>
             </>
           ) : null}
           {validationState === "invalid" && validationResult ? (
             <>
-              <p><strong>Validation errors detected.</strong> The following issues were found:</p>
+              <p><strong>❌ Validation errors detected.</strong> The following issues were found:</p>
               <ul className="clean-list">
                 {validationResult.errors.map((error, idx) => (
                   <li key={`error-${idx}`}>
                     <strong>{error.code}:</strong> {error.message}
-                    {error.details && <div style={{ marginLeft: '1rem', fontSize: '0.9em', color: '#666' }}>{error.details}</div>}
+                    {error.details && (
+                      <div style={{ marginLeft: '1rem', fontSize: '0.9em', color: '#666', marginTop: '0.25rem' }}>
+                        {error.details}
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
+              {retryCount > 0 && (
+                <p style={{ marginTop: '1rem', fontSize: '0.9em', opacity: 0.8 }}>
+                  Retry attempts: {retryCount}
+                </p>
+              )}
               {validationResult.validationState === "invalid" && (
                 <p style={{ marginTop: '1rem', fontStyle: 'italic' }}>
-                  Please fix these issues and try again.
+                  Please fix these issues and upload a corrected file, or try a different repository.
                 </p>
               )}
             </>

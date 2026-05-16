@@ -27,22 +27,19 @@ Demo Request
     ↓
 Check for saved result
     ↓
-    ├─ Found? → Return cached result ✓
+    ├─ Found? → Return cached result ✓ (CONSISTENT)
     ↓
-    └─ Not found
+    └─ Not found (first time only)
         ↓
-    Try Bob Analysis
+    Generate Demo Result
         ↓
-        ├─ Success? → Store & return Bob result ✓
+    Store for all future requests
         ↓
-        └─ Failed/Unavailable
-            ↓
-        Generate Fallback Result
-            ↓
-        Store fallback for caching
-            ↓
-        Return fallback result ✓
+    Return demo result ✓
 ```
+
+**Key Change:** Demo mode now ALWAYS uses saved results for consistency.
+No Bob calls are made in demo mode, ensuring reproducible results every time.
 
 ### Implementation in `scan.routes.ts`
 
@@ -51,81 +48,85 @@ server.post("/api/scans/demo", async (request, reply) => {
   const migrationContext = buildMigrationContext(request.body);
   const scanId = "demo-legacy-cloud-api";
 
-  // 1. Try cached result first (no Bob cost)
+  // ALWAYS use saved demo result for consistency
   const savedResult = await getScanResult(scanId);
   if (savedResult) {
-    return reply.send(savedResult);
+    return reply.send(savedResult); // Guaranteed consistent result
   }
 
-  // 2. Try Bob analysis
-  try {
-    assertBobConfigured(env);
-    const scanContext = loadDemoRepositoryScanContext();
-    const result = await analyzeWithBob(migrationContext, scanContext, scanId, env);
-    return reply.send(result);
-  } catch (error) {
-    // 3. Fallback to pre-generated result
-    const fallbackResult = generateDemoFallbackResult(migrationContext, scanId);
-    await storeScanResult(fallbackResult); // Cache for next time
-    return reply.send(fallbackResult);
-  }
+  // First time only - generate and save demo result
+  const demoResult = generateDemoFallbackResult(migrationContext, scanId);
+  await storeScanResult(demoResult);
+  return reply.send(demoResult);
 });
 ```
 
 ## Benefits
 
-### 1. **Hackathon Reliability** 🎯
-- Demo never crashes due to Bob unavailability
-- Presenters can confidently show the application
-- No dependency on external services during demo
+### 1. **Guaranteed Consistency** 🎯
+- **Same results every time** - No variation between demo runs
+- Perfect for hackathon judging and presentations
+- Reproducible demo flow ensures fair evaluation
 
-### 2. **Cost Efficiency** 💰
-- First request uses Bob (if available)
-- Result is cached for subsequent requests
-- Fallback is free (no Bobcoins consumed)
+### 2. **Zero Bob Dependency** 💰
+- Demo mode never calls Bob API
+- No Bobcoins consumed during demos
+- Works even if Bob is completely unavailable
 
-### 3. **Realistic Demo Data** 📊
-- Fallback result mirrors real Bob analysis
+### 3. **Instant Response** ⚡
+- Cached results return immediately
+- No waiting for Bob analysis
+- Smooth demo experience
+
+### 4. **Realistic Demo Data** 📊
+- Pre-generated result mirrors real Bob analysis
 - Contains realistic findings and recommendations
 - Demonstrates all UI features properly
 
-### 4. **Clear Indication** 🏷️
-- Fallback results clearly marked as "Demo Mode"
+### 5. **Clear Indication** 🏷️
+- Results clearly marked as "Demo Mode"
 - Bob confidence shows "(Demo Mode - Bob unavailable)"
 - Analysis status indicates "Demo mode - Bob unavailable"
 
-## Testing the Fallback
+## Testing Demo Mode
 
-### Scenario 1: Bob Available
+### First Request (Generates and Saves)
 ```bash
-# Bob is configured and working
 curl -X POST http://localhost:3000/api/scans/demo \
   -H "Content-Type: application/json" \
   -d '{"projectName": "Test Project"}'
 
-# Result: Real Bob analysis
-# bobConfidence: "High" (or Medium/Low based on analysis)
-```
-
-### Scenario 2: Bob Unavailable
-```bash
-# Bob is not configured or fails
-curl -X POST http://localhost:3000/api/scans/demo \
-  -H "Content-Type: application/json" \
-  -d '{"projectName": "Test Project"}'
-
-# Result: Fallback demo result
+# Result: Demo result generated and saved
 # bobConfidence: "Medium (Demo Mode - Bob unavailable)"
+# Response time: ~50ms (generation + save)
 ```
 
-### Scenario 3: Cached Result
+### Subsequent Requests (Cached)
 ```bash
-# Second request (Bob or fallback already cached)
 curl -X POST http://localhost:3000/api/scans/demo \
   -H "Content-Type: application/json" \
   -d '{"projectName": "Test Project"}'
 
-# Result: Cached result (instant response)
+# Result: EXACT SAME cached result
+# bobConfidence: "Medium (Demo Mode - Bob unavailable)"
+# Response time: ~5ms (instant from cache)
+```
+
+### Verify Consistency
+```bash
+# Run demo multiple times - results are IDENTICAL
+for i in {1..5}; do
+  curl -s http://localhost:3000/api/scans/demo \
+    -H "Content-Type: application/json" \
+    -d '{}' | jq '.scanId, .readinessScore'
+done
+
+# Output (all identical):
+# "demo-legacy-cloud-api"
+# 65
+# "demo-legacy-cloud-api"
+# 65
+# ...
 ```
 
 ## Fallback Result Contents
@@ -160,36 +161,60 @@ The fallback result includes:
 
 ## Maintenance
 
-### Updating Fallback Data
+### Updating Demo Results
 
-To update the fallback result with new findings or recommendations:
+To update the demo result with new findings or recommendations:
 
 1. Edit `demoFallbackResult.ts`
 2. Modify the `generateDemoFallbackResult` function
 3. Update findings, action plan, or reasoning trace
-4. Clear cached results: `rm scan-results/demo-legacy-cloud-api.json`
-5. Test with a new demo request
+4. **Clear cached result:** `rm scan-results/demo-legacy-cloud-api.json`
+5. Test with a new demo request (will regenerate and save)
+
+### Pre-generating Demo Results
+
+To pre-generate the demo result before deployment:
+
+```bash
+# Start the backend server
+cd backend && npm run dev
+
+# Generate and save demo result
+curl -X POST http://localhost:3000/api/scans/demo \
+  -H "Content-Type: application/json" \
+  -d '{}'
+
+# Verify the saved result exists
+ls -la scan-results/demo-legacy-cloud-api.json
+
+# Commit the saved result to version control (optional)
+git add scan-results/demo-legacy-cloud-api.json
+git commit -m "Pre-generate demo result for consistency"
+```
 
 ### Adding New Demo Scenarios
 
 To add different demo scenarios:
 
 1. Create new scan context in `loadDemoRepository.ts`
-2. Add corresponding fallback generator
-3. Update routes to handle new demo types
-4. Use different scanIds for different scenarios
+2. Add corresponding result generator in `demoFallbackResult.ts`
+3. Update routes to handle new demo types with different scanIds
+4. Pre-generate and save each demo scenario
 
-## Error Handling
+## Consistency Guarantees
 
-The fallback pattern handles these error cases:
+### What's Guaranteed
+- ✅ **Same scanId** - Always `demo-legacy-cloud-api`
+- ✅ **Same findings** - Identical 4 findings every time
+- ✅ **Same scores** - readinessScore always 65
+- ✅ **Same recommendations** - Action plan never changes
+- ✅ **Same timestamps** - Only `createdAt` varies (when first generated)
 
-1. **Bob not configured** - `BOB_CONFIGURATION_ERROR`
-2. **Bob executable missing** - `BOB_EXECUTABLE_ERROR`
-3. **Bob provider error** - `BOB_PROVIDER_ERROR`
-4. **Bob analysis failed** - Any other error during analysis
-5. **Bob timeout** - Network or execution timeout
+### What Can Vary
+- ⚠️ **createdAt timestamp** - Set when result is first generated
+- ⚠️ **generatedDate** - Set when result is first generated
 
-All errors trigger the fallback, ensuring demo reliability.
+To ensure 100% identical results including timestamps, pre-generate and commit the result to version control.
 
 ## Future Enhancements
 

@@ -911,4 +911,98 @@ td {
 
 .review-action {
   margin-top: 14px;
+
+/* Enhanced validation and progress indicators */
+.validation-progress {
+  margin: 16px 0;
+}
+
+.progress-bar {
+  position: relative;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--blue), var(--green));
+  transition: width 0.3s ease;
+}
+
+.progress-label {
+  display: block;
+  color: var(--muted-strong);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: right;
+}
+
+.info-card {
+  margin-bottom: 18px;
+  border-color: rgba(57, 215, 232, 0.42);
+  background: rgba(57, 215, 232, 0.05);
+}
+
+.info-card h3 {
+  color: var(--cyan);
+}
+
+.error-card h3 {
+  color: var(--red);
+}
+
+.flow-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Enhanced progress step states */
+.progress-step {
+  transition: all 0.3s ease;
+}
+
+.progress-step.active {
+  font-weight: 700;
+}
+
+.progress-step.active span {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Retry and error state enhancements */
+.error-card .button {
+  margin-right: 8px;
+}
+
+.error-card p:last-of-type {
+  margin-bottom: 0;
+}
+
+/* Time display */
+.time-display {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  color: var(--cyan);
+}
 }
