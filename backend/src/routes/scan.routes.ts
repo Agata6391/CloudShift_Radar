@@ -96,13 +96,44 @@ export async function registerScanRoutes(server: FastifyInstance, env: AppEnv) {
 
     const scanId = randomUUID();
     const migrationContext = buildMigrationContext(fields);
-    validateZip(zipBuffer, zipFilename);
 
+    // Step 1: Validate ZIP format
+    try {
+      validateZip(zipBuffer, zipFilename);
+    } catch (error) {
+      return reply.status(400).send({
+        error: error instanceof Error ? error.message : "Invalid ZIP file"
+      });
+    }
+
+    // Step 2: Extract and validate repository structure
     const extractionDir = path.join(UPLOADS_DIR, scanId);
-    await fs.rm(extractionDir, { recursive: true, force: true });
-    await extractZip(zipBuffer, extractionDir);
+    try {
+      await fs.rm(extractionDir, { recursive: true, force: true });
+      await extractZip(zipBuffer, extractionDir);
+      
+      const validationResult = await validateRepository(extractionDir);
+      
+      if (!validationResult.valid) {
+        // Clean up on validation failure
+        await fs.rm(extractionDir, { recursive: true, force: true });
+        return reply.status(400).send({
+          error: "Repository validation failed",
+          validation: validationResult
+        });
+      }
+    } catch (error) {
+      // Clean up on error
+      await fs.rm(extractionDir, { recursive: true, force: true }).catch(() => {});
+      return reply.status(400).send({
+        error: error instanceof Error ? error.message : "Repository validation failed"
+      });
+    }
+
+    // Step 3: Scan repository for technical signals
     const scanContext = await scanRepository(extractionDir);
 
+    // Step 4: Analyze with Bob
     try {
       const result = await analyzeWithBob(migrationContext, scanContext, scanId, env);
       return reply.send(result);
