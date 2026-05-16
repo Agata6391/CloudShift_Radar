@@ -8,7 +8,8 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
-    "check:bob": "tsx src/bob/checkBobShell.ts"
+    "check:bob": "tsx src/bob/checkBobShell.ts",
+    "generate-demo": "tsx scripts/generate-demo-result.ts"
   },
   "dependencies": {
     "@cloudshift-radar/shared": "workspace:*",
