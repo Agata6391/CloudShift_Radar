@@ -7,6 +7,44 @@ import { Card } from "../components/ui/Card";
 import type { ProjectInputPayload } from "./Assessment";
 import type { Route } from "../utils/navigation";
 
+// Hook to detect reduced motion preference
+function usePrefersReducedMotion(): boolean {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+    
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
+  
+  return prefersReducedMotion;
+}
+
+// Hook for animated dots on active step
+function useAnimatedDots(isActive: boolean, reducedMotion: boolean): string {
+  const [dotCount, setDotCount] = useState(0);
+  
+  useEffect(() => {
+    if (!isActive || reducedMotion) {
+      setDotCount(0);
+      return;
+    }
+    
+    const interval = setInterval(() => {
+      setDotCount((prev) => (prev + 1) % 4);
+    }, 600);
+    
+    return () => clearInterval(interval);
+  }, [isActive, reducedMotion]);
+  
+  if (!isActive) return "";
+  if (reducedMotion) return "...";
+  return ".".repeat(dotCount);
+}
+
 interface AnalysisRunningProps {
   pendingScan: ProjectInputPayload | null;
   onComplete: (result: ScanResult) => void;
@@ -34,6 +72,29 @@ const detectedItems = [
   "Authentication configuration"
 ];
 
+// Component for individual analysis step with animated dots
+interface AnalysisStepItemProps {
+  step: string;
+  isDone: boolean;
+  isCurrent: boolean;
+  isPending: boolean;
+  stepNumber: number;
+  prefersReducedMotion: boolean;
+}
+
+function AnalysisStepItem({ step, isDone, isCurrent, isPending, stepNumber, prefersReducedMotion }: AnalysisStepItemProps) {
+  const animatedDots = useAnimatedDots(isCurrent, prefersReducedMotion);
+  
+  return (
+    <div
+      className={`progress-step ${isDone ? "done" : ""} ${isCurrent ? "active" : ""}`}
+    >
+      <span>{isDone ? "✓" : isCurrent ? "●" : isPending ? "○" : stepNumber}</span>
+      <p>{step}{animatedDots}</p>
+    </div>
+  );
+}
+
 export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: AnalysisRunningProps) {
   const [progress, setProgress] = useState(8);
   const [analysisState, setAnalysisState] = useState<AnalysisState>("running");
@@ -43,11 +104,14 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [minimumDurationComplete, setMinimumDurationComplete] = useState(false);
   const cancelledRef = useRef(false);
+  
+  const prefersReducedMotion = usePrefersReducedMotion();
 
-  const currentStep = useMemo(() => {
-    const index = Math.min(analysisSteps.length - 1, Math.floor((progress / 100) * analysisSteps.length));
-    return analysisSteps[index];
+  const currentStepIndex = useMemo(() => {
+    return Math.min(analysisSteps.length - 1, Math.floor((progress / 100) * analysisSteps.length));
   }, [progress]);
+  
+  const currentStep = analysisSteps[currentStepIndex];
 
   const startAnalysis = useCallback(() => {
     if (!pendingScan) {
@@ -179,7 +243,12 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
             <p>{pendingScan.context.currentProvider} &rarr; {pendingScan.context.targetProvider}</p>
             {analysisState === "running" && (
               <p style={{ marginTop: "0.5rem", fontSize: "0.9em", opacity: 0.8 }}>
-                Elapsed time: {formatTime(elapsedTime)} | Expected: 2-4 minutes
+                Elapsed time: {formatTime(elapsedTime)}
+              </p>
+            )}
+            {analysisState === "running" && (
+              <p style={{ marginTop: "0.25rem", fontSize: "0.85em", opacity: 0.7, fontStyle: "italic" }}>
+                Bob is processing repository signals. Timing may vary by project size.
               </p>
             )}
           </Card>
@@ -251,7 +320,7 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
             <div className="analysis-progress-track">
               <span style={{ width: `${progress}%` }} />
             </div>
-            <p>Analysis stage: <strong>{currentStep}</strong></p>
+            <p>Analysis stage: <strong>{currentStep}{useAnimatedDots(analysisState === "running", prefersReducedMotion)}</strong></p>
 
             <h3>Detected so far</h3>
             <ul className="clean-list">
@@ -263,17 +332,19 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
             <h3>Analysis steps</h3>
             <div className="progress-list">
               {analysisSteps.map((step, idx) => {
-                const stepIndex = analysisSteps.indexOf(currentStep);
-                const isDone = idx < stepIndex;
-                const isCurrent = idx === stepIndex;
+                const isDone = idx < currentStepIndex;
+                const isCurrent = idx === currentStepIndex;
+                const isPending = idx > currentStepIndex;
                 return (
-                  <div
-                    className={`progress-step ${isDone ? "done" : ""} ${isCurrent ? "active" : ""}`}
+                  <AnalysisStepItem
                     key={step}
-                  >
-                    <span>{isDone ? "✓" : idx + 1}</span>
-                    <p>{step}</p>
-                  </div>
+                    step={step}
+                    isDone={isDone}
+                    isCurrent={isCurrent}
+                    isPending={isPending}
+                    stepNumber={idx + 1}
+                    prefersReducedMotion={prefersReducedMotion}
+                  />
                 );
               })}
             </div>
