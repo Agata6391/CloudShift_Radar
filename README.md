@@ -213,6 +213,10 @@ Before you begin, ensure you have the following installed:
 
 1. **Copy the environment template**:
    ```bash
+   # Windows (PowerShell)
+   Copy-Item .env.example .env
+   
+   # Linux/macOS
    cp .env.example .env
    ```
 
@@ -221,7 +225,12 @@ Before you begin, ensure you have the following installed:
    # Bob AI Configuration
    BOB_PROVIDER=shell
    BOBSHELL_API_KEY=your_real_api_key_here
+   
+   # Bob Shell Command (choose based on your OS):
+   # - Windows: Use full path or ./node_modules/.bin/bob
+   # - Linux/macOS: Use 'bob' (if global) or ./node_modules/.bin/bob
    BOB_SHELL_COMMAND=./node_modules/.bin/bob
+   
    BOB_TIMEOUT_MS=600000
 
    # Server Configuration

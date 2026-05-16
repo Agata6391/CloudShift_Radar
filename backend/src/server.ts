@@ -8,6 +8,36 @@ import { MAX_ZIP_SIZE_BYTES } from "./security/validateZip";
 
 const env = loadEnv();
 
+function getErrorStatusCode(error: unknown): number {
+  if (
+    error &&
+    typeof error === "object" &&
+    "statusCode" in error &&
+    typeof error.statusCode === "number"
+  ) {
+    return error.statusCode;
+  }
+
+  return 500;
+}
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  if (
+    error &&
+    typeof error === "object" &&
+    "message" in error &&
+    typeof error.message === "string"
+  ) {
+    return error.message;
+  }
+
+  return "Unexpected server error.";
+}
+
 async function buildServer() {
   const server = Fastify({
     logger: {
@@ -32,10 +62,12 @@ async function buildServer() {
   await registerScanRoutes(server, env);
 
   server.setErrorHandler((error, _request, reply) => {
-    const statusCode = error.statusCode || 500;
+    const statusCode = getErrorStatusCode(error);
+    const message = getErrorMessage(error);
+
     reply.status(statusCode).send({
-      error: statusCode >= 500 ? "Internal server error" : error.message,
-      message: error.message
+      error: statusCode >= 500 ? "Internal server error" : message,
+      message
     });
   });
 
