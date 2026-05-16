@@ -169,14 +169,6 @@ export async function registerScanRoutes(server: FastifyInstance, env: AppEnv) {
   });
 
   server.post("/api/scans/demo", async (request, reply) => {
-    try {
-      assertBobConfigured(env);
-    } catch (error) {
-      return reply.status(503).send({
-        error: error instanceof Error ? error.message : BOB_CONFIGURATION_ERROR
-      });
-    }
-
     const body = (request.body || {}) as Partial<MigrationContext>;
     const migrationContext: MigrationContext = {
       projectName: body.projectName || "Legacy Cloud API Demo",
@@ -185,7 +177,25 @@ export async function registerScanRoutes(server: FastifyInstance, env: AppEnv) {
       applicationType: body.applicationType || "Backend API"
     };
 
-    const scanId = randomUUID();
+    // Use a deterministic scanId for demo mode to enable result caching
+    const scanId = "demo-legacy-cloud-api";
+
+    // Try to load saved demo result first
+    const savedResult = await getScanResult(scanId);
+    if (savedResult) {
+      // Return cached result without consuming Bobcoins
+      return reply.send(savedResult);
+    }
+
+    // No saved result found, need to generate new one with Bob
+    try {
+      assertBobConfigured(env);
+    } catch (error) {
+      return reply.status(503).send({
+        error: error instanceof Error ? error.message : BOB_CONFIGURATION_ERROR
+      });
+    }
+
     const scanContext = loadDemoRepositoryScanContext();
 
     try {
