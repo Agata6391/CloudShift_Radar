@@ -4,7 +4,7 @@ import { callBobShell } from "./bobShellClient";
 async function main() {
   const env = loadEnv();
   const output = await callBobShell({ prompt: "Explain this project" }, env);
-  console.log(output);
+  
 }
 
 main().catch((error) => {
