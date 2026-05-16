@@ -95,6 +95,7 @@ For every finding, include:
 - feature status
 - risk level
 - short summary
+- technical complexity
 - business impact
 - migration impact
 - recommended action
@@ -154,6 +155,13 @@ Use these resolution levels only:
 - L4: Architecture change
 - L5: Human review required
 
+Use these technical complexity values:
+- Low: Simple config or minor code changes (L1-L2)
+- Medium: Moderate refactoring or code changes (L2-L3)
+- High: Significant refactoring or architecture changes (L3-L4)
+- Very High: Major architecture redesign (L4)
+- Unknown: Requires human review to determine (L5)
+
 Use this rule:
 High severity + low confidence = Human Review Required.
 
@@ -187,6 +195,7 @@ Return this exact JSON structure:
       "bobRationale": "Short rationale.",
       "businessImpact": "Short business impact.",
       "migrationImpact": "Short migration impact.",
+      "technicalComplexity": "High",
       "recommendedAction": "Short recommended action.",
       "requiresHumanReview": false,
       "humanReviewReason": null,

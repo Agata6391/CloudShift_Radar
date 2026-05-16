@@ -173,7 +173,14 @@ export async function validateRepository(rootDir: string): Promise<ValidationRes
         message: "Extracted path is not a directory",
         severity: "error"
       });
-      return { valid: false, errors, warnings, validatedAt: new Date().toISOString() };
+      return {
+        validationState: "invalid",
+        valid: false,
+        canProceed: false,
+        errors,
+        warnings,
+        validatedAt: new Date().toISOString()
+      };
     }
 
     // 2. Walk directory and collect files
@@ -185,7 +192,14 @@ export async function validateRepository(rootDir: string): Promise<ValidationRes
         message: "Repository contains no files",
         severity: "error"
       });
-      return { valid: false, errors, warnings, validatedAt: new Date().toISOString() };
+      return {
+        validationState: "invalid",
+        valid: false,
+        canProceed: false,
+        errors,
+        warnings,
+        validatedAt: new Date().toISOString()
+      };
     }
 
     // 3. Check file count limit
@@ -248,20 +262,27 @@ export async function validateRepository(rootDir: string): Promise<ValidationRes
       hasRequirementsTxt: fileBasenames.includes("requirements.txt"),
       hasDockerfile: fileBasenames.some(f => f.startsWith("dockerfile")),
       hasTerraform: files.some(f => f.relativePath.endsWith(".tf")),
-      hasKubernetes: files.some(f => 
-        f.relativePath.includes("k8s") || 
+      hasKubernetes: files.some(f =>
+        f.relativePath.includes("k8s") ||
         f.relativePath.includes("kubernetes") ||
-        f.relativePath.endsWith(".yaml") && fileBasenames.some(b => 
-          b.includes("deployment") || 
-          b.includes("service") || 
+        f.relativePath.endsWith(".yaml") && fileBasenames.some(b =>
+          b.includes("deployment") ||
+          b.includes("service") ||
           b.includes("ingress")
         )
       ),
       maxDirectoryDepth: maxDepth
     };
 
+    // Determine validation state and canProceed
+    const isValid = errors.length === 0;
+    const validationState = isValid ? "valid" : "invalid";
+    const canProceed = isValid;
+
     return {
-      valid: errors.length === 0,
+      validationState,
+      valid: isValid,
+      canProceed,
       errors,
       warnings,
       metadata,
@@ -274,7 +295,14 @@ export async function validateRepository(rootDir: string): Promise<ValidationRes
       message: error instanceof Error ? error.message : "Unknown validation error",
       severity: "error"
     });
-    return { valid: false, errors, warnings, validatedAt: new Date().toISOString() };
+    return {
+      validationState: "invalid",
+      valid: false,
+      canProceed: false,
+      errors,
+      warnings,
+      validatedAt: new Date().toISOString()
+    };
   }
 }
 

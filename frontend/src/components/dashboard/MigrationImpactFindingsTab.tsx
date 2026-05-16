@@ -22,6 +22,14 @@ function stateTone(state: string) {
   return "neutral";
 }
 
+function featureSurvivalStateTone(state: string) {
+  if (state === "Blocked") return "critical";
+  if (state === "High risk") return "high";
+  if (state === "Partially working") return "medium";
+  if (state === "Likely working") return "success";
+  return "neutral";
+}
+
 function reviewForFinding(result: ScanResult, finding: Finding) {
   return result.humanReviewQueue.find((item) => item.findingId === finding.id || item.title === finding.title);
 }
@@ -36,6 +44,39 @@ export function MigrationImpactFindingsTab({ result }: MigrationImpactFindingsTa
 
   return (
     <div className="impact-findings">
+      {/* Feature Survival Map Section */}
+      <div className="table-card">
+        <div className="section-heading">
+          <span>Bob feature survival map</span>
+          <h2>What survives the migration</h2>
+        </div>
+        <div className="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>Dependency</th>
+                <th>Expected state after migration</th>
+                <th>Bob rationale</th>
+                <th>Recommended action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {result.featureSurvivalMap.map((item) => (
+                <tr key={item.feature}>
+                  <td><strong>{item.feature}</strong></td>
+                  <td>{item.dependency}</td>
+                  <td><StatusPill tone={featureSurvivalStateTone(item.expectedState)}>{item.expectedState}</StatusPill></td>
+                  <td>{item.bobRationale}</td>
+                  <td>{item.recommendedAction}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Findings Section */}
       <Card className="wide-card">
         <div className="section-heading">
           <span>Findings</span>
@@ -110,6 +151,10 @@ export function MigrationImpactFindingsTab({ result }: MigrationImpactFindingsTa
                 <div>
                   <dt>Feature impact</dt>
                   <dd>{finding.migrationImpact}</dd>
+                </div>
+                <div>
+                  <dt>Technical Complexity</dt>
+                  <dd>{finding.technicalComplexity || 'Not specified'}</dd>
                 </div>
                 <div>
                   <dt>Recommended action</dt>
