@@ -1,0 +1,868 @@
+You are Bob, the AI modernization analyst for CloudShift Radar.
+
+Analyze the repository scan context and produce a migration readiness assessment.
+
+The scanner only provides raw technical signals. You produce the final assessment.
+
+Your task:
+1. Identify cloud migration blockers.
+2. Classify each finding by severity, confidence, and resolution level.
+3. Determine which findings require human review.
+4. Estimate which product features would survive migration.
+5. Generate a migration readiness score.
+6. Recommend whether the team should proceed, proceed with caution, prepare first, block migration, or require human review.
+7. Explain your reasoning clearly.
+
+For every finding, include:
+- technical issue
+- affected provider/service
+- affected files
+- severity
+- confidence
+- resolution level
+- affected feature or feature area
+- feature survival state
+- business impact
+- migration impact
+- recommended action
+- Bob rationale
+- whether human review is required
+
+Migration context:
+Project name: Legacy Cloud API
+Current cloud provider: AWS
+Target cloud provider: GCP
+Application type: Backend API
+
+Repository file tree:
+[
+  "legacy-cloud-api-demo/.env.example",
+  "legacy-cloud-api-demo/.github/workflows/deploy.yml",
+  "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md",
+  "legacy-cloud-api-demo/docker-compose.yml",
+  "legacy-cloud-api-demo/Dockerfile",
+  "legacy-cloud-api-demo/docs/migration-notes.md",
+  "legacy-cloud-api-demo/infra/aws/main.tf",
+  "legacy-cloud-api-demo/k8s/deployment.yml",
+  "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+  "legacy-cloud-api-demo/migration-fixtures/scan-context.json",
+  "legacy-cloud-api-demo/package.json",
+  "legacy-cloud-api-demo/README.md",
+  "legacy-cloud-api-demo/scripts/print-seeded-findings.js",
+  "legacy-cloud-api-demo/src/config/database.js",
+  "legacy-cloud-api-demo/src/config/env.js",
+  "legacy-cloud-api-demo/src/config/redis.js",
+  "legacy-cloud-api-demo/src/index.js",
+  "legacy-cloud-api-demo/src/legacy/legacyQueueBridge.js",
+  "legacy-cloud-api-demo/src/middleware/errorHandler.js",
+  "legacy-cloud-api-demo/src/routes/auth.routes.js",
+  "legacy-cloud-api-demo/src/routes/billing.routes.js",
+  "legacy-cloud-api-demo/src/routes/health.routes.js",
+  "legacy-cloud-api-demo/src/routes/matchmaking.routes.js",
+  "legacy-cloud-api-demo/src/routes/order.routes.js",
+  "legacy-cloud-api-demo/src/routes/upload.routes.js",
+  "legacy-cloud-api-demo/src/services/email/sendgridEmail.js",
+  "legacy-cloud-api-demo/src/services/jobs/orderQueue.js",
+  "legacy-cloud-api-demo/src/services/matchmaking/gameliftMatchmaker.js",
+  "legacy-cloud-api-demo/src/services/storage/s3Storage.js",
+  "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js",
+  "legacy-cloud-api-demo/src/workers/orderWorker.js",
+  "legacy-cloud-api-demo/tests/smoke/health.test.js"
+]
+
+Detected technical signals:
+[
+  {
+    "id": "aws_references",
+    "label": "AWS references",
+    "category": "Cloud provider",
+    "provider": "AWS",
+    "service": "AWS",
+    "files": [
+      "legacy-cloud-api-demo/.github/workflows/deploy.yml",
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md",
+      "legacy-cloud-api-demo/README.md",
+      "legacy-cloud-api-demo/docker-compose.yml",
+      "legacy-cloud-api-demo/infra/aws/main.tf",
+      "legacy-cloud-api-demo/k8s/deployment.yml",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/migration-fixtures/scan-context.json",
+      "legacy-cloud-api-demo/package.json",
+      "legacy-cloud-api-demo/src/config/database.js",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/services/matchmaking/gameliftMatchmaker.js",
+      "legacy-cloud-api-demo/src/services/storage/s3Storage.js",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "evidence": [
+      "legacy-cloud-api-demo/.github/workflows/deploy.yml Line 17: - name: Configure AWS credentials",
+      "legacy-cloud-api-demo/.github/workflows/deploy.yml Line 18: uses: aws-actions/configure-aws-credentials@v4",
+      "legacy-cloud-api-demo/.github/workflows/deploy.yml Line 20: aws-access-key-id: [REDACTED] secrets.AWS_ACCESS_KEY_ID }}",
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md Line 11: Evaluate cloud migration readiness from AWS to GCP.",
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md Line 30: - Treat AWS GameLift as an architecture-level migration concern.",
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md Line 31: - Treat direct AWS S3 SDK usage as a refactor concern.",
+      "legacy-cloud-api-demo/docker-compose.yml Line 15: # L3: still assumes AWS storage provider.",
+      "legacy-cloud-api-demo/docker-compose.yml Line 16: STORAGE_PROVIDER: aws-s3"
+    ]
+  },
+  {
+    "id": "gcp_references",
+    "label": "GCP references",
+    "category": "Cloud provider",
+    "provider": "GCP",
+    "service": "Google Cloud",
+    "files": [
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md",
+      "legacy-cloud-api-demo/README.md",
+      "legacy-cloud-api-demo/docs/migration-notes.md",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/migration-fixtures/scan-context.json",
+      "legacy-cloud-api-demo/src/config/redis.js",
+      "legacy-cloud-api-demo/src/services/matchmaking/gameliftMatchmaker.js",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "evidence": [
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md Line 11: Evaluate cloud migration readiness from AWS to GCP.",
+      "legacy-cloud-api-demo/docs/migration-notes.md Line 5: Target cloud: GCP",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 3: \"scenario\": \"AWS to GCP migration readiness assessment\",",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 91: \"title\": \"AWS GameLift matchmaking blocks direct migration to GCP\",",
+      "legacy-cloud-api-demo/migration-fixtures/scan-context.json Line 4: \"targetProvider\": \"GCP\",",
+      "legacy-cloud-api-demo/README.md Line 5: This is a deliberately imperfect legacy backend API used to test cloud migration readiness scanning. It represents a Node.js / Express appli",
+      "legacy-cloud-api-demo/README.md Line 10: - Target provider: GCP",
+      "legacy-cloud-api-demo/src/config/redis.js Line 5: // L2: TLS behavior is implicitly coupled to a string env flag and may fail in local/GCP Redis."
+    ]
+  },
+  {
+    "id": "s3_usage",
+    "label": "S3 usage",
+    "category": "Storage",
+    "provider": "AWS",
+    "service": "S3",
+    "files": [
+      "legacy-cloud-api-demo/.env.example",
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md",
+      "legacy-cloud-api-demo/README.md",
+      "legacy-cloud-api-demo/docker-compose.yml",
+      "legacy-cloud-api-demo/docs/migration-notes.md",
+      "legacy-cloud-api-demo/infra/aws/main.tf",
+      "legacy-cloud-api-demo/k8s/deployment.yml",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/package.json",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/services/storage/s3Storage.js",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "evidence": [
+      "legacy-cloud-api-demo/.env.example Line 5: # - S3_BUCKET",
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md Line 31: - Treat direct AWS S3 SDK usage as a refactor concern.",
+      "legacy-cloud-api-demo/docker-compose.yml Line 16: STORAGE_PROVIDER: aws-s3",
+      "legacy-cloud-api-demo/docker-compose.yml Line 17: S3_BUCKET: legacy-cloud-api-prod-assets",
+      "legacy-cloud-api-demo/docs/migration-notes.md Line 9: - Should S3 uploads move to Google Cloud Storage or a provider-agnostic storage layer?",
+      "legacy-cloud-api-demo/infra/aws/main.tf Line 14: resource \"aws_s3_bucket\" \"assets\" {",
+      "legacy-cloud-api-demo/k8s/deployment.yml Line 23: - name: S3_BUCKET",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 73: \"title\": \"AWS S3 SDK is used directly for file storage\","
+    ]
+  },
+  {
+    "id": "gcs_usage",
+    "label": "Google Cloud Storage usage",
+    "category": "Storage",
+    "provider": "GCP",
+    "service": "Cloud Storage",
+    "files": [
+      "legacy-cloud-api-demo/src/routes/upload.routes.js",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "evidence": [
+      "legacy-cloud-api-demo/src/routes/upload.routes.js Line 6: const upload = multer({ storage: multer.memoryStorage() });",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js Line 5: 'https://storage.googleapis.com/future-target-bucket',"
+    ]
+  },
+  {
+    "id": "redis_usage",
+    "label": "Redis usage",
+    "category": "Cache / Queue",
+    "provider": "Unknown",
+    "service": "Redis",
+    "files": [
+      "legacy-cloud-api-demo/.env.example",
+      "legacy-cloud-api-demo/README.md",
+      "legacy-cloud-api-demo/docker-compose.yml",
+      "legacy-cloud-api-demo/docs/migration-notes.md",
+      "legacy-cloud-api-demo/infra/aws/main.tf",
+      "legacy-cloud-api-demo/k8s/deployment.yml",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/package.json",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/config/redis.js",
+      "legacy-cloud-api-demo/src/index.js",
+      "legacy-cloud-api-demo/src/routes/health.routes.js",
+      "legacy-cloud-api-demo/src/services/jobs/orderQueue.js",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "evidence": [
+      "legacy-cloud-api-demo/.env.example Line 14: REDIS_URL=redis://localhost:6379",
+      "legacy-cloud-api-demo/docker-compose.yml Line 11: # L1: points to local default but redis service is not defined.",
+      "legacy-cloud-api-demo/docker-compose.yml Line 12: REDIS_URL: redis://redis:6379",
+      "legacy-cloud-api-demo/docker-compose.yml Line 18: # Missing redis and postgres services are intentional.",
+      "legacy-cloud-api-demo/docs/migration-notes.md Line 19: - Redis/Bull queue test",
+      "legacy-cloud-api-demo/infra/aws/main.tf Line 18: resource \"aws_elasticache_cluster\" \"redis\" {",
+      "legacy-cloud-api-demo/infra/aws/main.tf Line 19: cluster_id           = \"legacy-cloud-api-redis\"",
+      "legacy-cloud-api-demo/infra/aws/main.tf Line 20: engine               = \"redis\""
+    ]
+  },
+  {
+    "id": "elasticache_references",
+    "label": "ElastiCache references",
+    "category": "Cache / Queue",
+    "provider": "AWS",
+    "service": "ElastiCache",
+    "files": [
+      "legacy-cloud-api-demo/README.md",
+      "legacy-cloud-api-demo/infra/aws/main.tf",
+      "legacy-cloud-api-demo/k8s/deployment.yml",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "evidence": [
+      "legacy-cloud-api-demo/infra/aws/main.tf Line 18: resource \"aws_elasticache_cluster\" \"redis\" {",
+      "legacy-cloud-api-demo/k8s/deployment.yml Line 26: value: rediss://legacy-cloud-api-redis.z1v37w.ng.0001.use1.cache.amazonaws.com:6379",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 7: \"title\": \"Redis endpoint defaults to AWS ElastiCache\",",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 10: \"service\": \"ElastiCache / Redis\",",
+      "legacy-cloud-api-demo/README.md Line 24: | L1 | Config change | Can be fixed through configuration/env changes | Redis host default points to AWS ElastiCache |",
+      "legacy-cloud-api-demo/README.md Line 46: 3. Redis defaults to an AWS ElastiCache-style hostname.",
+      "legacy-cloud-api-demo/src/config/env.js Line 7: REDIS_URL: process.env.REDIS_URL || 'rediss://legacy-cloud-api-redis.z1v37w.ng.0001.use1.cache.amazonaws.com:6379',",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js Line 8: 'redis://legacy-cloud-api-redis.z1v37w.ng.0001.use1.cache.amazonaws.com:6379'"
+    ]
+  },
+  {
+    "id": "postgresql_references",
+    "label": "PostgreSQL references",
+    "category": "Database",
+    "provider": "Unknown",
+    "service": "PostgreSQL",
+    "files": [
+      "legacy-cloud-api-demo/.env.example",
+      "legacy-cloud-api-demo/README.md",
+      "legacy-cloud-api-demo/docker-compose.yml",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/src/config/database.js",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/index.js"
+    ],
+    "evidence": [
+      "legacy-cloud-api-demo/.env.example Line 13: DATABASE_URL=postgres://app:app@localhost:5432/legacy_cloud",
+      "legacy-cloud-api-demo/docker-compose.yml Line 13: # L1/L2: Postgres service is not defined either.",
+      "legacy-cloud-api-demo/docker-compose.yml Line 14: DATABASE_URL: postgres://app:app@postgres:5432/legacy_cloud",
+      "legacy-cloud-api-demo/docker-compose.yml Line 18: # Missing redis and postgres services are intentional.",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 152: \"recommendedAction\": \"Add local Redis and PostgreSQL services or document external dependency requirements.\"",
+      "legacy-cloud-api-demo/README.md Line 13: - Data stores: PostgreSQL, Redis, MongoDB-like audit sink",
+      "legacy-cloud-api-demo/README.md Line 49: 6. Docker Compose does not provision PostgreSQL or Redis.",
+      "legacy-cloud-api-demo/src/config/database.js Line 6: connectionString: env.DATABASE_URL,"
+    ]
+  },
+  {
+    "id": "mongodb_references",
+    "label": "MongoDB references",
+    "category": "Database",
+    "provider": "Unknown",
+    "service": "MongoDB",
+    "files": [
+      "legacy-cloud-api-demo/README.md"
+    ],
+    "evidence": [
+      "legacy-cloud-api-demo/README.md Line 13: - Data stores: PostgreSQL, Redis, MongoDB-like audit sink"
+    ]
+  },
+  {
+    "id": "sendgrid_references",
+    "label": "SendGrid references",
+    "category": "Runtime dependency",
+    "provider": "External",
+    "service": "SendGrid",
+    "files": [
+      "legacy-cloud-api-demo/.env.example",
+      "legacy-cloud-api-demo/README.md",
+      "legacy-cloud-api-demo/docs/migration-notes.md",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/package.json",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/index.js",
+      "legacy-cloud-api-demo/src/routes/auth.routes.js",
+      "legacy-cloud-api-demo/src/services/email/sendgridEmail.js",
+      "legacy-cloud-api-demo/src/workers/orderWorker.js"
+    ],
+    "evidence": [
+      "legacy-cloud-api-demo/.env.example Line 4: # - SENDGRID_API_KEY",
+      "legacy-cloud-api-demo/docs/migration-notes.md Line 11: - Should SendGrid remain external or be abstracted behind an email provider interface?",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 42: \"title\": \"SendGrid is required at startup without graceful fallback\",",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 44: \"provider\": \"SendGrid\",",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 48: \"src/services/email/sendgridEmail.js\"",
+      "legacy-cloud-api-demo/package.json Line 18: \"@sendgrid/mail\": \"^8.1.4\",",
+      "legacy-cloud-api-demo/README.md Line 14: - External services: AWS S3, AWS GameLift, SendGrid, legacy billing provider",
+      "legacy-cloud-api-demo/README.md Line 47: 4. SendGrid is required at startup without fallback."
+    ]
+  },
+  {
+    "id": "gamelift_references",
+    "label": "GameLift references",
+    "category": "Game infrastructure",
+    "provider": "AWS",
+    "service": "GameLift",
+    "files": [
+      "legacy-cloud-api-demo/.env.example",
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md",
+      "legacy-cloud-api-demo/README.md",
+      "legacy-cloud-api-demo/docs/migration-notes.md",
+      "legacy-cloud-api-demo/infra/aws/main.tf",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/package.json",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/routes/matchmaking.routes.js",
+      "legacy-cloud-api-demo/src/services/matchmaking/gameliftMatchmaker.js"
+    ],
+    "evidence": [
+      "legacy-cloud-api-demo/.env.example Line 7: # - GAMELIFT_FLEET_ID",
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md Line 30: - Treat AWS GameLift as an architecture-level migration concern.",
+      "legacy-cloud-api-demo/docs/migration-notes.md Line 10: - Should GameLift be replaced by Agones?",
+      "legacy-cloud-api-demo/infra/aws/main.tf Line 27: resource \"aws_gamelift_fleet\" \"game\" {",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 91: \"title\": \"AWS GameLift matchmaking blocks direct migration to GCP\",",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 94: \"service\": \"GameLift\",",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 96: \"src/services/matchmaking/gameliftMatchmaker.js\",",
+      "legacy-cloud-api-demo/package.json Line 15: \"@aws-sdk/client-gamelift\": \"^3.758.0\","
+    ]
+  },
+  {
+    "id": "agones_references",
+    "label": "Agones references",
+    "category": "Game infrastructure",
+    "provider": "GCP",
+    "service": "Agones",
+    "files": [
+      "legacy-cloud-api-demo/docs/migration-notes.md",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/src/services/matchmaking/gameliftMatchmaker.js"
+    ],
+    "evidence": [
+      "legacy-cloud-api-demo/docs/migration-notes.md Line 10: - Should GameLift be replaced by Agones?",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 104: \"recommendedAction\": \"Plan architecture replacement, likely Agones or custom matchmaking/session orchestration.\"",
+      "legacy-cloud-api-demo/src/services/matchmaking/gameliftMatchmaker.js Line 5: // This likely requires architecture replacement, for example Agones or custom matchmaking."
+    ]
+  },
+  {
+    "id": "ci_cd_cloud_assumptions",
+    "label": "CI/CD cloud assumptions",
+    "category": "CI/CD",
+    "provider": "Unknown",
+    "service": "Pipeline",
+    "files": [
+      "legacy-cloud-api-demo/.github/workflows/deploy.yml"
+    ],
+    "evidence": [
+      "legacy-cloud-api-demo/.github/workflows/deploy.yml Line 18: uses: aws-actions/configure-aws-credentials@v4"
+    ]
+  }
+]
+
+Environment gaps:
+[
+  {
+    "variable": "GAMELIFT_QUEUE_NAME",
+    "usedIn": [
+      "legacy-cloud-api-demo/src/config/env.js"
+    ],
+    "documented": false,
+    "description": "GAMELIFT_QUEUE_NAME is used by application code but is not documented in .env.example or README.md."
+  },
+  {
+    "variable": "LEGACY_BILLING_ENDPOINT",
+    "usedIn": [
+      "legacy-cloud-api-demo/src/config/env.js"
+    ],
+    "documented": false,
+    "description": "LEGACY_BILLING_ENDPOINT is used by application code but is not documented in .env.example or README.md."
+  },
+  {
+    "variable": "LEGACY_QUEUE_ENDPOINT",
+    "usedIn": [
+      "legacy-cloud-api-demo/src/legacy/legacyQueueBridge.js"
+    ],
+    "documented": false,
+    "description": "LEGACY_QUEUE_ENDPOINT is used by application code but is not documented in .env.example or README.md."
+  },
+  {
+    "variable": "LEGACY_QUEUE_TOKEN",
+    "usedIn": [
+      "legacy-cloud-api-demo/src/legacy/legacyQueueBridge.js"
+    ],
+    "documented": false,
+    "description": "LEGACY_QUEUE_TOKEN [REDACTED] used by application code but is not documented in .env.example or README.md."
+  },
+  {
+    "variable": "SENDGRID_FROM_EMAIL",
+    "usedIn": [
+      "legacy-cloud-api-demo/src/config/env.js"
+    ],
+    "documented": false,
+    "description": "SENDGRID_FROM_EMAIL is used by application code but is not documented in .env.example or README.md."
+  },
+  {
+    "variable": "STORAGE_PROVIDER",
+    "usedIn": [
+      "legacy-cloud-api-demo/src/config/env.js"
+    ],
+    "documented": false,
+    "description": "STORAGE_PROVIDER is used by application code but is not documented in .env.example or README.md."
+  }
+]
+
+Hardcoded infrastructure:
+[
+  {
+    "type": "url",
+    "value": "http://localhost:8080",
+    "files": [
+      "legacy-cloud-api-demo/.env.example"
+    ],
+    "confidence": "High"
+  },
+  {
+    "type": "region",
+    "value": "us-east-1",
+    "files": [
+      "legacy-cloud-api-demo/.github/workflows/deploy.yml",
+      "legacy-cloud-api-demo/infra/aws/main.tf",
+      "legacy-cloud-api-demo/k8s/deployment.yml",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "confidence": "Medium"
+  },
+  {
+    "type": "url",
+    "value": "https://api.legacy-cloud.example.com",
+    "files": [
+      "legacy-cloud-api-demo/src/config/env.js"
+    ],
+    "confidence": "High"
+  },
+  {
+    "type": "url",
+    "value": "https://billing.legacy-vendor.example.com/v1/callback",
+    "files": [
+      "legacy-cloud-api-demo/src/config/env.js"
+    ],
+    "confidence": "High"
+  },
+  {
+    "type": "url",
+    "value": "https://mq.internal.legacy-vendor.example/bridge",
+    "files": [
+      "legacy-cloud-api-demo/src/legacy/legacyQueueBridge.js"
+    ],
+    "confidence": "High"
+  },
+  {
+    "type": "url",
+    "value": "https://${env.S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com/${key}",
+    "files": [
+      "legacy-cloud-api-demo/src/services/storage/s3Storage.js"
+    ],
+    "confidence": "High"
+  },
+  {
+    "type": "url",
+    "value": "https://storage.googleapis.com/future-target-bucket",
+    "files": [
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "confidence": "High"
+  },
+  {
+    "type": "url",
+    "value": "https://legacy-cloud-api-prod-assets.s3.us-east-1.amazonaws.com/demo.png",
+    "files": [
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "confidence": "High"
+  }
+]
+
+Preliminary findings:
+[
+  {
+    "title": "Direct S3 usage detected",
+    "category": "Storage",
+    "provider": "AWS",
+    "service": "S3",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/.env.example",
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md",
+      "legacy-cloud-api-demo/README.md",
+      "legacy-cloud-api-demo/docker-compose.yml",
+      "legacy-cloud-api-demo/docs/migration-notes.md",
+      "legacy-cloud-api-demo/infra/aws/main.tf",
+      "legacy-cloud-api-demo/k8s/deployment.yml",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/package.json",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/services/storage/s3Storage.js",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "scannerEvidence": [
+      "legacy-cloud-api-demo/.env.example Line 5: # - S3_BUCKET",
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md Line 31: - Treat direct AWS S3 SDK usage as a refactor concern.",
+      "legacy-cloud-api-demo/docker-compose.yml Line 16: STORAGE_PROVIDER: aws-s3",
+      "legacy-cloud-api-demo/docker-compose.yml Line 17: S3_BUCKET: legacy-cloud-api-prod-assets",
+      "legacy-cloud-api-demo/docs/migration-notes.md Line 9: - Should S3 uploads move to Google Cloud Storage or a provider-agnostic storage layer?",
+      "legacy-cloud-api-demo/infra/aws/main.tf Line 14: resource \"aws_s3_bucket\" \"assets\" {",
+      "legacy-cloud-api-demo/k8s/deployment.yml Line 23: - name: S3_BUCKET",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 73: \"title\": \"AWS S3 SDK is used directly for file storage\","
+    ]
+  },
+  {
+    "title": "AWS ElastiCache reference detected",
+    "category": "Cache / Queue",
+    "provider": "AWS",
+    "service": "ElastiCache",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/README.md",
+      "legacy-cloud-api-demo/infra/aws/main.tf",
+      "legacy-cloud-api-demo/k8s/deployment.yml",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "scannerEvidence": [
+      "legacy-cloud-api-demo/infra/aws/main.tf Line 18: resource \"aws_elasticache_cluster\" \"redis\" {",
+      "legacy-cloud-api-demo/k8s/deployment.yml Line 26: value: rediss://legacy-cloud-api-redis.z1v37w.ng.0001.use1.cache.amazonaws.com:6379",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 7: \"title\": \"Redis endpoint defaults to AWS ElastiCache\",",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 10: \"service\": \"ElastiCache / Redis\",",
+      "legacy-cloud-api-demo/README.md Line 24: | L1 | Config change | Can be fixed through configuration/env changes | Redis host default points to AWS ElastiCache |",
+      "legacy-cloud-api-demo/README.md Line 46: 3. Redis defaults to an AWS ElastiCache-style hostname.",
+      "legacy-cloud-api-demo/src/config/env.js Line 7: REDIS_URL: process.env.REDIS_URL || 'rediss://legacy-cloud-api-redis.z1v37w.ng.0001.use1.cache.amazonaws.com:6379',",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js Line 8: 'redis://legacy-cloud-api-redis.z1v37w.ng.0001.use1.cache.amazonaws.com:6379'"
+    ]
+  },
+  {
+    "title": "SendGrid runtime dependency detected",
+    "category": "Runtime dependency",
+    "provider": "External",
+    "service": "SendGrid",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/.env.example",
+      "legacy-cloud-api-demo/README.md",
+      "legacy-cloud-api-demo/docs/migration-notes.md",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/package.json",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/index.js",
+      "legacy-cloud-api-demo/src/routes/auth.routes.js",
+      "legacy-cloud-api-demo/src/services/email/sendgridEmail.js",
+      "legacy-cloud-api-demo/src/workers/orderWorker.js"
+    ],
+    "scannerEvidence": [
+      "legacy-cloud-api-demo/.env.example Line 4: # - SENDGRID_API_KEY",
+      "legacy-cloud-api-demo/docs/migration-notes.md Line 11: - Should SendGrid remain external or be abstracted behind an email provider interface?",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 42: \"title\": \"SendGrid is required at startup without graceful fallback\",",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 44: \"provider\": \"SendGrid\",",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 48: \"src/services/email/sendgridEmail.js\"",
+      "legacy-cloud-api-demo/package.json Line 18: \"@sendgrid/mail\": \"^8.1.4\",",
+      "legacy-cloud-api-demo/README.md Line 14: - External services: AWS S3, AWS GameLift, SendGrid, legacy billing provider",
+      "legacy-cloud-api-demo/README.md Line 47: 4. SendGrid is required at startup without fallback."
+    ]
+  },
+  {
+    "title": "AWS GameLift dependency detected",
+    "category": "Game infrastructure",
+    "provider": "AWS",
+    "service": "GameLift",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/.env.example",
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md",
+      "legacy-cloud-api-demo/README.md",
+      "legacy-cloud-api-demo/docs/migration-notes.md",
+      "legacy-cloud-api-demo/infra/aws/main.tf",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json",
+      "legacy-cloud-api-demo/package.json",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/routes/matchmaking.routes.js",
+      "legacy-cloud-api-demo/src/services/matchmaking/gameliftMatchmaker.js"
+    ],
+    "scannerEvidence": [
+      "legacy-cloud-api-demo/.env.example Line 7: # - GAMELIFT_FLEET_ID",
+      "legacy-cloud-api-demo/BOB_ANALYSIS_PROMPT.md Line 30: - Treat AWS GameLift as an architecture-level migration concern.",
+      "legacy-cloud-api-demo/docs/migration-notes.md Line 10: - Should GameLift be replaced by Agones?",
+      "legacy-cloud-api-demo/infra/aws/main.tf Line 27: resource \"aws_gamelift_fleet\" \"game\" {",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 91: \"title\": \"AWS GameLift matchmaking blocks direct migration to GCP\",",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 94: \"service\": \"GameLift\",",
+      "legacy-cloud-api-demo/migration-fixtures/expected-findings.json Line 96: \"src/services/matchmaking/gameliftMatchmaker.js\",",
+      "legacy-cloud-api-demo/package.json Line 15: \"@aws-sdk/client-gamelift\": \"^3.758.0\","
+    ]
+  },
+  {
+    "title": "CI/CD cloud assumption detected",
+    "category": "CI/CD",
+    "provider": "Unknown",
+    "service": "Pipeline",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/.github/workflows/deploy.yml"
+    ],
+    "scannerEvidence": [
+      "legacy-cloud-api-demo/.github/workflows/deploy.yml Line 18: uses: aws-actions/configure-aws-credentials@v4"
+    ]
+  },
+  {
+    "title": "Environment variable GAMELIFT_QUEUE_NAME is used but not documented",
+    "category": "Environment configuration",
+    "provider": "Unknown",
+    "service": "Environment",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/src/config/env.js"
+    ],
+    "scannerEvidence": [
+      "GAMELIFT_QUEUE_NAME is used by application code but is not documented in .env.example or README.md."
+    ]
+  },
+  {
+    "title": "Environment variable LEGACY_BILLING_ENDPOINT is used but not documented",
+    "category": "Environment configuration",
+    "provider": "Unknown",
+    "service": "Environment",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/src/config/env.js"
+    ],
+    "scannerEvidence": [
+      "LEGACY_BILLING_ENDPOINT is used by application code but is not documented in .env.example or README.md."
+    ]
+  },
+  {
+    "title": "Environment variable LEGACY_QUEUE_ENDPOINT is used but not documented",
+    "category": "Environment configuration",
+    "provider": "Unknown",
+    "service": "Environment",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/src/legacy/legacyQueueBridge.js"
+    ],
+    "scannerEvidence": [
+      "LEGACY_QUEUE_ENDPOINT is used by application code but is not documented in .env.example or README.md."
+    ]
+  },
+  {
+    "title": "Environment variable LEGACY_QUEUE_TOKEN [REDACTED] used but not documented",
+    "category": "Environment configuration",
+    "provider": "Unknown",
+    "service": "Environment",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/src/legacy/legacyQueueBridge.js"
+    ],
+    "scannerEvidence": [
+      "LEGACY_QUEUE_TOKEN [REDACTED] used by application code but is not documented in .env.example or README.md."
+    ]
+  },
+  {
+    "title": "Environment variable SENDGRID_FROM_EMAIL is used but not documented",
+    "category": "Environment configuration",
+    "provider": "Unknown",
+    "service": "Environment",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/src/config/env.js"
+    ],
+    "scannerEvidence": [
+      "SENDGRID_FROM_EMAIL is used by application code but is not documented in .env.example or README.md."
+    ]
+  },
+  {
+    "title": "Environment variable STORAGE_PROVIDER is used but not documented",
+    "category": "Environment configuration",
+    "provider": "Unknown",
+    "service": "Environment",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/src/config/env.js"
+    ],
+    "scannerEvidence": [
+      "STORAGE_PROVIDER is used by application code but is not documented in .env.example or README.md."
+    ]
+  },
+  {
+    "title": "Hardcoded url detected",
+    "category": "Hardcoded infrastructure",
+    "provider": "Unknown",
+    "service": "url",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/.env.example"
+    ],
+    "scannerEvidence": [
+      "url: http://localhost:8080"
+    ]
+  },
+  {
+    "title": "Hardcoded region detected",
+    "category": "Hardcoded infrastructure",
+    "provider": "Unknown",
+    "service": "region",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/.github/workflows/deploy.yml",
+      "legacy-cloud-api-demo/infra/aws/main.tf",
+      "legacy-cloud-api-demo/k8s/deployment.yml",
+      "legacy-cloud-api-demo/src/config/env.js",
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "scannerEvidence": [
+      "region: us-east-1"
+    ]
+  },
+  {
+    "title": "Hardcoded url detected",
+    "category": "Hardcoded infrastructure",
+    "provider": "Unknown",
+    "service": "url",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/src/config/env.js"
+    ],
+    "scannerEvidence": [
+      "url: https://api.legacy-cloud.example.com"
+    ]
+  },
+  {
+    "title": "Hardcoded url detected",
+    "category": "Hardcoded infrastructure",
+    "provider": "Unknown",
+    "service": "url",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/src/config/env.js"
+    ],
+    "scannerEvidence": [
+      "url: https://billing.legacy-vendor.example.com/v1/callback"
+    ]
+  },
+  {
+    "title": "Hardcoded url detected",
+    "category": "Hardcoded infrastructure",
+    "provider": "Unknown",
+    "service": "url",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/src/legacy/legacyQueueBridge.js"
+    ],
+    "scannerEvidence": [
+      "url: https://mq.internal.legacy-vendor.example/bridge"
+    ]
+  },
+  {
+    "title": "Hardcoded url detected",
+    "category": "Hardcoded infrastructure",
+    "provider": "Unknown",
+    "service": "url",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/src/services/storage/s3Storage.js"
+    ],
+    "scannerEvidence": [
+      "url: https://${env.S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com/${key}"
+    ]
+  },
+  {
+    "title": "Hardcoded url detected",
+    "category": "Hardcoded infrastructure",
+    "provider": "Unknown",
+    "service": "url",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "scannerEvidence": [
+      "url: https://storage.googleapis.com/future-target-bucket"
+    ]
+  },
+  {
+    "title": "Hardcoded url detected",
+    "category": "Hardcoded infrastructure",
+    "provider": "Unknown",
+    "service": "url",
+    "affectedFiles": [
+      "legacy-cloud-api-demo/src/utils/providerDetectionExamples.js"
+    ],
+    "scannerEvidence": [
+      "url: https://legacy-cloud-api-prod-assets.s3.us-east-1.amazonaws.com/demo.png"
+    ]
+  }
+]
+
+Use these resolution levels:
+- L1: Config change
+- L2: Minor code change
+- L3: Refactor required
+- L4: Architecture change
+- L5: Human review required
+
+Use this rule:
+High severity + low confidence = Human Review Required
+
+Return only valid JSON matching the ScanResult type with this structure:
+
+{
+  "bobVerdict": "Prepare First",
+  "bobSummary": "...",
+  "bobConfidence": "Medium-High",
+  "readinessScore": 42,
+  "recommendedDecision": "Prepare First",
+  "businessRiskLevel": "High",
+  "technicalComplexity": "High",
+  "findings": [
+    {
+      "id": "finding_001",
+      "title": "...",
+      "category": "...",
+      "provider": "...",
+      "service": "...",
+      "affectedFiles": ["..."],
+      "severity": "High",
+      "confidence": "High",
+      "resolutionLevel": "L3",
+      "affectedFeature": "File uploads",
+      "featureSurvivalState": "High risk",
+      "bobRationale": "...",
+      "businessImpact": "...",
+      "migrationImpact": "...",
+      "recommendedAction": "...",
+      "requiresHumanReview": false,
+      "humanReviewReason": "...",
+      "suggestedReviewer": "Senior Backend Engineer"
+    }
+  ],
+  "featureSurvivalMap": [
+    {
+      "feature": "...",
+      "dependency": "...",
+      "expectedState": "High risk",
+      "bobRationale": "...",
+      "recommendedAction": "..."
+    }
+  ],
+  "humanReviewQueue": [
+    {
+      "findingId": "...",
+      "title": "...",
+      "reason": "...",
+      "severity": "Critical",
+      "confidence": "Low",
+      "suggestedReviewer": "Senior Backend Engineer",
+      "nextAction": "..."
+    }
+  ],
+  "actionPlan": {
+    "fixBeforeMigration": [],
+    "validateBeforeMigration": [],
+    "reviewWithSeniorEngineer": [],
+    "documentBeforeMigration": [],
+    "postMigrationChecks": []
+  },
+  "bobReasoningTrace": {
+    "architectureSummary": "...",
+    "cloudDependencyReasoning": [],
+    "riskClassificationRationale": [],
+    "confidenceRationale": [],
+    "humanReviewRationale": [],
+    "recommendedModernizationNotes": [],
+    "traceTimeline": []
+  }
+}

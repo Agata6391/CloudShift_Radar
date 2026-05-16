@@ -118,7 +118,8 @@ Add Bob Shell configuration to `.env` before running a real scan:
 BOB_PROVIDER=shell
 BOBSHELL_API_KEY=your_key
 BOB_SHELL_COMMAND=.\node_modules\.bin\bob.cmd
-BOB_TIMEOUT_MS=60000
+BOB_TIMEOUT_MS=define_your_timeout_ms
+BOB_SHELL_COMMAND=your_path_to_bob_shell_command
 PORT=4000
 FRONTEND_URL=http://localhost:5173
 ```
@@ -170,7 +171,7 @@ The default frontend runs on `http://localhost:5173`. The backend runs on `http:
 BOB_PROVIDER=shell
 BOBSHELL_API_KEY=
 BOB_SHELL_COMMAND=.\node_modules\.bin\bob.cmd
-BOB_TIMEOUT_MS=60000
+BOB_TIMEOUT_MS= define
 PORT=4000
 FRONTEND_URL=http://localhost:5173
 ```
