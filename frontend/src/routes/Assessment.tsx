@@ -15,7 +15,7 @@ interface AssessmentProps {
   onStartAnalysis: (payload: ProjectInputPayload) => void;
 }
 
-type ValidationState = "incomplete" | "ready" | "validating" | "success" | "warning" | "error";
+type ValidationState = "incomplete" | "ready" | "validating" | "success" | "warning" | "error" | "invalid";
 
 const cloudOptions = ["AWS", "GCP", "Azure", "Other"];
 const applicationTypes = ["Frontend", "Backend", "Full-stack", "Custom"];
@@ -87,7 +87,12 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
         // Check if there are warnings
         setValidationState(result.warnings.length > 0 ? "warning" : "success");
       } else {
-        setValidationState("error");
+        // Check if validation state is 'invalid' with validationErrors
+        if (result.validationState === "invalid") {
+          setValidationState("invalid");
+        } else {
+          setValidationState("error");
+        }
       }
     } catch (error) {
       setValidationState("error");
@@ -114,7 +119,7 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
       return;
     }
 
-    if (validationState === "error" && selectedFile && !selectedFile.name.toLowerCase().endsWith(".zip")) {
+    if ((validationState === "error" || validationState === "invalid") && selectedFile && !selectedFile.name.toLowerCase().endsWith(".zip")) {
       setSelectedFile(null);
       setValidationState("incomplete");
       fileInputRef.current?.click();
@@ -128,10 +133,10 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
     if (validationState === "validating") return "Validating...";
     if (validationState === "success") return "Validation Complete - Start Analysis";
     if (validationState === "warning") return "Validation Complete - Start Analysis";
-    if (validationState === "error" && selectedFile && !selectedFile.name.toLowerCase().endsWith(".zip")) {
+    if ((validationState === "error" || validationState === "invalid") && selectedFile && !selectedFile.name.toLowerCase().endsWith(".zip")) {
       return "Upload Another File";
     }
-    if (validationState === "error") return "Retry Validation";
+    if (validationState === "error" || validationState === "invalid") return "Retry Validation";
     return "Upload & Validate Repository";
   })();
 
@@ -299,6 +304,24 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
                   <li key={idx}>{error.message}</li>
                 ))}
               </ul>
+            </>
+          ) : null}
+          {validationState === "invalid" && validationResult ? (
+            <>
+              <p><strong>Validation errors detected.</strong> The following issues were found:</p>
+              <ul className="clean-list">
+                {validationResult.errors.map((error, idx) => (
+                  <li key={`error-${idx}`}>
+                    <strong>{error.code}:</strong> {error.message}
+                    {error.details && <div style={{ marginLeft: '1rem', fontSize: '0.9em', color: '#666' }}>{error.details}</div>}
+                  </li>
+                ))}
+              </ul>
+              {validationResult.validationState === "invalid" && (
+                <p style={{ marginTop: '1rem', fontStyle: 'italic' }}>
+                  Please fix these issues and try again.
+                </p>
+              )}
             </>
           ) : null}
           <Button variant="ghost" onClick={() => onNavigate("/login")}>Back to login</Button>

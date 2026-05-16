@@ -7,6 +7,17 @@ interface MigrationImpactFindingsTabProps {
   result: ScanResult;
 }
 
+/**
+ * MigrationImpactFindingsTab - Main findings view with migration impact focus
+ * This component displays findings from ScanResult.findings with emphasis on:
+ * - Migration risk and feature survival
+ * - Business and feature impact
+ * - Migration-specific recommendations
+ *
+ * Note: All findings come from the same data source (ScanResult.findings).
+ * The term "findings" is standardized across the codebase.
+ */
+
 function riskTone(risk: RiskValue) {
   if (risk === "Critical" || risk === "Needs review") return "critical";
   if (risk === "High") return "high";

@@ -58,6 +58,13 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
       })
       .catch((scanError) => {
         if (cancelled) return;
+        
+        // Handle network errors specifically
+        if (scanError instanceof TypeError && scanError.message.includes("fetch")) {
+          setError("Network error. Please check your connection and try again.");
+          return;
+        }
+        
         const message = scanError instanceof Error ? scanError.message : "Bob analysis failed.";
         setError(
           message.includes("BOBSHELL_API_KEY")

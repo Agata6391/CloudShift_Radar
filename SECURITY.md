@@ -856,7 +856,7 @@ async function getSecret(secretName: string): Promise<string> {
 }
 
 // Load secrets at startup
-const BOB_SHELL_API_KEY = await getSecret('cloud-radar/bob-shell-api-key');
+const BOB_SHELL_API_KEY = await getSecret('cloudshift-radar/bob-shell-api-key');
 ```
 
 ---

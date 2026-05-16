@@ -27,6 +27,16 @@ export type FeatureStatus =
 
 export type RiskValue = "Low" | "Medium" | "High" | "Critical" | "Needs review";
 
+/**
+ * Finding - Core data structure for migration issues
+ *
+ * Represents a single migration-related issue detected by Bob.
+ * All findings are stored in ScanResult.findings array.
+ *
+ * Terminology note: We use "findings" consistently throughout the codebase.
+ * There is no separate "technical findings" data structure - all findings
+ * contain both technical details and migration impact information.
+ */
 export interface Finding {
   id: string;
   title: string;
@@ -49,7 +59,7 @@ export interface Finding {
   businessImpact: string;
   migrationImpact: string;
   featureImpact?: string;
-  technicalComplexity?: string;
+  technicalComplexity?: 'low' | 'medium' | 'high';
   recommendedAction: string;
   requiresHumanReview: boolean;
   humanReviewReason?: string;
@@ -111,6 +121,12 @@ export interface BobReasoningTrace {
   traceTimeline: string[];
 }
 
+/**
+ * ScanResult - Complete migration analysis result
+ *
+ * Contains all findings and analysis from Bob's migration assessment.
+ * The 'findings' array is the single source of truth for all detected issues.
+ */
 export interface ScanResult {
   scanId: string;
   projectName: string;
@@ -124,6 +140,7 @@ export interface ScanResult {
   recommendedDecision: RecommendedDecision;
   businessRiskLevel: string;
   technicalComplexity: string;
+  /** All migration findings - single source of truth for detected issues */
   findings: Finding[];
   featureSurvivalMap: FeatureSurvivalItem[];
   humanReviewQueue: HumanReviewItem[];
@@ -131,6 +148,9 @@ export interface ScanResult {
   bobReasoningTrace: BobReasoningTrace;
   reportSummary?: ReportSummary;
   aiSummary?: AISummary;
+  validationState?: ValidationState;
+  validationErrors?: string[];
+  canProceed?: boolean;
   createdAt: string;
 }
 
@@ -165,6 +185,13 @@ export interface HardcodedInfrastructure {
   confidence: Confidence;
 }
 
+/**
+ * PreliminaryFinding - Scanner-detected issue before Bob analysis
+ *
+ * These are converted to full Finding objects by Bob during analysis.
+ * The scanner detects potential issues, then Bob enriches them with
+ * severity, confidence, migration impact, and recommendations.
+ */
 export interface PreliminaryFinding {
   title: string;
   category: string;
