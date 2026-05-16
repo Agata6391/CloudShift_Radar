@@ -11,7 +11,8 @@
     "build:frontend": "pnpm --filter @cloudshift-radar/shared build && pnpm --filter @cloudshift-radar/frontend build",
     "build:backend": "pnpm --filter @cloudshift-radar/shared build && pnpm --filter @cloudshift-radar/backend build",
     "typecheck": "pnpm --filter @cloudshift-radar/shared typecheck && pnpm --filter @cloudshift-radar/backend typecheck && pnpm --filter @cloudshift-radar/frontend typecheck",
-    "setup:bob": "pnpm add -D ./vendor/bobshell.tgz",
+    "setup:bob": "node -e \"process.platform==='win32'?require('child_process').execSync('powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/install-bob-shell.ps1',{stdio:'inherit'}):require('child_process').execSync('bash ./scripts/install-bob-shell.sh',{stdio:'inherit'})\"",
+    "setup:bob:local": "node -e \"process.platform==='win32'?require('child_process').execSync('powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/install-bob-shell.ps1 -SkipInstall',{stdio:'inherit'}):require('child_process').execSync('bash ./scripts/install-bob-shell.sh --skip-install',{stdio:'inherit'})\"",
     "check:bob": "pnpm --filter @cloudshift-radar/backend check:bob",
     "clean": "pnpm --filter @cloudshift-radar/shared clean && pnpm --filter @cloudshift-radar/backend clean && pnpm --filter @cloudshift-radar/frontend clean"
   }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import type { ScanResult } from "@cloudshift-radar/shared";
 import { submitZipScan } from "../api/client";
 import { BobAnalysisPanel } from "../components/assessment/BobAnalysisPanel";
@@ -6,6 +6,44 @@ import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import type { ProjectInputPayload } from "./Assessment";
 import type { Route } from "../utils/navigation";
+
+// Hook to detect reduced motion preference
+function usePrefersReducedMotion(): boolean {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+    
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
+  
+  return prefersReducedMotion;
+}
+
+// Hook for animated dots on active step
+function useAnimatedDots(isActive: boolean, reducedMotion: boolean): string {
+  const [dotCount, setDotCount] = useState(0);
+  
+  useEffect(() => {
+    if (!isActive || reducedMotion) {
+      setDotCount(0);
+      return;
+    }
+    
+    const interval = setInterval(() => {
+      setDotCount((prev) => (prev + 1) % 4);
+    }, 600);
+    
+    return () => clearInterval(interval);
+  }, [isActive, reducedMotion]);
+  
+  if (!isActive) return "";
+  if (reducedMotion) return "...";
+  return ".".repeat(dotCount);
+}
 
 interface AnalysisRunningProps {
   pendingScan: ProjectInputPayload | null;
@@ -15,14 +53,16 @@ interface AnalysisRunningProps {
 
 type AnalysisState = "running" | "error" | "timeout" | "cancelled";
 
-const scanSteps = [
-  "Queued",
-  "Uploading files",
-  "Validating package",
-  "Scanning structure",
+// Minimum visible duration to ensure users can perceive Bob's analysis work
+const MINIMUM_VISIBLE_DURATION_MS = 3500;
+
+const analysisSteps = [
+  "Preparing repository context",
   "Detecting cloud dependencies",
-  "Running Bob analysis",
-  "Generating report"
+  "Mapping findings to feature impact",
+  "Asking Bob for migration reasoning",
+  "Generating readiness verdict",
+  "Preparing dashboard"
 ];
 
 const detectedItems = [
@@ -32,17 +72,46 @@ const detectedItems = [
   "Authentication configuration"
 ];
 
+// Component for individual analysis step with animated dots
+interface AnalysisStepItemProps {
+  step: string;
+  isDone: boolean;
+  isCurrent: boolean;
+  isPending: boolean;
+  stepNumber: number;
+  prefersReducedMotion: boolean;
+}
+
+function AnalysisStepItem({ step, isDone, isCurrent, isPending, stepNumber, prefersReducedMotion }: AnalysisStepItemProps) {
+  const animatedDots = useAnimatedDots(isCurrent, prefersReducedMotion);
+  
+  return (
+    <div
+      className={`progress-step ${isDone ? "done" : ""} ${isCurrent ? "active" : ""}`}
+    >
+      <span>{isDone ? "✓" : isCurrent ? "●" : isPending ? "○" : stepNumber}</span>
+      <p>{step}{animatedDots}</p>
+    </div>
+  );
+}
+
 export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: AnalysisRunningProps) {
   const [progress, setProgress] = useState(8);
   const [analysisState, setAnalysisState] = useState<AnalysisState>("running");
   const [error, setError] = useState("");
   const [retryCount, setRetryCount] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+  const [minimumDurationComplete, setMinimumDurationComplete] = useState(false);
+  const cancelledRef = useRef(false);
+  
+  const prefersReducedMotion = usePrefersReducedMotion();
 
-  const currentStep = useMemo(() => {
-    const index = Math.min(scanSteps.length - 1, Math.floor((progress / 100) * scanSteps.length));
-    return scanSteps[index];
+  const currentStepIndex = useMemo(() => {
+    return Math.min(analysisSteps.length - 1, Math.floor((progress / 100) * analysisSteps.length));
   }, [progress]);
+  
+  const currentStep = analysisSteps[currentStepIndex];
 
   const startAnalysis = useCallback(() => {
     if (!pendingScan) {
@@ -55,8 +124,10 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
     setError("");
     setProgress(8);
     setElapsedTime(0);
+    setScanResult(null);
+    setMinimumDurationComplete(false);
+    cancelledRef.current = false;
 
-    let cancelled = false;
     const progressInterval = window.setInterval(() => {
       setProgress((current) => Math.min(current + 7, 92));
     }, 550);
@@ -65,9 +136,14 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
       setElapsedTime((t) => t + 1);
     }, 1000);
 
+    // Start minimum visible duration timer
+    const minDurationTimer = window.setTimeout(() => {
+      setMinimumDurationComplete(true);
+    }, MINIMUM_VISIBLE_DURATION_MS);
+
     // Timeout after 5 minutes
     const timeoutId = window.setTimeout(() => {
-      if (!cancelled && analysisState === "running") {
+      if (!cancelledRef.current && analysisState === "running") {
         setAnalysisState("timeout");
         setError("Analysis is taking longer than expected. The server may be overloaded.");
       }
@@ -75,12 +151,12 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
 
     submitZipScan(pendingScan.context, pendingScan.file)
       .then((result) => {
-        if (cancelled) return;
+        if (cancelledRef.current) return;
         setProgress(100);
-        window.setTimeout(() => onComplete(result), 550);
+        setScanResult(result);
       })
       .catch((scanError) => {
-        if (cancelled) return;
+        if (cancelledRef.current) return;
         
         setAnalysisState("error");
         
@@ -111,15 +187,24 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
         window.clearInterval(progressInterval);
         window.clearInterval(timeInterval);
         window.clearTimeout(timeoutId);
+        // Don't clear minDurationTimer here - let it complete naturally
       });
 
     return () => {
-      cancelled = true;
+      cancelledRef.current = true;
       window.clearInterval(progressInterval);
       window.clearInterval(timeInterval);
       window.clearTimeout(timeoutId);
+      window.clearTimeout(minDurationTimer);
     };
-  }, [pendingScan, onComplete, analysisState]);
+  }, [pendingScan, analysisState]);
+
+  // Navigate to dashboard only when both conditions are met
+  useEffect(() => {
+    if (scanResult && minimumDurationComplete && !cancelledRef.current) {
+      onComplete(scanResult);
+    }
+  }, [scanResult, minimumDurationComplete, onComplete]);
 
   useEffect(() => {
     const cleanup = startAnalysis();
@@ -143,24 +228,39 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
     <div className="page analysis-page">
       <section className="page-intro">
         <span className="eyebrow">Analysis Running</span>
-        <h1>{analysisState === "running" ? "Analysis in progress" : "Analysis Status"}</h1>
+        <h1>{analysisState === "running" ? "Bob is analyzing your migration risk" : "Analysis Status"}</h1>
         <p>
           {analysisState === "running"
-            ? "CloudShift Radar is scanning your project with Bob."
+            ? "CloudShift Radar is scanning repository signals, mapping infrastructure dependencies, and asking Bob to generate a migration readiness verdict."
             : "Review the status below and take action if needed."}
         </p>
       </section>
 
       {pendingScan ? (
-        <Card className="wide-card">
-          <h2>{pendingScan.context.projectName}</h2>
-          <p>{pendingScan.context.currentProvider} &rarr; {pendingScan.context.targetProvider}</p>
+        <>
+          <Card className="wide-card">
+            <h2>{pendingScan.context.projectName}</h2>
+            <p>{pendingScan.context.currentProvider} &rarr; {pendingScan.context.targetProvider}</p>
+            {analysisState === "running" && (
+              <p style={{ marginTop: "0.5rem", fontSize: "0.9em", opacity: 0.8 }}>
+                Elapsed time: {formatTime(elapsedTime)}
+              </p>
+            )}
+            {analysisState === "running" && (
+              <p style={{ marginTop: "0.25rem", fontSize: "0.85em", opacity: 0.7, fontStyle: "italic" }}>
+                Bob is processing repository signals. Timing may vary by project size.
+              </p>
+            )}
+          </Card>
+          
           {analysisState === "running" && (
-            <p style={{ marginTop: "0.5rem", fontSize: "0.9em", opacity: 0.8 }}>
-              Elapsed time: {formatTime(elapsedTime)} | Expected: 2-4 minutes
-            </p>
+            <Card className="info-card" style={{ marginTop: "1rem", padding: "1rem", background: "rgba(59, 130, 246, 0.05)", border: "1px solid rgba(59, 130, 246, 0.2)" }}>
+              <p style={{ fontSize: "0.9em", fontStyle: "italic", margin: 0, color: "rgba(255, 255, 255, 0.8)" }}>
+                Small repositories may finish quickly, but CloudShift Radar keeps this step visible so you can follow what Bob is evaluating.
+              </p>
+            </Card>
           )}
-        </Card>
+        </>
       ) : null}
 
       {analysisState === "error" && error ? (
@@ -220,7 +320,7 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
             <div className="analysis-progress-track">
               <span style={{ width: `${progress}%` }} />
             </div>
-            <p>Current step: <strong>{currentStep}</strong></p>
+            <p>Analysis stage: <strong>{currentStep}{useAnimatedDots(analysisState === "running", prefersReducedMotion)}</strong></p>
 
             <h3>Detected so far</h3>
             <ul className="clean-list">
@@ -229,20 +329,22 @@ export function AnalysisRunning({ pendingScan, onComplete, onNavigate }: Analysi
               ))}
             </ul>
 
-            <h3>Scan steps</h3>
+            <h3>Analysis steps</h3>
             <div className="progress-list">
-              {scanSteps.map((step, idx) => {
-                const stepIndex = scanSteps.indexOf(currentStep);
-                const isDone = idx < stepIndex;
-                const isCurrent = idx === stepIndex;
+              {analysisSteps.map((step, idx) => {
+                const isDone = idx < currentStepIndex;
+                const isCurrent = idx === currentStepIndex;
+                const isPending = idx > currentStepIndex;
                 return (
-                  <div
-                    className={`progress-step ${isDone ? "done" : ""} ${isCurrent ? "active" : ""}`}
+                  <AnalysisStepItem
                     key={step}
-                  >
-                    <span>{isDone ? "✓" : idx + 1}</span>
-                    <p>{step}</p>
-                  </div>
+                    step={step}
+                    isDone={isDone}
+                    isCurrent={isCurrent}
+                    isPending={isPending}
+                    stepNumber={idx + 1}
+                    prefersReducedMotion={prefersReducedMotion}
+                  />
                 );
               })}
             </div>
