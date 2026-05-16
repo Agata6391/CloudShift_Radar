@@ -6,7 +6,40 @@ import {
   BOB_EXECUTABLE_ERROR,
   assertBobConfigured
 } from "../config/env";
+function stripBobLogPrefix(output: string): string {
+  return output
+    .split(/\r?\n/)
+    .map((line) => line.replace(/^backend dev:\s*\[BobShell stdout\]\s?/, ""))
+    .join("\n");
+}
 
+function extractJsonFromBobOutput(output: string): string | null {
+  const clean = stripBobLogPrefix(output);
+
+  const outputMarkerIndex = clean.lastIndexOf("---output---");
+  const candidate = outputMarkerIndex >= 0
+    ? clean.slice(outputMarkerIndex + "---output---".length)
+    : clean;
+
+  const fencedMatch = candidate.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  const jsonText = fencedMatch ? fencedMatch[1] : candidate;
+
+  const firstBrace = jsonText.indexOf("{");
+  const lastBrace = jsonText.lastIndexOf("}");
+
+  if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) {
+    return null;
+  }
+
+  const possibleJson = jsonText.slice(firstBrace, lastBrace + 1).trim();
+
+  try {
+    JSON.parse(possibleJson);
+    return possibleJson;
+  } catch {
+    return null;
+  }
+}
 export interface BobShellClientInput {
   prompt: string;
 }
@@ -98,9 +131,20 @@ export async function callBobShell(
     child.stderr.setEncoding("utf-8");
 
     child.stdout.on("data", (chunk: string) => {
-      stdout += chunk;
-      console.log("[BobShell stdout]", chunk);
-    });
+  stdout += chunk;
+  console.log("[BobShell stdout]", chunk);
+
+  const extractedJson = extractJsonFromBobOutput(stdout);
+
+  if (extractedJson && !settled) {
+    settled = true;
+    clearTimeout(timeout);
+
+    child.kill("SIGTERM");
+
+    resolve(extractedJson);
+  }
+});
 
     child.stderr.on("data", (chunk: string) => {
       stderr += chunk;
@@ -130,28 +174,35 @@ export async function callBobShell(
     });
 
     child.on("close", (code) => {
-      if (settled) return;
+  if (settled) return;
 
-      settled = true;
-      clearTimeout(timeout);
+  settled = true;
+  clearTimeout(timeout);
 
-     if (code !== 0) {
-  reject(
-    new Error(
-      [
-        `Bob Shell exited with code ${code}.`,
-        stderr.trim() ? `stderr: ${stderr.trim()}` : "",
-        stdout.trim() ? `stdout: ${stdout.trim().slice(-2000)}` : ""
-      ]
-        .filter(Boolean)
-        .join("\n")
-    )
-  );
-  return;
-}
+  if (code !== 0) {
+    reject(
+      new Error(
+        [
+          `Bob Shell exited with code ${code}.`,
+          stderr.trim() ? `stderr: ${stderr.trim()}` : "",
+          stdout.trim() ? `stdout: ${stdout.trim().slice(-2000)}` : ""
+        ]
+          .filter(Boolean)
+          .join("\n")
+      )
+    );
+    return;
+  }
 
-      resolve(stdout.trim());
-    });
+  const extractedJson = extractJsonFromBobOutput(stdout);
+
+  if (!extractedJson) {
+    reject(new Error("Bob Shell returned output, but no valid JSON could be extracted."));
+    return;
+  }
+
+  resolve(extractedJson);
+});
 
    child.stdin.write(
   [

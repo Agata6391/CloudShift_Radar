@@ -21,17 +21,27 @@ import {
 
 const PARSE_ERROR = "Bob returned output that could not be parsed as ScanResult JSON.";
 
-function extractFencedJson(text: string): string | null {
-  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  if (fenced?.[1]) {
-    return fenced[1].trim();
+function extractLastFencedJson(text: string): string | null {
+  const matches = [...text.matchAll(/```(?:json)?\s*([\s\S]*?)```/gi)];
+  const lastMatch = matches[matches.length - 1];
+
+  if (lastMatch?.[1]?.trim()) {
+    return lastMatch[1].trim();
   }
 
   return null;
 }
 
-function extractFirstJsonObject(text: string): string {
-  const fenced = extractFencedJson(text);
+function extractJsonObject(text: string): string {
+  const normalized = text.replace(/\r/g, "").trim();
+
+  const lastOutputMarker = normalized.lastIndexOf("---output---");
+  const searchText =
+    lastOutputMarker >= 0
+      ? normalized.slice(lastOutputMarker + "---output---".length).trim()
+      : normalized;
+
+  const fenced = extractLastFencedJson(searchText);
   if (fenced) {
     return fenced;
   }
@@ -40,9 +50,10 @@ function extractFirstJsonObject(text: string): string {
   let depth = 0;
   let inString = false;
   let escaped = false;
+  let lastCompleteObject = "";
 
-  for (let index = 0; index < text.length; index += 1) {
-    const char = text[index];
+  for (let index = 0; index < searchText.length; index += 1) {
+    const char = searchText[index];
 
     if (escaped) {
       escaped = false;
@@ -67,15 +78,23 @@ function extractFirstJsonObject(text: string): string {
       if (depth === 0) {
         start = index;
       }
+
       depth += 1;
+      continue;
     }
 
     if (char === "}") {
       depth -= 1;
+
       if (depth === 0 && start >= 0) {
-        return text.slice(start, index + 1);
+        lastCompleteObject = searchText.slice(start, index + 1);
+        start = -1;
       }
     }
+  }
+
+  if (lastCompleteObject) {
+    return lastCompleteObject.trim();
   }
 
   throw new Error(PARSE_ERROR);
@@ -86,7 +105,7 @@ function parseBobPayload(rawResponse: unknown): Record<string, unknown> {
     throw new Error(PARSE_ERROR);
   }
 
-  const jsonText = extractFirstJsonObject(rawResponse.trim());
+  const jsonText = extractJsonObject(rawResponse.trim());
   const parsed = JSON.parse(jsonText) as unknown;
 
   if (!isRecord(parsed)) {
@@ -98,6 +117,7 @@ function parseBobPayload(rawResponse: unknown): Record<string, unknown> {
 
 function requireString(record: Record<string, unknown>, key: string): string {
   const value = record[key];
+
   if (typeof value !== "string" || !value.trim()) {
     throw new Error(PARSE_ERROR);
   }
@@ -113,6 +133,7 @@ function optionalString(record: Record<string, unknown>, key: string): string | 
 function requireNumber(record: Record<string, unknown>, key: string): number {
   const value = record[key];
   const parsed = typeof value === "number" ? value : Number(value);
+
   if (!Number.isFinite(parsed)) {
     throw new Error(PARSE_ERROR);
   }
@@ -122,6 +143,7 @@ function requireNumber(record: Record<string, unknown>, key: string): number {
 
 function requireArray(record: Record<string, unknown>, key: string): unknown[] {
   const value = record[key];
+
   if (!Array.isArray(value)) {
     throw new Error(PARSE_ERROR);
   }
@@ -131,6 +153,7 @@ function requireArray(record: Record<string, unknown>, key: string): unknown[] {
 
 function requireRecord(record: Record<string, unknown>, key: string): Record<string, unknown> {
   const value = record[key];
+
   if (!isRecord(value)) {
     throw new Error(PARSE_ERROR);
   }
@@ -138,8 +161,13 @@ function requireRecord(record: Record<string, unknown>, key: string): Record<str
   return value;
 }
 
-function requireEnum<T extends string>(record: Record<string, unknown>, key: string, allowed: readonly T[]): T {
+function requireEnum<T extends string>(
+  record: Record<string, unknown>,
+  key: string,
+  allowed: readonly T[]
+): T {
   const value = record[key];
+
   if (typeof value !== "string" || !allowed.includes(value as T)) {
     throw new Error(PARSE_ERROR);
   }
@@ -147,12 +175,105 @@ function requireEnum<T extends string>(record: Record<string, unknown>, key: str
   return value as T;
 }
 
-function findFeatureImpact(item: Record<string, unknown>, featureSurvivalMap: FeatureSurvivalItem[]) {
+function normalizeExpectedState(value: unknown): FeatureSurvivalItem["expectedState"] {
+  if (typeof value !== "string") {
+    return "Partially working";
+  }
+
+  const normalized = value.trim().toLowerCase();
+
+  if (
+    normalized === "blocked" ||
+    normalized.includes("blocked") ||
+    normalized.includes("not survive") ||
+    normalized.includes("will not survive")
+  ) {
+    return "Blocked";
+  }
+
+  if (
+    normalized === "high risk" ||
+    normalized === "at risk" ||
+    normalized.includes("high risk") ||
+    normalized.includes("at risk") ||
+    normalized.includes("architecture replacement") ||
+    normalized.includes("requires refactoring") ||
+    normalized.includes("requires architecture")
+  ) {
+    return "High risk";
+  }
+
+  if (
+    normalized === "partially working" ||
+    normalized === "needs changes" ||
+    normalized === "needs change" ||
+    normalized.includes("medium risk") ||
+    normalized.includes("configuration change") ||
+    normalized.includes("needs changes") ||
+    normalized.includes("needs change")
+  ) {
+    return "Partially working";
+  }
+
+  if (
+    normalized === "likely working" ||
+    normalized === "ready" ||
+    normalized.includes("survives") ||
+    normalized.includes("cloud-agnostic") ||
+    normalized.includes("no cloud-specific")
+  ) {
+    return "Likely working";
+  }
+
+  if ((expectedStates as readonly string[]).includes(value)) {
+    return value as FeatureSurvivalItem["expectedState"];
+  }
+
+  return "Partially working";
+}
+
+function featureStatusFromExpectedState(
+  value: FeatureSurvivalItem["expectedState"] | undefined
+): Finding["featureStatus"] {
+  if (value === "Likely working") return "Ready";
+  if (value === "Partially working") return "Needs changes";
+  if (value === "High risk") return "At risk";
+  if (value === "Blocked") return "Blocked";
+
+  return "Needs human review";
+}
+
+function normalizeFeatureStatus(
+  value: unknown,
+  fallbackExpectedState?: FeatureSurvivalItem["expectedState"]
+): Finding["featureStatus"] {
+  if (typeof value === "string" && (featureStatuses as readonly string[]).includes(value)) {
+    return value as Finding["featureStatus"];
+  }
+
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+
+    if (normalized === "ready") return "Ready";
+    if (normalized === "blocked") return "Blocked";
+    if (normalized === "at risk") return "At risk";
+    if (normalized === "needs changes" || normalized === "needs change") return "Needs changes";
+    if (normalized === "needs human review") return "Needs human review";
+  }
+
+  return featureStatusFromExpectedState(fallbackExpectedState);
+}
+
+function findFeatureImpact(
+  item: Record<string, unknown>,
+  featureSurvivalMap: FeatureSurvivalItem[]
+): FeatureSurvivalItem | undefined {
   const searchable = [
     optionalString(item, "title"),
     optionalString(item, "category"),
     optionalString(item, "service"),
-    optionalString(item, "provider")
+    optionalString(item, "provider"),
+    optionalString(item, "affectedFeature")
   ]
     .filter(Boolean)
     .join(" ")
@@ -160,6 +281,7 @@ function findFeatureImpact(item: Record<string, unknown>, featureSurvivalMap: Fe
 
   return featureSurvivalMap.find((feature) => {
     const featureText = `${feature.feature} ${feature.dependency}`.toLowerCase();
+
     return featureText
       .split(/\s+|\/+/)
       .filter((token) => token.length > 2)
@@ -167,15 +289,7 @@ function findFeatureImpact(item: Record<string, unknown>, featureSurvivalMap: Fe
   });
 }
 
-function featureStatusFromExpectedState(value: string | undefined) {
-  if (value === "Likely working") return "Ready";
-  if (value === "Partially working") return "Needs changes";
-  if (value === "High risk") return "At risk";
-  if (value === "Blocked") return "Blocked";
-  return "Needs human review";
-}
-
-function riskFromSeverity(severity: Finding["severity"]) {
+function riskFromSeverity(severity: Finding["severity"]): Finding["risk"] {
   return severity === "Low" ? "Low" : severity;
 }
 
@@ -193,20 +307,28 @@ function normalizeFindings(value: unknown, featureSurvivalMap: FeatureSurvivalIt
     const severity = requireEnum(item, "severity", severities);
     const confidence = requireEnum(item, "confidence", confidences);
     const featureImpact = findFeatureImpact(item, featureSurvivalMap);
-    const featureSurvivalState =
-      typeof item.featureSurvivalState === "string" && (expectedStates as readonly string[]).includes(item.featureSurvivalState)
-        ? (item.featureSurvivalState as Finding["featureSurvivalState"])
-        : featureImpact?.expectedState;
+
+    const featureSurvivalState = item.featureSurvivalState
+      ? normalizeExpectedState(item.featureSurvivalState)
+      : normalizeExpectedState(featureImpact?.expectedState);
+
     const bobRationale = requireString(item, "bobRationale");
     const migrationImpact = requireString(item, "migrationImpact");
+
     return {
-      id: typeof item.id === "string" && item.id.trim() ? item.id : `finding_${String(index + 1).padStart(3, "0")}`,
+      id:
+        typeof item.id === "string" && item.id.trim()
+          ? item.id
+          : `finding_${String(index + 1).padStart(3, "0")}`,
       title: requireString(item, "title"),
       category: requireString(item, "category"),
       provider: requireString(item, "provider"),
       service: requireString(item, "service"),
       affectedFiles: coerceStringArray(item.affectedFiles),
-      detectedFiles: coerceStringArray(item.detectedFiles).length > 0 ? coerceStringArray(item.detectedFiles) : coerceStringArray(item.affectedFiles),
+      detectedFiles:
+        coerceStringArray(item.detectedFiles).length > 0
+          ? coerceStringArray(item.detectedFiles)
+          : coerceStringArray(item.affectedFiles),
       severity,
       confidence,
       resolutionLevel: requireEnum(item, "resolutionLevel", resolutionLevels),
@@ -214,11 +336,9 @@ function normalizeFindings(value: unknown, featureSurvivalMap: FeatureSurvivalIt
         typeof item.risk === "string" && (riskValues as readonly string[]).includes(item.risk)
           ? (item.risk as Finding["risk"])
           : riskFromSeverity(severity),
-      affectedFeature: optionalString(item, "affectedFeature") || featureImpact?.feature || "Unknown feature area",
-      featureStatus:
-        typeof item.featureStatus === "string" && (featureStatuses as readonly string[]).includes(item.featureStatus)
-          ? (item.featureStatus as Finding["featureStatus"])
-          : featureStatusFromExpectedState(featureSurvivalState),
+      affectedFeature:
+        optionalString(item, "affectedFeature") || featureImpact?.feature || "Unknown feature area",
+      featureStatus: normalizeFeatureStatus(item.featureStatus, featureSurvivalState),
       featureSurvivalState,
       shortSummary: optionalString(item, "shortSummary") || migrationImpact,
       technicalIssue: optionalString(item, "technicalIssue") || requireString(item, "title"),
@@ -251,7 +371,7 @@ function normalizeFeatureSurvival(value: unknown): FeatureSurvivalItem[] {
     return {
       feature: requireString(entry, "feature"),
       dependency: requireString(entry, "dependency"),
-      expectedState: requireEnum(entry, "expectedState", expectedStates),
+      expectedState: normalizeExpectedState(entry.expectedState),
       bobRationale: requireString(entry, "bobRationale"),
       recommendedAction: requireString(entry, "recommendedAction")
     };
@@ -269,7 +389,10 @@ function normalizeHumanReview(value: unknown): HumanReviewItem[] {
     }
 
     return {
-      findingId: typeof entry.findingId === "string" && entry.findingId.trim() ? entry.findingId : `review_${index + 1}`,
+      findingId:
+        typeof entry.findingId === "string" && entry.findingId.trim()
+          ? entry.findingId
+          : `review_${index + 1}`,
       title: requireString(entry, "title"),
       reason: requireString(entry, "reason"),
       severity: requireEnum(entry, "severity", severities),
@@ -287,14 +410,12 @@ function normalizeActionPlan(value: unknown): ActionPlan {
     throw new Error(PARSE_ERROR);
   }
 
-  const item: Record<string, unknown> = value;
-
   return {
-    fixBeforeMigration: coerceStringArray(item.fixBeforeMigration),
-    validateBeforeMigration: coerceStringArray(item.validateBeforeMigration),
-    reviewWithSeniorEngineer: coerceStringArray(item.reviewWithSeniorEngineer),
-    documentBeforeMigration: coerceStringArray(item.documentBeforeMigration),
-    postMigrationChecks: coerceStringArray(item.postMigrationChecks)
+    fixBeforeMigration: coerceStringArray(value.fixBeforeMigration),
+    validateBeforeMigration: coerceStringArray(value.validateBeforeMigration),
+    reviewWithSeniorEngineer: coerceStringArray(value.reviewWithSeniorEngineer),
+    documentBeforeMigration: coerceStringArray(value.documentBeforeMigration),
+    postMigrationChecks: coerceStringArray(value.postMigrationChecks)
   };
 }
 
@@ -303,15 +424,14 @@ function normalizeTrace(value: unknown): BobReasoningTrace {
     throw new Error(PARSE_ERROR);
   }
 
-  const item: Record<string, unknown> = value;
   return {
-    architectureSummary: requireString(item, "architectureSummary"),
-    cloudDependencyReasoning: coerceStringArray(item.cloudDependencyReasoning),
-    riskClassificationRationale: coerceStringArray(item.riskClassificationRationale),
-    confidenceRationale: coerceStringArray(item.confidenceRationale),
-    humanReviewRationale: coerceStringArray(item.humanReviewRationale),
-    recommendedModernizationNotes: coerceStringArray(item.recommendedModernizationNotes),
-    traceTimeline: coerceStringArray(item.traceTimeline)
+    architectureSummary: requireString(value, "architectureSummary"),
+    cloudDependencyReasoning: coerceStringArray(value.cloudDependencyReasoning),
+    riskClassificationRationale: coerceStringArray(value.riskClassificationRationale),
+    confidenceRationale: coerceStringArray(value.confidenceRationale),
+    humanReviewRationale: coerceStringArray(value.humanReviewRationale),
+    recommendedModernizationNotes: coerceStringArray(value.recommendedModernizationNotes),
+    traceTimeline: coerceStringArray(value.traceTimeline)
   };
 }
 
@@ -325,7 +445,15 @@ export function normalizeBobResponse(
   try {
     payload = parseBobPayload(rawResponse);
   } catch (error) {
-    throw new Error(PARSE_ERROR);
+    throw new Error(
+      [
+        PARSE_ERROR,
+        error instanceof Error ? error.message : String(error),
+        typeof rawResponse === "string" ? rawResponse.slice(0, 3000) : ""
+      ]
+        .filter(Boolean)
+        .join("\n")
+    );
   }
 
   const featureSurvivalMap = normalizeFeatureSurvival(requireArray(payload, "featureSurvivalMap"));
