@@ -1,10 +1,4 @@
-export type DashboardTab =
-  | "overview"
-  | "migrationImpact"
-  | "humanReview"
-  | "actionPlan"
-  | "report"
-  | "trace";
+export type DashboardTab = "overview" | "findings" | "humanReview" | "aiSummary";
 
 interface DashboardTabsProps {
   activeTab: DashboardTab;
@@ -12,12 +6,10 @@ interface DashboardTabsProps {
 }
 
 const tabs: Array<{ id: DashboardTab; label: string }> = [
-  { id: "overview", label: "Bob Overview" },
-  { id: "migrationImpact", label: "Migration Impact Findings" },
+  { id: "overview", label: "Overview" },
+  { id: "findings", label: "Findings" },
   { id: "humanReview", label: "Human Review" },
-  { id: "actionPlan", label: "Action Plan" },
-  { id: "report", label: "Migration Report" },
-  { id: "trace", label: "Bob Reasoning Trace" }
+  { id: "aiSummary", label: "AI Summary" }
 ];
 
 export function DashboardTabs({ activeTab, onChange }: DashboardTabsProps) {

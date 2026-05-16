@@ -1,32 +1,41 @@
-import { useEffect, useState } from "react";
-import type { MigrationContext, ScanResult } from "@cloudshift-radar/shared";
-import { getHealth, submitDemoScan, submitZipScan } from "../api/client";
-import { MigrationSetup } from "../components/assessment/MigrationSetup";
-import { RepositoryInput } from "../components/assessment/RepositoryInput";
-import { progressSteps, ScanProgress } from "../components/assessment/ScanProgress";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { MigrationContext } from "@cloudshift-radar/shared";
+import { getHealth } from "../api/client";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
-import { mockScanResult } from "../data/mockScanResult";
 import type { Route } from "../utils/navigation";
+
+export interface ProjectInputPayload {
+  context: MigrationContext;
+  file: File;
+}
 
 interface AssessmentProps {
   onNavigate: (route: Route) => void;
-  onScanComplete: (result: ScanResult, preview?: boolean) => void;
+  onStartAnalysis: (payload: ProjectInputPayload) => void;
 }
 
-const initialContext: MigrationContext = {
-  projectName: "Legacy Cloud API",
-  currentProvider: "AWS",
-  targetProvider: "GCP",
-  applicationType: "Backend API"
-};
+type ValidationState = "incomplete" | "ready" | "validating" | "success" | "warning" | "error";
 
-export function Assessment({ onNavigate, onScanComplete }: AssessmentProps) {
-  const [step, setStep] = useState(1);
-  const [context, setContext] = useState<MigrationContext>(initialContext);
+const cloudOptions = ["AWS", "GCP", "Azure", "Other"];
+const applicationTypes = ["Frontend", "Backend", "Full-stack", "Custom"];
+const validationSteps = [
+  "Reading ZIP file",
+  "Checking project structure",
+  "Detecting dependency files",
+  "Scanning environment files",
+  "Preparing analysis context"
+];
+
+export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [projectName, setProjectName] = useState("");
+  const [currentProvider, setCurrentProvider] = useState("");
+  const [targetProvider, setTargetProvider] = useState("");
+  const [applicationType, setApplicationType] = useState("");
+  const [customDescription, setCustomDescription] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [progressIndex, setProgressIndex] = useState(0);
-  const [error, setError] = useState("");
+  const [validationState, setValidationState] = useState<ValidationState>("incomplete");
   const [bobConfigured, setBobConfigured] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -35,43 +44,90 @@ export function Assessment({ onNavigate, onScanComplete }: AssessmentProps) {
       .catch(() => setBobConfigured(false));
   }, []);
 
+  const formComplete = useMemo(() => {
+    const hasApplicationType = applicationType === "Custom" ? customDescription.trim().length > 0 : applicationType.length > 0;
+    return (
+      projectName.trim().length > 0 &&
+      Boolean(selectedFile) &&
+      currentProvider.length > 0 &&
+      targetProvider.length > 0 &&
+      currentProvider !== targetProvider &&
+      hasApplicationType
+    );
+  }, [applicationType, currentProvider, customDescription, projectName, selectedFile, targetProvider]);
+
   useEffect(() => {
-    if (step !== 3) {
+    if (!formComplete && validationState !== "validating") {
+      setValidationState("incomplete");
+    }
+
+    if (formComplete && validationState === "incomplete") {
+      setValidationState("ready");
+    }
+  }, [formComplete, validationState]);
+
+  const context: MigrationContext = {
+    projectName: projectName.trim(),
+    currentProvider,
+    targetProvider,
+    applicationType: applicationType === "Custom" ? customDescription.trim() : applicationType
+  };
+
+  const validateProject = () => {
+    if (!selectedFile) return;
+    setValidationState("validating");
+
+    window.setTimeout(() => {
+      if (!selectedFile.name.toLowerCase().endsWith(".zip")) {
+        setValidationState("error");
+        return;
+      }
+
+      if (selectedFile.size === 0) {
+        setValidationState("error");
+        return;
+      }
+
+      const lowerName = selectedFile.name.toLowerCase();
+      setValidationState(lowerName.includes("env") || lowerName.includes("lock") ? "success" : "warning");
+    }, 900);
+  };
+
+  const handlePrimaryAction = () => {
+    if (validationState === "success" || validationState === "warning") {
+      if (selectedFile) {
+        onStartAnalysis({ context, file: selectedFile });
+      }
       return;
     }
 
-    const interval = window.setInterval(() => {
-      setProgressIndex((current) => Math.min(current + 1, progressSteps.length - 1));
-    }, 450);
-
-    return () => window.clearInterval(interval);
-  }, [step]);
-
-  const runScan = async (mode: "zip" | "demo") => {
-    setError("");
-    setStep(3);
-    setProgressIndex(0);
-
-    try {
-      const result = mode === "zip" && selectedFile ? await submitZipScan(context, selectedFile) : await submitDemoScan(context);
-      setProgressIndex(progressSteps.length - 1);
-      window.setTimeout(() => onScanComplete(result), 700);
-    } catch (scanError) {
-      setError(scanError instanceof Error ? scanError.message : "Bob assessment failed.");
-      setStep(2);
+    if (validationState === "error" && selectedFile && !selectedFile.name.toLowerCase().endsWith(".zip")) {
+      setSelectedFile(null);
+      setValidationState("incomplete");
+      fileInputRef.current?.click();
+      return;
     }
+
+    validateProject();
   };
 
-  const previewDemo = () => {
-    onScanComplete(mockScanResult, true);
-  };
+  const ctaLabel = (() => {
+    if (validationState === "validating") return "Validating...";
+    if (validationState === "success") return "Start analysis";
+    if (validationState === "warning") return "Start analysis with warnings";
+    if (validationState === "error" && selectedFile && !selectedFile.name.toLowerCase().endsWith(".zip")) {
+      return "Upload another file";
+    }
+    if (validationState === "error") return "Validate again";
+    return "Validate project";
+  })();
 
   return (
     <div className="page assessment-page">
       <section className="page-intro">
-        <span className="eyebrow">Assessment</span>
-        <h1>Start a Bob migration assessment</h1>
-        <p>Give Bob the migration context, upload a repository ZIP, then review the readiness verdict.</p>
+        <span className="eyebrow">Project Input</span>
+        <h1>Set up your migration scan</h1>
+        <p>Upload your project and define the source and destination environment.</p>
       </section>
 
       {bobConfigured === false ? (
@@ -81,44 +137,147 @@ export function Assessment({ onNavigate, onScanComplete }: AssessmentProps) {
         </Card>
       ) : null}
 
-      {error ? (
-        <Card className="error-card">
-          <h3>Assessment stopped</h3>
-          <p>{error}</p>
-        </Card>
-      ) : null}
-
-      <div className="flow-indicator">
-        {[1, 2, 3].map((item) => (
-          <button key={item} className={step === item ? "active" : ""} onClick={() => setStep(item)}>
-            {item}
-          </button>
-        ))}
-      </div>
-
-      {step === 1 ? (
-        <>
-          <MigrationSetup context={context} onChange={setContext} />
-          <div className="flow-actions">
-            <Button onClick={() => setStep(2)}>Continue to repository input</Button>
+      <div className="project-input-layout">
+        <Card className="form-card">
+          <div className="section-heading">
+            <span>Project details</span>
+            <h2>Migration package</h2>
           </div>
-        </>
-      ) : null}
 
-      {step === 2 ? (
-        <RepositoryInput
-          selectedFile={selectedFile}
-          onFileSelected={setSelectedFile}
-          onUploadScan={() => runScan("zip")}
-          onDemoScan={() => runScan("demo")}
-          onPreviewDemo={previewDemo}
-        />
-      ) : null}
+          <label>
+            Project name
+            <input value={projectName} onChange={(event) => setProjectName(event.target.value)} placeholder="Enter project name" />
+          </label>
 
-      {step === 3 ? <ScanProgress activeIndex={progressIndex} /> : null}
+          <label>
+            Project files
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".zip,application/zip"
+              onChange={(event) => {
+                setSelectedFile(event.target.files?.[0] || null);
+                setValidationState("incomplete");
+              }}
+            />
+          </label>
+          <div className={selectedFile ? "drop-zone uploaded" : "drop-zone"} onClick={() => fileInputRef.current?.click()}>
+            <strong>{selectedFile ? selectedFile.name : "Drag and drop your project package here, or browse files."}</strong>
+            <span>{selectedFile ? "Uploaded" : "Empty"}</span>
+          </div>
 
-      <div className="flow-actions secondary-flow">
-        <Button variant="ghost" onClick={() => onNavigate("/")}>Back to product</Button>
+          <div className="form-grid">
+            <label>
+              Current cloud/service
+              <select value={currentProvider} onChange={(event) => setCurrentProvider(event.target.value)}>
+                <option value="">Select source</option>
+                {cloudOptions.map((option) => (
+                  <option key={option}>{option}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Destination cloud/service
+              <select value={targetProvider} onChange={(event) => setTargetProvider(event.target.value)}>
+                <option value="">Select destination</option>
+                {cloudOptions.map((option) => (
+                  <option key={option}>{option}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          {currentProvider && targetProvider && currentProvider === targetProvider ? (
+            <p className="field-warning">Current cloud/service and destination cloud/service cannot be the same.</p>
+          ) : null}
+
+          <div className="app-type-options">
+            {applicationTypes.map((option) => (
+              <label key={option} className="radio-card">
+                <input
+                  type="radio"
+                  name="applicationType"
+                  checked={applicationType === option}
+                  onChange={() => setApplicationType(option)}
+                />
+                {option}
+              </label>
+            ))}
+          </div>
+
+          {applicationType === "Custom" ? (
+            <label>
+              Custom description
+              <input
+                value={customDescription}
+                onChange={(event) => setCustomDescription(event.target.value)}
+                placeholder="Describe your application type"
+              />
+            </label>
+          ) : null}
+
+          <div className="progressive-action">
+            <Button disabled={!formComplete || validationState === "validating"} onClick={handlePrimaryAction}>
+              {ctaLabel}
+            </Button>
+          </div>
+        </Card>
+
+        <Card className="validation-card">
+          <div className="section-heading">
+            <span>Inline validation feedback</span>
+            <h2>Project package status</h2>
+          </div>
+
+          {validationState === "incomplete" ? (
+            <p>Complete the required fields to validate your project.</p>
+          ) : null}
+          {validationState === "ready" ? (
+            <p>Validate your project package before starting the migration analysis.</p>
+          ) : null}
+          {validationState === "validating" ? (
+            <>
+              <p>Validating project package...</p>
+              <ul className="clean-list">
+                {validationSteps.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+          {validationState === "success" ? (
+            <>
+              <p><strong>Project validated successfully.</strong> CloudShift Radar found the required files to start the analysis.</p>
+              <ul className="clean-list">
+                <li>Files detected</li>
+                <li>Dependency files found</li>
+                <li>Environment files found</li>
+              </ul>
+              <p>Estimated analysis time: 2-4 minutes</p>
+            </>
+          ) : null}
+          {validationState === "warning" ? (
+            <>
+              <p><strong>Project validated with warnings.</strong> CloudShift Radar can continue, but some information may be incomplete.</p>
+              <ul className="clean-list">
+                <li>Missing .env.example file</li>
+                <li>Missing lock file</li>
+              </ul>
+              <p>The migration report may have lower confidence for environment variables and dependency resolution.</p>
+            </>
+          ) : null}
+          {validationState === "error" ? (
+            <>
+              <p><strong>Project validation failed.</strong> CloudShift Radar could not process this package.</p>
+              <ul className="clean-list">
+                <li>Invalid ZIP file</li>
+                <li>No readable project structure detected</li>
+                <li>Package may be corrupted</li>
+              </ul>
+            </>
+          ) : null}
+          <Button variant="ghost" onClick={() => onNavigate("/login")}>Back to login</Button>
+        </Card>
       </div>
     </div>
   );

@@ -15,15 +15,29 @@ function severityTone(severity: Severity) {
 
 export function HumanReviewTab({ result }: HumanReviewTabProps) {
   const reviewFindings = result.findings.filter((finding) => finding.requiresHumanReview);
+  const mediumConfidence = reviewFindings.filter((finding) => finding.confidence === "Medium").length;
+  const lowConfidence = reviewFindings.filter((finding) => finding.confidence === "Low").length;
 
   return (
     <div className="human-review-layout">
       <Card className="wide-card">
         <div className="section-heading">
-          <span>Bob escalation decisions</span>
-          <h2>Bob does not hide uncertainty.</h2>
+          <span>Human Review</span>
+          <h2>These items require manual validation before migration.</h2>
         </div>
-        <p>When a finding is both severe and low-confidence, Bob escalates it for senior human review.</p>
+        <p>
+          Bob does not hide uncertainty. When a finding is severe, ambiguous, or low-confidence, Bob escalates it for
+          manual validation before migration.
+        </p>
+      </Card>
+
+      <Card>
+        <h3>Review summary</h3>
+        <div className="risk-stack">
+          <span>Total review items: {reviewFindings.length}</span>
+          <span>Medium confidence: {mediumConfidence}</span>
+          <span>Low confidence: {lowConfidence}</span>
+        </div>
       </Card>
 
       {reviewFindings.map((finding) => {
@@ -33,7 +47,7 @@ export function HumanReviewTab({ result }: HumanReviewTabProps) {
         <Card key={finding.id} className="review-card">
           <div className="review-card-header">
             <h3>{finding.title}</h3>
-            <StatusPill tone={severityTone(finding.severity)}>{finding.severity}</StatusPill>
+            <StatusPill tone={severityTone(finding.severity)}>{finding.confidence} confidence</StatusPill>
           </div>
           <p>
             {finding.humanReviewReason ||
@@ -66,13 +80,18 @@ export function HumanReviewTab({ result }: HumanReviewTabProps) {
               <dd>{finding.suggestedReviewer || review?.suggestedReviewer || "Senior Engineer"}</dd>
             </div>
             <div>
-              <dt>Next action</dt>
+              <dt>Recommended validation</dt>
               <dd>{review?.nextAction || finding.recommendedAction}</dd>
             </div>
           </dl>
+          <ButtonLikeReview />
         </Card>
         );
       })}
     </div>
   );
+}
+
+function ButtonLikeReview() {
+  return <button className="button button-ghost review-action" type="button">Review item</button>;
 }

@@ -11,9 +11,11 @@ import {
   coerceStringArray,
   confidences,
   expectedStates,
+  featureStatuses,
   isRecord,
   recommendedDecisions,
   resolutionLevels,
+  riskValues,
   severities
 } from "./bobResponseSchema";
 
@@ -165,6 +167,18 @@ function findFeatureImpact(item: Record<string, unknown>, featureSurvivalMap: Fe
   });
 }
 
+function featureStatusFromExpectedState(value: string | undefined) {
+  if (value === "Likely working") return "Ready";
+  if (value === "Partially working") return "Needs changes";
+  if (value === "High risk") return "At risk";
+  if (value === "Blocked") return "Blocked";
+  return "Needs human review";
+}
+
+function riskFromSeverity(severity: Finding["severity"]) {
+  return severity === "Low" ? "Low" : severity;
+}
+
 function normalizeFindings(value: unknown, featureSurvivalMap: FeatureSurvivalItem[]): Finding[] {
   if (!Array.isArray(value)) {
     throw new Error(PARSE_ERROR);
@@ -179,6 +193,12 @@ function normalizeFindings(value: unknown, featureSurvivalMap: FeatureSurvivalIt
     const severity = requireEnum(item, "severity", severities);
     const confidence = requireEnum(item, "confidence", confidences);
     const featureImpact = findFeatureImpact(item, featureSurvivalMap);
+    const featureSurvivalState =
+      typeof item.featureSurvivalState === "string" && (expectedStates as readonly string[]).includes(item.featureSurvivalState)
+        ? (item.featureSurvivalState as Finding["featureSurvivalState"])
+        : featureImpact?.expectedState;
+    const bobRationale = requireString(item, "bobRationale");
+    const migrationImpact = requireString(item, "migrationImpact");
     return {
       id: typeof item.id === "string" && item.id.trim() ? item.id : `finding_${String(index + 1).padStart(3, "0")}`,
       title: requireString(item, "title"),
@@ -186,17 +206,27 @@ function normalizeFindings(value: unknown, featureSurvivalMap: FeatureSurvivalIt
       provider: requireString(item, "provider"),
       service: requireString(item, "service"),
       affectedFiles: coerceStringArray(item.affectedFiles),
+      detectedFiles: coerceStringArray(item.detectedFiles).length > 0 ? coerceStringArray(item.detectedFiles) : coerceStringArray(item.affectedFiles),
       severity,
       confidence,
       resolutionLevel: requireEnum(item, "resolutionLevel", resolutionLevels),
+      risk:
+        typeof item.risk === "string" && (riskValues as readonly string[]).includes(item.risk)
+          ? (item.risk as Finding["risk"])
+          : riskFromSeverity(severity),
       affectedFeature: optionalString(item, "affectedFeature") || featureImpact?.feature || "Unknown feature area",
-      featureSurvivalState:
-        typeof item.featureSurvivalState === "string" && (expectedStates as readonly string[]).includes(item.featureSurvivalState)
-          ? (item.featureSurvivalState as Finding["featureSurvivalState"])
-          : featureImpact?.expectedState || "Unknown",
-      bobRationale: requireString(item, "bobRationale"),
+      featureStatus:
+        typeof item.featureStatus === "string" && (featureStatuses as readonly string[]).includes(item.featureStatus)
+          ? (item.featureStatus as Finding["featureStatus"])
+          : featureStatusFromExpectedState(featureSurvivalState),
+      featureSurvivalState,
+      shortSummary: optionalString(item, "shortSummary") || migrationImpact,
+      technicalIssue: optionalString(item, "technicalIssue") || requireString(item, "title"),
+      bobNotes: optionalString(item, "bobNotes") || bobRationale,
+      bobRationale,
       businessImpact: requireString(item, "businessImpact"),
-      migrationImpact: requireString(item, "migrationImpact"),
+      migrationImpact,
+      featureImpact: optionalString(item, "featureImpact") || migrationImpact,
       recommendedAction: requireString(item, "recommendedAction"),
       requiresHumanReview:
         typeof item.requiresHumanReview === "boolean"
@@ -244,8 +274,10 @@ function normalizeHumanReview(value: unknown): HumanReviewItem[] {
       reason: requireString(entry, "reason"),
       severity: requireEnum(entry, "severity", severities),
       confidence: requireEnum(entry, "confidence", confidences),
+      affectedFeature: optionalString(entry, "affectedFeature"),
       suggestedReviewer: requireString(entry, "suggestedReviewer"),
-      nextAction: requireString(entry, "nextAction")
+      nextAction: requireString(entry, "nextAction"),
+      recommendedValidation: optionalString(entry, "recommendedValidation") || requireString(entry, "nextAction")
     };
   });
 }

@@ -36,15 +36,11 @@ export async function callBobShell(
   }
 
   const bobCommand = resolveBobCommand(env.bobShellCommand);
-  console.log("[BobShell] prompt chars:", input.prompt.length);
-console.log("[BobShell] command:", bobCommand);
-console.log("[BobShell] platform:", process.platform);
-await import("node:fs/promises").then((fs) =>
-  fs.writeFile("bob-debug-prompt.txt", input.prompt, "utf-8")
-);
-
-
   const isWindows = process.platform === "win32";
+
+  console.log("[BobShell] prompt chars:", input.prompt.length);
+  console.log("[BobShell] command:", bobCommand);
+  console.log("[BobShell] platform:", process.platform);
 
   return await new Promise<string>((resolve, reject) => {
     const bobArgs = [
@@ -54,22 +50,16 @@ await import("node:fs/promises").then((fs) =>
   "--trust",
   "--chat-mode",
   "ask",
-  //"--hide-intermediary-output",
-  "-p",
-  "Analyze the repository assessment input provided through stdin. Return only the final assessment. Do not run commands. Do not ask for confirmation."
+  "--output-format",
+  "text"
 ];
 
-    const command = isWindows ? "cmd.exe" : bobCommand;
-
-    const args = isWindows
-      ? ["/d", "/s", "/c", bobCommand, ...bobArgs]
-      : bobArgs;
-
-    const child = spawn(command, args, {
+    const child = spawn(bobCommand, bobArgs, {
       env: {
         ...process.env,
         BOBSHELL_API_KEY: env.bobShellApiKey
       },
+      shell: isWindows,
       windowsHide: true,
       stdio: ["pipe", "pipe", "pipe"]
     });
@@ -83,7 +73,18 @@ await import("node:fs/promises").then((fs) =>
 
       settled = true;
       child.kill("SIGTERM");
-      reject(new Error(`Bob Shell request timed out after ${env.bobTimeoutMs} ms.`));
+
+      reject(
+        new Error(
+          [
+            `Bob Shell request timed out after ${env.bobTimeoutMs} ms.`,
+            stderr.trim() ? `stderr: ${stderr.slice(-2000)}` : "",
+            stdout.trim() ? `stdout: ${stdout.slice(-2000)}` : ""
+          ]
+            .filter(Boolean)
+            .join("\n")
+        )
+      );
     }, env.bobTimeoutMs);
 
     if (!child.stdin || !child.stdout || !child.stderr) {
@@ -97,14 +98,14 @@ await import("node:fs/promises").then((fs) =>
     child.stderr.setEncoding("utf-8");
 
     child.stdout.on("data", (chunk: string) => {
-  stdout += chunk;
-  console.log("[BobShell stdout]", chunk);
-});
+      stdout += chunk;
+      console.log("[BobShell stdout]", chunk);
+    });
 
-child.stderr.on("data", (chunk: string) => {
-  stderr += chunk;
-  console.error("[BobShell stderr]", chunk);
-});
+    child.stderr.on("data", (chunk: string) => {
+      stderr += chunk;
+      console.error("[BobShell stderr]", chunk);
+    });
 
     child.stdin.on("error", (error: NodeJS.ErrnoException) => {
       if (settled) return;
@@ -134,29 +135,37 @@ child.stderr.on("data", (chunk: string) => {
       settled = true;
       clearTimeout(timeout);
 
-      if (code !== 0) {
-        if (/hide-intermediary-output|unknown option|unrecognized option/i.test(stderr)) {
-          reject(
-            new Error(
-              "Bob Shell does not support --hide-intermediary-output. Update Bob Shell or configure a compatible version."
-            )
-          );
-          return;
-        }
-
-        reject(new Error(`Bob Shell exited with code ${code}. ${stderr.trim()}`.trim()));
-        return;
-      }
-
-      if (!stdout.trim()) {
-        reject(new Error("Bob Shell returned empty output."));
-        return;
-      }
+     if (code !== 0) {
+  reject(
+    new Error(
+      [
+        `Bob Shell exited with code ${code}.`,
+        stderr.trim() ? `stderr: ${stderr.trim()}` : "",
+        stdout.trim() ? `stdout: ${stdout.trim().slice(-2000)}` : ""
+      ]
+        .filter(Boolean)
+        .join("\n")
+    )
+  );
+  return;
+}
 
       resolve(stdout.trim());
     });
 
-    child.stdin.write(input.prompt);
-    child.stdin.end();
+   child.stdin.write(
+  [
+    "Analyze the repository assessment input below.",
+    "Return only compact valid JSON.",
+    "Do not run commands.",
+    "Do not ask for confirmation.",
+    "Do not include markdown.",
+    "Do not include explanations outside JSON.",
+    "",
+    input.prompt
+  ].join("\n")
+);
+
+child.stdin.end();
   });
 }

@@ -1,4 +1,5 @@
-import type { Finding, ScanResult, Severity } from "@cloudshift-radar/shared";
+import { useState } from "react";
+import type { Finding, RiskValue, ScanResult, Severity } from "@cloudshift-radar/shared";
 import { Card } from "../ui/Card";
 import { StatusPill } from "../ui/StatusPill";
 
@@ -6,18 +7,18 @@ interface MigrationImpactFindingsTabProps {
   result: ScanResult;
 }
 
-function severityTone(severity: Severity) {
-  if (severity === "Critical") return "critical";
-  if (severity === "High") return "high";
-  if (severity === "Medium") return "medium";
+function riskTone(risk: RiskValue) {
+  if (risk === "Critical" || risk === "Needs review") return "critical";
+  if (risk === "High") return "high";
+  if (risk === "Medium") return "medium";
   return "low";
 }
 
 function stateTone(state: string) {
-  if (state === "Blocked") return "critical";
-  if (state === "High risk") return "high";
-  if (state === "Partially working") return "medium";
-  if (state === "Likely working") return "success";
+  if (state === "Blocked" || state === "Needs human review") return "critical";
+  if (state === "At risk") return "high";
+  if (state === "Needs changes") return "medium";
+  if (state === "Ready") return "success";
   return "neutral";
 }
 
@@ -26,30 +27,44 @@ function reviewForFinding(result: ScanResult, finding: Finding) {
 }
 
 export function MigrationImpactFindingsTab({ result }: MigrationImpactFindingsTabProps) {
+  const [filter, setFilter] = useState<"All" | Severity | "Review">("All");
+  const filteredFindings = result.findings.filter((finding) => {
+    if (filter === "All") return true;
+    if (filter === "Review") return finding.requiresHumanReview;
+    return finding.severity === filter;
+  });
+
   return (
     <div className="impact-findings">
       <Card className="wide-card">
         <div className="section-heading">
-          <span>Technical findings + feature survival</span>
-          <h2>Migration Impact Findings</h2>
+          <span>Findings</span>
+          <h2>Findings & Feature Status</h2>
         </div>
         <p>
-          Bob combines repository signals with feature impact so every finding shows both what breaks technically and
-          what product capability is at risk.
+          Technical issues detected by Bob and their impact on application features.
         </p>
+        <div className="finding-filters" aria-label="Finding filters">
+          {(["All", "Critical", "High", "Medium", "Low", "Review"] as const).map((item) => (
+            <button key={item} className={filter === item ? "active" : ""} onClick={() => setFilter(item)}>
+              {item}
+            </button>
+          ))}
+        </div>
       </Card>
 
-      {result.findings.map((finding) => {
+      {filteredFindings.map((finding) => {
         const review = reviewForFinding(result, finding);
         const humanReviewReason = finding.humanReviewReason || review?.reason;
         const suggestedReviewer = finding.suggestedReviewer || review?.suggestedReviewer;
+        const risk = finding.risk as RiskValue;
 
         return (
           <Card key={finding.id} className="impact-card">
             <div className="impact-summary-grid">
               <div>
-                <span>Severity</span>
-                <StatusPill tone={severityTone(finding.severity)}>{finding.severity}</StatusPill>
+                <span>Risk</span>
+                <StatusPill tone={riskTone(risk)}>{risk}</StatusPill>
               </div>
               <div className="impact-title">
                 <span>Finding</span>
@@ -60,8 +75,8 @@ export function MigrationImpactFindingsTab({ result }: MigrationImpactFindingsTa
                 <strong>{finding.affectedFeature}</strong>
               </div>
               <div>
-                <span>Feature survival</span>
-                <StatusPill tone={stateTone(finding.featureSurvivalState)}>{finding.featureSurvivalState}</StatusPill>
+                <span>Feature status</span>
+                <StatusPill tone={stateTone(finding.featureStatus)}>{finding.featureStatus}</StatusPill>
               </div>
               <div>
                 <span>Provider / Service</span>
@@ -72,41 +87,41 @@ export function MigrationImpactFindingsTab({ result }: MigrationImpactFindingsTa
                 <strong>{finding.confidence}</strong>
               </div>
               <div>
-                <span>Resolution</span>
-                <strong>{finding.resolutionLevel}</strong>
-              </div>
-              <div>
                 <span>Human review</span>
                 <strong>{finding.requiresHumanReview ? "Yes" : "No"}</strong>
               </div>
             </div>
+            <p className="impact-short-summary">{finding.shortSummary}</p>
 
             <details className="impact-details">
-              <summary>See details</summary>
+              <summary>
+                <span className="details-open-label">See details</span>
+                <span className="details-close-label">Hide details</span>
+              </summary>
               <dl className="detail-list">
                 <div>
-                  <dt>Bob rationale</dt>
-                  <dd>{finding.bobRationale}</dd>
-                </div>
-                <div>
-                  <dt>Affected files</dt>
+                  <dt>Detected files</dt>
                   <dd>{finding.affectedFiles.length > 0 ? finding.affectedFiles.join(", ") : "No specific files reported"}</dd>
                 </div>
                 <div>
-                  <dt>Business impact</dt>
-                  <dd>{finding.businessImpact}</dd>
+                  <dt>Technical issue</dt>
+                  <dd>{finding.technicalIssue}</dd>
                 </div>
                 <div>
-                  <dt>Migration impact</dt>
+                  <dt>Feature impact</dt>
                   <dd>{finding.migrationImpact}</dd>
-                </div>
-                <div>
-                  <dt>Feature survival state</dt>
-                  <dd>{finding.featureSurvivalState}</dd>
                 </div>
                 <div>
                   <dt>Recommended action</dt>
                   <dd>{finding.recommendedAction}</dd>
+                </div>
+                <div>
+                  <dt>Bob notes</dt>
+                  <dd>{finding.bobNotes}</dd>
+                </div>
+                <div>
+                  <dt>Business impact</dt>
+                  <dd>{finding.businessImpact}</dd>
                 </div>
                 {suggestedReviewer ? (
                   <div>

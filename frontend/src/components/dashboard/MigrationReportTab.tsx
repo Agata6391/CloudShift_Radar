@@ -40,7 +40,7 @@ export function MigrationReportTab({ result }: MigrationReportTabProps) {
         <ul className="clean-list">
           {topMigrationImpactFindings.map((finding) => (
             <li key={finding.id}>
-              {finding.title} - {finding.affectedFeature} is {finding.featureSurvivalState.toLowerCase()}.
+              {finding.title} - {finding.affectedFeature} is {finding.featureStatus.toLowerCase()}.
             </li>
           ))}
         </ul>

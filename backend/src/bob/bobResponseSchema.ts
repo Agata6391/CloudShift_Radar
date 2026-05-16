@@ -1,8 +1,10 @@
 import type {
   Confidence,
   ExpectedMigrationState,
+  FeatureStatus,
   RecommendedDecision,
   ResolutionLevel,
+  RiskValue,
   Severity
 } from "@cloudshift-radar/shared";
 
@@ -23,6 +25,16 @@ export const expectedStates: ExpectedMigrationState[] = [
   "Blocked",
   "Unknown"
 ];
+
+export const featureStatuses: FeatureStatus[] = [
+  "Ready",
+  "Needs changes",
+  "At risk",
+  "Blocked",
+  "Needs human review"
+];
+
+export const riskValues: RiskValue[] = ["Low", "Medium", "High", "Critical", "Needs review"];
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
