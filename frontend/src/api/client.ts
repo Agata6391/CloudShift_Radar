@@ -1,4 +1,4 @@
-import type { MigrationContext, ScanResult } from "@cloudshift-radar/shared";
+import type { MigrationContext, ScanResult, ValidationResult } from "@cloudshift-radar/shared";
 
 export interface HealthResponse {
   ok: boolean;
@@ -34,6 +34,18 @@ export async function submitZipScan(context: MigrationContext, file: File): Prom
   });
 
   return parseJsonResponse<ScanResult>(response);
+}
+
+export async function validateZip(file: File): Promise<ValidationResult> {
+  const formData = new FormData();
+  formData.append("repository", file);
+
+  const response = await fetch("/api/scans/validate", {
+    method: "POST",
+    body: formData
+  });
+
+  return parseJsonResponse<ValidationResult>(response);
 }
 
 export async function submitDemoScan(context: MigrationContext): Promise<ScanResult> {
