@@ -105,7 +105,7 @@ Full IBM Bob Shell runtime analysis is supported in local setup when IBM Bob She
 |------------|----------|
 | Hosted Vercel demo | Interactive product demo with cached/fallback Bob analysis |
 | Local full setup | IBM Bob Shell runtime analysis when credentials are configured |
-| IBM Bob IDE evidence | Exported task sessions and screenshots in `/bob_sessions/Dev-dan/` |
+| IBM Bob IDE evidence | Exported task sessions and screenshots in `/bob_sessions/Dev-dan/` and `/bob_sessions/Moni/` |
 
 ---
 
