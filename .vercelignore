@@ -1,0 +1,6 @@
+uploads/
+backend/uploads/
+scan-results/
+backend/scan-results/
+.env
+.env.local

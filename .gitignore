@@ -13,3 +13,5 @@ Thumbs.db
 *.log
 echo
 test.zip
+.vercel
+.env*.local
