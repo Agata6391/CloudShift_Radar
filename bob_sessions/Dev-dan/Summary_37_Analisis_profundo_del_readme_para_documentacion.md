@@ -1,4 +1,4 @@
-**User:**
+﻿**User:**
 
 <task>
 hola bob pordias actualizar el readme de root  con esta nueva actualizacion  ponlo bonito  tambien 
@@ -247,13 +247,13 @@ CloudShift Radar is built as a monorepo using pnpm workspaces.
 
 ```txt
 CloudShift_Radar/
-├── frontend/       React + Vite application
-├── backend/        Fastify API + scanner + Bob integration
-├── shared/         Shared TypeScript types
-├── demo-repos/     Demo scan context
-├── bob_sessions/   IBM Bob IDE task session evidence
-├── uploads/        Local generated scan workspace
-└── scan-results/   Local generated scan results
+â”œâ”€â”€ frontend/       React + Vite application
+â”œâ”€â”€ backend/        Fastify API + scanner + Bob integration
+â”œâ”€â”€ shared/         Shared TypeScript types
+â”œâ”€â”€ demo-repos/     Demo scan context
+â”œâ”€â”€ bob_sessions/   IBM Bob IDE task session evidence
+â”œâ”€â”€ uploads/        Local generated scan workspace
+â””â”€â”€ scan-results/   Local generated scan results
 ```
 
 High-level architecture:
@@ -461,7 +461,7 @@ RUNTIME_STORAGE_DIR=
 # Bob AI Configuration
 # Optional locally; hosted demo works with cached/fallback Bob analysis.
 BOB_PROVIDER=shell
-BOBSHELL_API_KEY=your_real_api_key_here
+BOBSHELL_API_KEY=<BOBSHELL_API_KEY_PLACEHOLDER>
 
 # Bob Shell Command
 # Windows: use full path or ./node_modules/.bin/bob
@@ -756,61 +756,61 @@ Supported formats:
 
 ```txt
 CloudShift_Radar/
-├── bob_sessions/               # IBM Bob IDE task session reports
-│   ├── README.md               # Instructions for task session exports
-│   └── Dev-dan/                # Exported Bob IDE task histories and screenshots
-│
-├── backend/                    # Fastify API + Scanner
-│   ├── src/
-│   │   ├── server.ts           # Main server entry point
-│   │   ├── bob/                # IBM Bob AI integration
-│   │   │   ├── bobClient.ts
-│   │   │   ├── bobShellClient.ts
-│   │   │   ├── buildBobAnalysisPrompt.ts
-│   │   │   ├── normalizeBobResponse.ts
-│   │   │   └── checkBobShell.ts
-│   │   ├── config/             # Environment configuration
-│   │   ├── demo/               # Demo repository loader and fallback data
-│   │   ├── export/             # Export format generators
-│   │   ├── routes/             # API route handlers
-│   │   ├── scanner/            # Static code analysis engine
-│   │   ├── security/           # ZIP validation and safe file handling
-│   │   └── storage/            # Scan result persistence
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── .vercelignore
-│
-├── frontend/                   # React UI + Dashboard
-│   ├── src/
-│   │   ├── main.tsx
-│   │   ├── App.tsx
-│   │   ├── api/
-│   │   ├── components/
-│   │   ├── routes/
-│   │   ├── styles/
-│   │   └── utils/
-│   ├── index.html
-│   ├── vercel.json             # Vercel SPA rewrite configuration
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── vite.config.ts
-│
-├── shared/                     # Shared TypeScript types
-│   ├── src/
-│   │   ├── index.ts
-│   │   └── scan.ts
-│   ├── package.json
-│   └── tsconfig.json
-│
-├── demo-repos/                 # Demo repositories / demo context
-├── uploads/                    # Local generated ZIP extraction workspace (.gitkeep only)
-├── scan-results/               # Local generated scan results (.gitkeep only)
-├── .env.example
-├── .gitignore
-├── .vercelignore
-├── package.json
-├── pnpm-workspace.yaml
-└── README.md
+â”œâ”€â”€ bob_sessions/               # IBM Bob IDE task session reports
+â”‚   â”œâ”€â”€ README.md               # Instructions for task session exports
+â”‚   â””â”€â”€ Dev-dan/                # Exported Bob IDE task histories and screenshots
+â”‚
+â”œâ”€â”€ backend/                    # Fastify API + Scanner
+â”‚   â”œâ”€â”€ src/
+â”‚   â”‚   â”œâ”€â”€ server.ts           # Main server entry point
+â”‚   â”‚   â”œâ”€â”€ bob/                # IBM Bob AI integration
+â”‚   â”‚   â”‚   â”œâ”€â”€ bobClient.ts
+â”‚   â”‚   â”‚   â”œâ”€â”€ bobShellClient.ts
+â”‚   â”‚   â”‚   â”œâ”€â”€ buildBobAnalysisPrompt.ts
+â”‚   â”‚   â”‚   â”œâ”€â”€ normalizeBobResponse.ts
+â”‚   â”‚   â”‚   â””â”€â”€ checkBobShell.ts
+â”‚   â”‚   â”œâ”€â”€ config/             # Environment configuration
+â”‚   â”‚   â”œâ”€â”€ demo/               # Demo repository loader and fallback data
+â”‚   â”‚   â”œâ”€â”€ export/             # Export format generators
+â”‚   â”‚   â”œâ”€â”€ routes/             # API route handlers
+â”‚   â”‚   â”œâ”€â”€ scanner/            # Static code analysis engine
+â”‚   â”‚   â”œâ”€â”€ security/           # ZIP validation and safe file handling
+â”‚   â”‚   â””â”€â”€ storage/            # Scan result persistence
+â”‚   â”œâ”€â”€ package.json
+â”‚   â”œâ”€â”€ tsconfig.json
+â”‚   â””â”€â”€ .vercelignore
+â”‚
+â”œâ”€â”€ frontend/                   # React UI + Dashboard
+â”‚   â”œâ”€â”€ src/
+â”‚   â”‚   â”œâ”€â”€ main.tsx
+â”‚   â”‚   â”œâ”€â”€ App.tsx
+â”‚   â”‚   â”œâ”€â”€ api/
+â”‚   â”‚   â”œâ”€â”€ components/
+â”‚   â”‚   â”œâ”€â”€ routes/
+â”‚   â”‚   â”œâ”€â”€ styles/
+â”‚   â”‚   â””â”€â”€ utils/
+â”‚   â”œâ”€â”€ index.html
+â”‚   â”œâ”€â”€ vercel.json             # Vercel SPA rewrite configuration
+â”‚   â”œâ”€â”€ package.json
+â”‚   â”œâ”€â”€ tsconfig.json
+â”‚   â””â”€â”€ vite.config.ts
+â”‚
+â”œâ”€â”€ shared/                     # Shared TypeScript types
+â”‚   â”œâ”€â”€ src/
+â”‚   â”‚   â”œâ”€â”€ index.ts
+â”‚   â”‚   â””â”€â”€ scan.ts
+â”‚   â”œâ”€â”€ package.json
+â”‚   â””â”€â”€ tsconfig.json
+â”‚
+â”œâ”€â”€ demo-repos/                 # Demo repositories / demo context
+â”œâ”€â”€ uploads/                    # Local generated ZIP extraction workspace (.gitkeep only)
+â”œâ”€â”€ scan-results/               # Local generated scan results (.gitkeep only)
+â”œâ”€â”€ .env.example
+â”œâ”€â”€ .gitignore
+â”œâ”€â”€ .vercelignore
+â”œâ”€â”€ package.json
+â”œâ”€â”€ pnpm-workspace.yaml
+â””â”€â”€ README.md
 ```
 
 ---
@@ -876,7 +876,7 @@ For full local Bob Shell analysis, configure:
 
 ```env
 BOB_PROVIDER=shell
-BOBSHELL_API_KEY=your_api_key_with_inference_scope
+BOBSHELL_API_KEY=<BOBSHELL_API_KEY_PLACEHOLDER>
 BOB_SHELL_COMMAND=./node_modules/.bin/bob
 BOB_TIMEOUT_MS=600000
 ```
@@ -995,7 +995,7 @@ GET /api/scans/:scanId/export?format=markdown
 Via UI:
 
 ```txt
-Open Report Dashboard → Export Report → Select format
+Open Report Dashboard â†’ Export Report â†’ Select format
 ```
 
 ---
@@ -1125,7 +1125,7 @@ Long description:
 ```txt
 CloudShift Radar is an AI-powered cloud migration assessment tool for CTOs, technical leads, DevOps engineers, and development teams preparing to move legacy applications to cloud-native infrastructure. Traditional migration assessments are slow, manual, and often miss hidden blockers until late in the process. CloudShift Radar solves this by scanning repository code through secure static analysis, detecting cloud provider dependencies, hardcoded infrastructure, environment gaps, storage patterns, queues, databases, and other migration-sensitive signals.
 
-IBM Bob is used as the project’s core AI reasoning engine. After local analysis identifies technical findings, Bob evaluates migration risk, explains likely impact, predicts which features may survive the migration, and generates a practical action plan. The product provides a migration readiness score, unified findings view, human review queue, Bob reasoning trace, and exportable reports.
+IBM Bob is used as the projectâ€™s core AI reasoning engine. After local analysis identifies technical findings, Bob evaluates migration risk, explains likely impact, predicts which features may survive the migration, and generates a practical action plan. The product provides a migration readiness score, unified findings view, human review queue, Bob reasoning trace, and exportable reports.
 
 The goal is to help teams know what will break before they migrate, reduce discovery time, and make cloud migration planning faster, safer, and clearer for both technical and business stakeholders.
 ```
@@ -1211,8 +1211,8 @@ $0.00
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -1242,13 +1242,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 
 
 # Current Workspace Directory (e:/github/Cloud_Radar) Files
@@ -1468,7 +1468,7 @@ I'll read the current README.md file first to understand its structure, then upd
 <files>
 <file><path>README.md</path>
 <content lines="1-851">
-  1 | # 🚀 CloudShift Radar
+  1 | # ðŸš€ CloudShift Radar
   2 | 
   3 | > **Know what will break before you migrate**
   4 | 
@@ -1481,7 +1481,7 @@ I'll read the current README.md file first to understand its structure, then upd
  11 | 
  12 | ---
  13 | 
- 14 | ## 📋 Table of Contents
+ 14 | ## ðŸ“‹ Table of Contents
  15 | 
  16 | - [Overview](#-overview)
  17 | - [Key Features](#-key-features)
@@ -1507,7 +1507,7 @@ I'll read the current README.md file first to understand its structure, then upd
  37 | 
  38 | ---
  39 | 
- 40 | ## 🎯 Overview
+ 40 | ## ðŸŽ¯ Overview
  41 | 
  42 | **CloudShift Radar** is designed for CTOs, technical leads, DevOps engineers, and development teams who need to assess the viability of migrating legacy applications to the cloud. By scanning repository code (via ZIP uploads or demo scenarios), CloudShift Radar detects infrastructure patterns, identifies potential migration blockers, and leverages IBM Bob AI to generate intelligent migration verdicts.
  43 | 
@@ -1525,9 +1525,9 @@ I'll read the current README.md file first to understand its structure, then upd
  55 | 
  56 | ---
  57 | 
- 58 | ## ✨ Key Features
+ 58 | ## âœ¨ Key Features
  59 | 
- 60 | ### 🔍 Repository Scanning
+ 60 | ### ðŸ” Repository Scanning
  61 | - Secure ZIP upload processing (never executes uploaded code)
  62 | - **Progressive validation** with real-time feedback
  63 | - Demo mode with pre-loaded context for quick evaluation
@@ -1535,18 +1535,18 @@ I'll read the current README.md file first to understand its structure, then upd
  65 | - Infrastructure pattern recognition (databases, queues, storage, etc.)
  66 | - Automatic language and framework detection
  67 | 
- 68 | ### 🤖 IBM Bob AI Integration
+ 68 | ### ðŸ¤– IBM Bob AI Integration
  69 | - Intelligent analysis of technical findings
  70 | - Context-aware migration recommendations
  71 | - Five-tier decision framework:
- 72 |   - ✅ **Proceed**: Safe to migrate
- 73 |   - ⚠️ **Proceed with Caution**: Manageable risks identified
- 74 |   - 🛠️ **Prepare First**: Requires preparation work
- 75 |   - 🚫 **Block Migration**: Critical blockers detected
- 76 |   - 👤 **Requires Human Review**: Complex scenarios needing expert evaluation
+ 72 |   - âœ… **Proceed**: Safe to migrate
+ 73 |   - âš ï¸ **Proceed with Caution**: Manageable risks identified
+ 74 |   - ðŸ› ï¸ **Prepare First**: Requires preparation work
+ 75 |   - ðŸš« **Block Migration**: Critical blockers detected
+ 76 |   - ðŸ‘¤ **Requires Human Review**: Complex scenarios needing expert evaluation
  77 | - **Graceful fallback**: System continues working even if Bob is unavailable
  78 | 
- 79 | ### 📊 Interactive Dashboard
+ 79 | ### ðŸ“Š Interactive Dashboard
  80 | - Migration readiness scoring (0-100)
  81 | - **Unified findings view** with migration impact focus
  82 | - Feature survival predictions with detailed rationale
@@ -1555,60 +1555,60 @@ I'll read the current README.md file first to understand its structure, then upd
  85 | - Actionable migration recommendations
  86 | - Technical complexity indicators
  87 | 
- 88 | ### 📤 Export Capabilities
+ 88 | ### ðŸ“¤ Export Capabilities
  89 | - **JSON**: Complete structured data export
  90 | - **CSV**: Spreadsheet-compatible findings export
  91 | - **Markdown**: Human-readable report format
  92 | - Downloadable reports with project name and timestamp
  93 | 
- 94 | ### 🔒 Security-First Design
- 95 | - ❌ Never executes uploaded code
- 96 | - ❌ Never installs dependencies
- 97 | - ❌ Never runs npm/pip/docker/shell commands
- 98 | - ✅ Only reads text files
- 99 | - ✅ Prevents path traversal attacks
-100 | - ✅ Strict file size limits
-101 | - ✅ Automatic secret redaction in AI prompts
-102 | - ✅ Comprehensive ZIP validation
+ 94 | ### ðŸ”’ Security-First Design
+ 95 | - âŒ Never executes uploaded code
+ 96 | - âŒ Never installs dependencies
+ 97 | - âŒ Never runs npm/pip/docker/shell commands
+ 98 | - âœ… Only reads text files
+ 99 | - âœ… Prevents path traversal attacks
+100 | - âœ… Strict file size limits
+101 | - âœ… Automatic secret redaction in AI prompts
+102 | - âœ… Comprehensive ZIP validation
 103 | 
 104 | ---
 105 | 
-106 | ## 🆕 What's New
+106 | ## ðŸ†• What's New
 107 | 
 108 | ### Recent Updates (v0.1.0)
 109 | 
-110 | #### ✅ Progressive Validation System
+110 | #### âœ… Progressive Validation System
 111 | - **Separate validation endpoint** (`POST /api/scans/validate`)
 112 | - Real-time validation feedback with progress indicators
 113 | - Detailed validation errors and warnings
 114 | - Repository metadata detection (languages, frameworks, config files)
 115 | - Network error handling with retry mechanism
 116 | 
-117 | #### ✅ Enhanced Demo Mode
+117 | #### âœ… Enhanced Demo Mode
 118 | - **Cached demo results** for consistent demonstrations
 119 | - No Bobcoin consumption on repeated demo runs
 120 | - Deterministic scan IDs for reproducible results
 121 | - Fallback to saved results when Bob is unavailable
 122 | 
-123 | #### ✅ Improved Error Handling
+123 | #### âœ… Improved Error Handling
 124 | - Graceful degradation when Bob AI is unavailable
 125 | - Detailed error messages with actionable guidance
 126 | - Network error detection and recovery
 127 | - Validation state management
 128 | 
-129 | #### ✅ Export Functionality
+129 | #### âœ… Export Functionality
 130 | - Multiple export formats (JSON, CSV, Markdown)
 131 | - Comprehensive report generation
 132 | - Sanitized filenames with timestamps
 133 | - All findings and analysis included
 134 | 
-135 | #### ✅ Schema Enhancements
+135 | #### âœ… Schema Enhancements
 136 | - Added `validationState`, `validationErrors`, and `canProceed` fields
 137 | - Added `technicalComplexity` to findings
 138 | - Standardized terminology across codebase
 139 | - Improved type safety with TypeScript
 140 | 
-141 | #### ✅ UI/UX Improvements
+141 | #### âœ… UI/UX Improvements
 142 | - Progressive CTA states with visual feedback
 143 | - Validation progress indicators
 144 | - Retry mechanism for failed validations
@@ -1617,30 +1617,30 @@ I'll read the current README.md file first to understand its structure, then upd
 147 | 
 148 | ---
 149 | 
-150 | ## 🏗️ Architecture
+150 | ## ðŸ—ï¸ Architecture
 151 | 
 152 | CloudShift Radar is built as a **monorepo** using pnpm workspaces, consisting of three main packages:
 153 | 
 154 | ```
-155 | ┌─────────────────────────────────────────────────────────┐
-156 | │                   CloudShift Radar                      │
-157 | ├─────────────────────────────────────────────────────────┤
-158 | │                                                         │
-159 | │  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐  │
-160 | │  │   Frontend   │  │   Backend    │  │   Shared    │  │
-161 | │  │              │  │              │  │             │  │
-162 | │  │  React +     │◄─┤  Fastify API │  │  TypeScript │  │
-163 | │  │  Vite        │  │  + Scanner   │  │  Types      │  │
-164 | │  │              │  │              │  │             │  │
-165 | │  │  Port: 5173  │  │  Port: 4000  │  │             │  │
-166 | │  └──────────────┘  └──────┬───────┘  └─────────────┘  │
-167 | │                           │                            │
-168 | │                           ▼                            │
-169 | │                    ┌──────────────┐                    │
-170 | │                    │   IBM Bob    │                    │
-171 | │                    │   AI Shell   │                    │
-172 | │                    └──────────────┘                    │
-173 | └─────────────────────────────────────────────────────────┘
+155 | â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+156 | â”‚                   CloudShift Radar                      â”‚
+157 | â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+158 | â”‚                                                         â”‚
+159 | â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚
+160 | â”‚  â”‚   Frontend   â”‚  â”‚   Backend    â”‚  â”‚   Shared    â”‚  â”‚
+161 | â”‚  â”‚              â”‚  â”‚              â”‚  â”‚             â”‚  â”‚
+162 | â”‚  â”‚  React +     â”‚â—„â”€â”¤  Fastify API â”‚  â”‚  TypeScript â”‚  â”‚
+163 | â”‚  â”‚  Vite        â”‚  â”‚  + Scanner   â”‚  â”‚  Types      â”‚  â”‚
+164 | â”‚  â”‚              â”‚  â”‚              â”‚  â”‚             â”‚  â”‚
+165 | â”‚  â”‚  Port: 5173  â”‚  â”‚  Port: 4000  â”‚  â”‚             â”‚  â”‚
+166 | â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚
+167 | â”‚                           â”‚                            â”‚
+168 | â”‚                           â–¼                            â”‚
+169 | â”‚                    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                    â”‚
+170 | â”‚                    â”‚   IBM Bob    â”‚                    â”‚
+171 | â”‚                    â”‚   AI Shell   â”‚                    â”‚
+172 | â”‚                    â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                    â”‚
+173 | â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 174 | ```
 175 | 
 176 | ### Components
@@ -1665,7 +1665,7 @@ I'll read the current README.md file first to understand its structure, then upd
 195 | 
 196 | ---
 197 | 
-198 | ## 🛠️ Technology Stack
+198 | ## ðŸ› ï¸ Technology Stack
 199 | 
 200 | ### Backend
 201 | - **Framework**: Fastify 5.8.5
@@ -1690,29 +1690,29 @@ I'll read the current README.md file first to understand its structure, then upd
 220 | 
 221 | ---
 222 | 
-223 | ## 🔒 Security Model
+223 | ## ðŸ”’ Security Model
 224 | 
 225 | CloudShift Radar follows a **zero-execution security model** to ensure uploaded code is never run:
 226 | 
 227 | ### What We DON'T Do
-228 | - ❌ Execute uploaded code
-229 | - ❌ Install dependencies (npm, pip, etc.)
-230 | - ❌ Run shell commands from uploaded files
-231 | - ❌ Execute Docker containers
-232 | - ❌ Evaluate dynamic code
+228 | - âŒ Execute uploaded code
+229 | - âŒ Install dependencies (npm, pip, etc.)
+230 | - âŒ Run shell commands from uploaded files
+231 | - âŒ Execute Docker containers
+232 | - âŒ Evaluate dynamic code
 233 | 
 234 | ### What We DO
-235 | - ✅ Read text files only (static analysis)
-236 | - ✅ Validate ZIP structure before extraction
-237 | - ✅ Prevent path traversal attacks
-238 | - ✅ Enforce strict file size limits (1000 files max)
-239 | - ✅ Redact secrets and credentials in AI prompts
-240 | - ✅ Store results in isolated JSON files
-241 | - ✅ Validate repository structure and metadata
+235 | - âœ… Read text files only (static analysis)
+236 | - âœ… Validate ZIP structure before extraction
+237 | - âœ… Prevent path traversal attacks
+238 | - âœ… Enforce strict file size limits (1000 files max)
+239 | - âœ… Redact secrets and credentials in AI prompts
+240 | - âœ… Store results in isolated JSON files
+241 | - âœ… Validate repository structure and metadata
 242 | 
 243 | ---
 244 | 
-245 | ## 🚀 Getting Started
+245 | ## ðŸš€ Getting Started
 246 | 
 247 | ### Prerequisites
 248 | 
@@ -1761,7 +1761,7 @@ I'll read the current README.md file first to understand its structure, then upd
 291 |    ```env
 292 |    # Bob AI Configuration (Optional - system works without it)
 293 |    BOB_PROVIDER=shell
-294 |    BOBSHELL_API_KEY=your_real_api_key_here
+294 |    BOBSHELL_API_KEY=<BOBSHELL_API_KEY_PLACEHOLDER>
 295 |    
 296 |    # Bob Shell Command (choose based on your OS):
 297 |    # - Windows: Use full path or ./node_modules/.bin/bob
@@ -1818,7 +1818,7 @@ I'll read the current README.md file first to understand its structure, then upd
 348 | 
 349 | ---
 350 | 
-351 | ## 🌐 API Endpoints
+351 | ## ðŸŒ API Endpoints
 352 | 
 353 | ### Scan Operations
 354 | 
@@ -1922,116 +1922,116 @@ I'll read the current README.md file first to understand its structure, then upd
 452 | 
 453 | ---
 454 | 
-455 | ## 📁 Project Structure
+455 | ## ðŸ“ Project Structure
 456 | 
 457 | ```
 458 | CloudShift_Radar/
-459 | ├── bob_sessions/               # IBM Bob IDE task session reports (Hackathon evidence)
-460 | │   ├── Dev-dan/               # Exported IBM Bob IDE task session evidence
-461 | │   └── README.md              # Instructions and evidence inventory
-462 | │
-463 | ├── backend/                    # Fastify API + Scanner
-464 | │   ├── src/
-465 | │   │   ├── server.ts          # Main server entry point
-466 | │   │   ├── bob/               # IBM Bob AI integration
-467 | │   │   │   ├── bobClient.ts
-468 | │   │   │   ├── bobShellClient.ts
-469 | │   │   │   ├── buildBobAnalysisPrompt.ts
-470 | │   │   │   ├── normalizeBobResponse.ts
-471 | │   │   │   └── checkBobShell.ts
-472 | │   │   ├── config/            # Environment configuration
-473 | │   │   ├── demo/              # Demo repository loader
-474 | │   │   │   ├── loadDemoRepository.ts
-475 | │   │   │   └── demoFallbackResult.ts
-476 | │   │   ├── export/            # Export format generators
-477 | │   │   │   └── exportFormats.ts
-478 | │   │   ├── routes/            # API route handlers
-479 | │   │   │   ├── scan.routes.ts
-480 | │   │   │   └── health.routes.ts
-481 | │   │   ├── scanner/           # Code analysis engine
-482 | │   │   │   ├── scanRepository.ts
-483 | │   │   │   ├── validateRepository.ts
-484 | │   │   │   ├── detectCloudSignals.ts
-485 | │   │   │   ├── detectHardcodedInfra.ts
-486 | │   │   │   └── extractZip.ts
-487 | │   │   ├── security/          # Security utilities
-488 | │   │   │   ├── sanitizePaths.ts
-489 | │   │   │   ├── safeFileReader.ts
-490 | │   │   │   └── validateZip.ts
-491 | │   │   └── storage/           # Scan result persistence
-492 | │   │       └── scanResultStore.ts
-493 | │   ├── package.json
-494 | │   └── tsconfig.json
-495 | │
-496 | ├── frontend/                   # React UI + Dashboard
-497 | │   ├── src/
-498 | │   │   ├── main.tsx           # Application entry point
-499 | │   │   ├── App.tsx            # Root component
-500 | │   │   ├── api/               # API client
-501 | │   │   │   └── client.ts
-502 | │   │   ├── components/        # React components
-503 | │   │   │   ├── assessment/    # Scan input components
-504 | │   │   │   │   ├── RepositoryInput.tsx
-505 | │   │   │   │   ├── MigrationSetup.tsx
-506 | │   │   │   │   └── ScanProgress.tsx
-507 | │   │   │   ├── bob/           # Bob AI visualization
-508 | │   │   │   │   ├── BobBadge.tsx
-509 | │   │   │   │   ├── BobConfidenceMeter.tsx
-510 | │   │   │   │   ├── BobReasoningCard.tsx
-511 | │   │   │   │   └── BobTraceTimeline.tsx
-512 | │   │   │   ├── dashboard/     # Results dashboard
-513 | │   │   │   │   ├── BobOverviewTab.tsx
-514 | │   │   │   │   ├── MigrationImpactFindingsTab.tsx
-515 | │   │   │   │   ├── ActionPlanTab.tsx
-516 | │   │   │   │   ├── HumanReviewTab.tsx
-517 | │   │   │   │   ├── BobReasoningTraceTab.tsx
-518 | │   │   │   │   ├── ExportMenu.tsx
-519 | │   │   │   │   └── DashboardTabs.tsx
-520 | │   │   │   ├── layout/        # App layout
-521 | │   │   │   │   ├── AppShell.tsx
-522 | │   │   │   │   ├── Header.tsx
-523 | │   │   │   │   └── Navigation.tsx
-524 | │   │   │   └── ui/            # Reusable UI components
-525 | │   │   │       ├── Badge.tsx
-526 | │   │   │       ├── Button.tsx
-527 | │   │   │       ├── Card.tsx
-528 | │   │   │       └── StatusPill.tsx
-529 | │   │   ├── routes/            # Page components
-530 | │   │   │   ├── Home.tsx
-531 | │   │   │   ├── Assessment.tsx
-532 | │   │   │   ├── AnalysisRunning.tsx
-533 | │   │   │   └── Results.tsx
-534 | │   │   ├── styles/            # CSS stylesheets
-535 | │   │   │   ├── tokens.css
-536 | │   │   │   ├── layout.css
-537 | │   │   │   ├── components.css
-538 | │   │   │   ├── responsive.css
-539 | │   │   │   └── export.css
-540 | │   │   └── utils/             # Utility functions
-541 | │   │       └── navigation.ts
-542 | │   ├── index.html
-543 | │   ├── package.json
-544 | │   ├── tsconfig.json
-545 | │   └── vite.config.ts
-546 | │
-547 | ├── shared/                     # Shared TypeScript types
-548 | │   ├── src/
-549 | │   │   ├── index.ts
-550 | │   │   └── scan.ts            # Scan result types
-551 | │   ├── package.json
-552 | │   └── tsconfig.json
-553 | │
-554 | ├── demo-repos/                 # Demo repositories
-555 | ├── scan-results/               # Persisted scan results (JSON)
-556 | ├── .env.example                # Environment template
-557 | ├── package.json                # Root package.json
-558 | ├── pnpm-workspace.yaml         # Workspace configuration
-559 | └── README.md                   # This file
+459 | â”œâ”€â”€ bob_sessions/               # IBM Bob IDE task session reports (Hackathon evidence)
+460 | â”‚   â”œâ”€â”€ Dev-dan/               # Exported IBM Bob IDE task session evidence
+461 | â”‚   â””â”€â”€ README.md              # Instructions and evidence inventory
+462 | â”‚
+463 | â”œâ”€â”€ backend/                    # Fastify API + Scanner
+464 | â”‚   â”œâ”€â”€ src/
+465 | â”‚   â”‚   â”œâ”€â”€ server.ts          # Main server entry point
+466 | â”‚   â”‚   â”œâ”€â”€ bob/               # IBM Bob AI integration
+467 | â”‚   â”‚   â”‚   â”œâ”€â”€ bobClient.ts
+468 | â”‚   â”‚   â”‚   â”œâ”€â”€ bobShellClient.ts
+469 | â”‚   â”‚   â”‚   â”œâ”€â”€ buildBobAnalysisPrompt.ts
+470 | â”‚   â”‚   â”‚   â”œâ”€â”€ normalizeBobResponse.ts
+471 | â”‚   â”‚   â”‚   â””â”€â”€ checkBobShell.ts
+472 | â”‚   â”‚   â”œâ”€â”€ config/            # Environment configuration
+473 | â”‚   â”‚   â”œâ”€â”€ demo/              # Demo repository loader
+474 | â”‚   â”‚   â”‚   â”œâ”€â”€ loadDemoRepository.ts
+475 | â”‚   â”‚   â”‚   â””â”€â”€ demoFallbackResult.ts
+476 | â”‚   â”‚   â”œâ”€â”€ export/            # Export format generators
+477 | â”‚   â”‚   â”‚   â””â”€â”€ exportFormats.ts
+478 | â”‚   â”‚   â”œâ”€â”€ routes/            # API route handlers
+479 | â”‚   â”‚   â”‚   â”œâ”€â”€ scan.routes.ts
+480 | â”‚   â”‚   â”‚   â””â”€â”€ health.routes.ts
+481 | â”‚   â”‚   â”œâ”€â”€ scanner/           # Code analysis engine
+482 | â”‚   â”‚   â”‚   â”œâ”€â”€ scanRepository.ts
+483 | â”‚   â”‚   â”‚   â”œâ”€â”€ validateRepository.ts
+484 | â”‚   â”‚   â”‚   â”œâ”€â”€ detectCloudSignals.ts
+485 | â”‚   â”‚   â”‚   â”œâ”€â”€ detectHardcodedInfra.ts
+486 | â”‚   â”‚   â”‚   â””â”€â”€ extractZip.ts
+487 | â”‚   â”‚   â”œâ”€â”€ security/          # Security utilities
+488 | â”‚   â”‚   â”‚   â”œâ”€â”€ sanitizePaths.ts
+489 | â”‚   â”‚   â”‚   â”œâ”€â”€ safeFileReader.ts
+490 | â”‚   â”‚   â”‚   â””â”€â”€ validateZip.ts
+491 | â”‚   â”‚   â””â”€â”€ storage/           # Scan result persistence
+492 | â”‚   â”‚       â””â”€â”€ scanResultStore.ts
+493 | â”‚   â”œâ”€â”€ package.json
+494 | â”‚   â””â”€â”€ tsconfig.json
+495 | â”‚
+496 | â”œâ”€â”€ frontend/                   # React UI + Dashboard
+497 | â”‚   â”œâ”€â”€ src/
+498 | â”‚   â”‚   â”œâ”€â”€ main.tsx           # Application entry point
+499 | â”‚   â”‚   â”œâ”€â”€ App.tsx            # Root component
+500 | â”‚   â”‚   â”œâ”€â”€ api/               # API client
+501 | â”‚   â”‚   â”‚   â””â”€â”€ client.ts
+502 | â”‚   â”‚   â”œâ”€â”€ components/        # React components
+503 | â”‚   â”‚   â”‚   â”œâ”€â”€ assessment/    # Scan input components
+504 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ RepositoryInput.tsx
+505 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ MigrationSetup.tsx
+506 | â”‚   â”‚   â”‚   â”‚   â””â”€â”€ ScanProgress.tsx
+507 | â”‚   â”‚   â”‚   â”œâ”€â”€ bob/           # Bob AI visualization
+508 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ BobBadge.tsx
+509 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ BobConfidenceMeter.tsx
+510 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ BobReasoningCard.tsx
+511 | â”‚   â”‚   â”‚   â”‚   â””â”€â”€ BobTraceTimeline.tsx
+512 | â”‚   â”‚   â”‚   â”œâ”€â”€ dashboard/     # Results dashboard
+513 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ BobOverviewTab.tsx
+514 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ MigrationImpactFindingsTab.tsx
+515 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ ActionPlanTab.tsx
+516 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ HumanReviewTab.tsx
+517 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ BobReasoningTraceTab.tsx
+518 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ ExportMenu.tsx
+519 | â”‚   â”‚   â”‚   â”‚   â””â”€â”€ DashboardTabs.tsx
+520 | â”‚   â”‚   â”‚   â”œâ”€â”€ layout/        # App layout
+521 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ AppShell.tsx
+522 | â”‚   â”‚   â”‚   â”‚   â”œâ”€â”€ Header.tsx
+523 | â”‚   â”‚   â”‚   â”‚   â””â”€â”€ Navigation.tsx
+524 | â”‚   â”‚   â”‚   â””â”€â”€ ui/            # Reusable UI components
+525 | â”‚   â”‚   â”‚       â”œâ”€â”€ Badge.tsx
+526 | â”‚   â”‚   â”‚       â”œâ”€â”€ Button.tsx
+527 | â”‚   â”‚   â”‚       â”œâ”€â”€ Card.tsx
+528 | â”‚   â”‚   â”‚       â””â”€â”€ StatusPill.tsx
+529 | â”‚   â”‚   â”œâ”€â”€ routes/            # Page components
+530 | â”‚   â”‚   â”‚   â”œâ”€â”€ Home.tsx
+531 | â”‚   â”‚   â”‚   â”œâ”€â”€ Assessment.tsx
+532 | â”‚   â”‚   â”‚   â”œâ”€â”€ AnalysisRunning.tsx
+533 | â”‚   â”‚   â”‚   â””â”€â”€ Results.tsx
+534 | â”‚   â”‚   â”œâ”€â”€ styles/            # CSS stylesheets
+535 | â”‚   â”‚   â”‚   â”œâ”€â”€ tokens.css
+536 | â”‚   â”‚   â”‚   â”œâ”€â”€ layout.css
+537 | â”‚   â”‚   â”‚   â”œâ”€â”€ components.css
+538 | â”‚   â”‚   â”‚   â”œâ”€â”€ responsive.css
+539 | â”‚   â”‚   â”‚   â””â”€â”€ export.css
+540 | â”‚   â”‚   â””â”€â”€ utils/             # Utility functions
+541 | â”‚   â”‚       â””â”€â”€ navigation.ts
+542 | â”‚   â”œâ”€â”€ index.html
+543 | â”‚   â”œâ”€â”€ package.json
+544 | â”‚   â”œâ”€â”€ tsconfig.json
+545 | â”‚   â””â”€â”€ vite.config.ts
+546 | â”‚
+547 | â”œâ”€â”€ shared/                     # Shared TypeScript types
+548 | â”‚   â”œâ”€â”€ src/
+549 | â”‚   â”‚   â”œâ”€â”€ index.ts
+550 | â”‚   â”‚   â””â”€â”€ scan.ts            # Scan result types
+551 | â”‚   â”œâ”€â”€ package.json
+552 | â”‚   â””â”€â”€ tsconfig.json
+553 | â”‚
+554 | â”œâ”€â”€ demo-repos/                 # Demo repositories
+555 | â”œâ”€â”€ scan-results/               # Persisted scan results (JSON)
+556 | â”œâ”€â”€ .env.example                # Environment template
+557 | â”œâ”€â”€ package.json                # Root package.json
+558 | â”œâ”€â”€ pnpm-workspace.yaml         # Workspace configuration
+559 | â””â”€â”€ README.md                   # This file
 560 | ```
 561 | 
 562 | ---
 563 | 
-564 | ## 📜 Available Scripts
+564 | ## ðŸ“œ Available Scripts
 565 | 
 566 | ### Root Level
 567 | 
@@ -2058,7 +2058,7 @@ I'll read the current README.md file first to understand its structure, then upd
 588 | 
 589 | ---
 590 | 
-591 | ## 🤖 Bob AI Integration
+591 | ## ðŸ¤– Bob AI Integration
 592 | 
 593 | IBM Bob is the **AI reasoning engine** at the heart of CloudShift Radar, not just a decorative feature. Bob analyzes technical findings and generates intelligent migration verdicts.
 594 | 
@@ -2068,11 +2068,11 @@ I'll read the current README.md file first to understand its structure, then upd
 598 | 2. **Prompt Generation**: Findings are formatted into a structured prompt with security redaction
 599 | 3. **AI Analysis**: Bob Shell processes the prompt and generates reasoning
 600 | 4. **Decision Making**: Bob provides one of five possible decisions:
-601 |    - ✅ **Proceed**: No significant blockers detected
-602 |    - ⚠️ **Proceed with Caution**: Minor risks that can be managed
-603 |    - 🛠️ **Prepare First**: Requires preparation work before migration
-604 |    - 🚫 **Block Migration**: Critical blockers that must be resolved
-605 |    - 👤 **Requires Human Review**: Complex scenarios needing expert evaluation
+601 |    - âœ… **Proceed**: No significant blockers detected
+602 |    - âš ï¸ **Proceed with Caution**: Minor risks that can be managed
+603 |    - ðŸ› ï¸ **Prepare First**: Requires preparation work before migration
+604 |    - ðŸš« **Block Migration**: Critical blockers that must be resolved
+605 |    - ðŸ‘¤ **Requires Human Review**: Complex scenarios needing expert evaluation
 606 | 
 607 | ### Graceful Degradation
 608 | 
@@ -2089,7 +2089,7 @@ I'll read the current README.md file first to understand its structure, then upd
 619 | 
 620 | ```env
 621 | BOB_PROVIDER=shell
-622 | BOBSHELL_API_KEY=your_api_key_with_inference_scope
+622 | BOBSHELL_API_KEY=<BOBSHELL_API_KEY_PLACEHOLDER>
 623 | BOB_SHELL_COMMAND=./node_modules/.bin/bob
 624 | BOB_TIMEOUT_MS=600000
 625 | ```
@@ -2106,7 +2106,7 @@ I'll read the current README.md file first to understand its structure, then upd
 636 | 
 637 | ---
 638 | 
-639 | ## 🏆 IBM Bob Hackathon Compliance
+639 | ## ðŸ† IBM Bob Hackathon Compliance
 640 | 
 641 | CloudShift Radar was built specifically for the **IBM Bob Hackathon** and leverages IBM Bob as a core component throughout the development and runtime lifecycle.
 642 | 
@@ -2131,7 +2131,7 @@ I'll read the current README.md file first to understand its structure, then upd
 661 | 
 662 | 3. **Static Analysis + AI Reasoning**: CloudShift Radar performs local static analysis to detect migration signals (cloud patterns, hardcoded infrastructure, environment gaps), then sends these findings to IBM Bob Shell for intelligent reasoning and verdict generation.
 663 | 
-664 | 4. **Demo Fallback Mode**: The cached demo results exist **only** for reliability during repeated demonstrations and Bobcoin preservation. They are not a replacement for Bob's AI reasoning—they are pre-generated Bob responses saved for demo consistency.
+664 | 4. **Demo Fallback Mode**: The cached demo results exist **only** for reliability during repeated demonstrations and Bobcoin preservation. They are not a replacement for Bob's AI reasoningâ€”they are pre-generated Bob responses saved for demo consistency.
 665 | 
 666 | ### Bob IDE vs Bob Shell
 667 | 
@@ -2147,7 +2147,7 @@ I'll read the current README.md file first to understand its structure, then upd
 677 | 
 678 | ---
 679 | 
-680 | ## 📤 Export Formats
+680 | ## ðŸ“¤ Export Formats
 681 | 
 682 | CloudShift Radar supports multiple export formats for scan results:
 683 | 
@@ -2185,7 +2185,7 @@ I'll read the current README.md file first to understand its structure, then upd
 715 | 
 716 | ---
 717 | 
-718 | ## ⚠️ MVP Limitations
+718 | ## âš ï¸ MVP Limitations
 719 | 
 720 | This is an **MVP (Minimum Viable Product)** version with the following limitations:
 721 | 
@@ -2214,7 +2214,7 @@ I'll read the current README.md file first to understand its structure, then upd
 744 | 
 745 | ---
 746 | 
-747 | ## 🗺️ Future Roadmap
+747 | ## ðŸ—ºï¸ Future Roadmap
 748 | 
 749 | ### Phase 1: Enhanced Analysis
 750 | - [ ] Full AST parsing for JavaScript/TypeScript/Python/Java
@@ -2249,7 +2249,7 @@ I'll read the current README.md file first to understand its structure, then upd
 779 | 
 780 | ---
 781 | 
-782 | ## 🤝 Contributing
+782 | ## ðŸ¤ Contributing
 783 | 
 784 | Contributions are welcome! This is an MVP, and we're actively improving the codebase.
 785 | 
@@ -2273,13 +2273,13 @@ I'll read the current README.md file first to understand its structure, then upd
 803 | 
 804 | ---
 805 | 
-806 | ## 📄 License
+806 | ## ðŸ“„ License
 807 | 
 808 | [Add appropriate license information here]
 809 | 
 810 | ---
 811 | 
-812 | ## 🙏 Acknowledgments
+812 | ## ðŸ™ Acknowledgments
 813 | 
 814 | - **IBM Bob AI**: For providing the intelligent reasoning engine
 815 | - **Fastify**: For the high-performance backend framework
@@ -2289,34 +2289,34 @@ I'll read the current README.md file first to understand its structure, then upd
 819 | 
 820 | ---
 821 | 
-822 | ## 📞 Support
+822 | ## ðŸ“ž Support
 823 | 
 824 | For questions, issues, or feature requests, please [open an issue](https://github.com/your-org/CloudShift_Radar/issues) on GitHub.
 825 | 
 826 | ---
 827 | 
-828 | ## 📊 Project Status
+828 | ## ðŸ“Š Project Status
 829 | 
 830 | **Current Version**: 0.1.0  
 831 | **Status**: MVP - Production Ready  
 832 | **Last Updated**: May 16, 2026
 833 | 
 834 | ### Recent Improvements
-835 | - ✅ Progressive validation system implemented
-836 | - ✅ Enhanced demo mode with caching
-837 | - ✅ Export functionality (JSON, CSV, Markdown)
-838 | - ✅ Graceful Bob AI fallback
-839 | - ✅ Improved error handling
-840 | - ✅ Schema enhancements
-841 | - ✅ UI/UX improvements
+835 | - âœ… Progressive validation system implemented
+836 | - âœ… Enhanced demo mode with caching
+837 | - âœ… Export functionality (JSON, CSV, Markdown)
+838 | - âœ… Graceful Bob AI fallback
+839 | - âœ… Improved error handling
+840 | - âœ… Schema enhancements
+841 | - âœ… UI/UX improvements
 842 | 
 843 | ---
 844 | 
 845 | <div align="center">
 846 | 
-847 | **Built with ❤️ for better cloud migrations**
+847 | **Built with â¤ï¸ for better cloud migrations**
 848 | 
-849 | [Documentation](#-table-of-contents) • [API Reference](#-api-endpoints) • [Roadmap](#-future-roadmap)
+849 | [Documentation](#-table-of-contents) â€¢ [API Reference](#-api-endpoints) â€¢ [Roadmap](#-future-roadmap)
 850 | 
 851 | </div>
 </content>
@@ -2339,8 +2339,8 @@ $0.04
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -2370,13 +2370,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -2402,7 +2402,7 @@ CloudShift Radar is an AI-powered cloud migration assessment tool that combines 
 
 ---
 
-## 📋 Table of Contents
+## ðŸ“‹ Table of Contents
 
 - [Overview](#-overview)
 - [Live Demo](#-live-demo)
@@ -2434,7 +2434,7 @@ CloudShift Radar is an AI-powered cloud migration assessment tool that combines 
 
 ---
 
-## 🎯 Overview
+## ðŸŽ¯ Overview
 
 **CloudShift Radar** is designed for CTOs, technical leads, DevOps engineers, platform engineers, and development teams who need to assess the viability of migrating legacy applications to the cloud.
 
@@ -2442,11 +2442,11 @@ Traditional cloud migration assessments are time-consuming, manual, error-prone,
 
 CloudShift Radar answers questions such as:
 
-- 🔍 What will break before migration?
-- ✅ Which features are likely to survive?
-- 🔧 Which dependencies need refactoring?
-- ⚠️ Which risks require human review?
-- 📋 What should the team fix before moving to the target cloud?
+- ðŸ” What will break before migration?
+- âœ… Which features are likely to survive?
+- ðŸ”§ Which dependencies need refactoring?
+- âš ï¸ Which risks require human review?
+- ðŸ“‹ What should the team fix before moving to the target cloud?
 
 ### Value Proposition
 
@@ -2463,7 +2463,7 @@ CloudShift Radar provides:
 
 ---
 
-## 🌐 Live Demo
+## ðŸŒ Live Demo
 
 CloudShift Radar is deployed as a hosted hackathon demo on Vercel.
 
@@ -2499,9 +2499,9 @@ Full IBM Bob Shell runtime analysis is supported in local setup when IBM Bob She
 
 ---
 
-## ✨ Key Features
+## âœ¨ Key Features
 
-### 🔍 Repository Scanning
+### ðŸ” Repository Scanning
 
 - Secure ZIP upload processing.
 - Static code analysis only.
@@ -2513,7 +2513,7 @@ Full IBM Bob Shell runtime analysis is supported in local setup when IBM Bob She
 - Automatic language and framework detection.
 - Repository structure validation before analysis.
 
-### 📊 Progressive Validation
+### ðŸ“Š Progressive Validation
 
 - Validates project packages before scan execution.
 - Shows validation errors and warnings inline.
@@ -2521,7 +2521,7 @@ Full IBM Bob Shell runtime analysis is supported in local setup when IBM Bob She
 - Supports warning-based progression when the repository is usable but incomplete.
 - Provides clear validation states before analysis begins.
 
-### 🤖 IBM Bob AI Integration
+### ðŸ¤– IBM Bob AI Integration
 
 IBM Bob is used as the migration reasoning engine.
 
@@ -2538,13 +2538,13 @@ Bob evaluates scanner findings and generates:
 
 Bob uses a five-tier decision framework:
 
-- ✅ **Proceed**: Safe to migrate.
-- ⚠️ **Proceed with Caution**: Manageable risks identified.
-- 🛠️ **Prepare First**: Requires preparation work.
-- 🚫 **Block Migration**: Critical blockers detected.
-- 👤 **Requires Human Review**: Complex scenarios needing expert evaluation.
+- âœ… **Proceed**: Safe to migrate.
+- âš ï¸ **Proceed with Caution**: Manageable risks identified.
+- ðŸ› ï¸ **Prepare First**: Requires preparation work.
+- ðŸš« **Block Migration**: Critical blockers detected.
+- ðŸ‘¤ **Requires Human Review**: Complex scenarios needing expert evaluation.
 
-### 📈 Interactive Dashboard
+### ðŸ“ˆ Interactive Dashboard
 
 The report dashboard includes:
 
@@ -2558,7 +2558,7 @@ The report dashboard includes:
 - Bob reasoning trace.
 - Export menu.
 
-### 📤 Export Capabilities
+### ðŸ“¤ Export Capabilities
 
 Reports can be exported as:
 
@@ -2566,26 +2566,26 @@ Reports can be exported as:
 - **CSV**: Spreadsheet-compatible format
 - **Markdown**: Human-readable report
 
-### 🔒 Security-First Design
+### ðŸ”’ Security-First Design
 
 CloudShift Radar follows a zero-execution security model:
 
-- ❌ Uploaded code is never executed.
-- ❌ Dependencies are never installed.
-- ❌ Shell commands from uploaded repositories are never run.
-- ❌ Docker containers are never executed.
-- ✅ Only text files are read.
-- ✅ ZIP files are validated before extraction.
-- ✅ Path traversal is prevented.
-- ✅ Secrets are redacted before AI analysis.
+- âŒ Uploaded code is never executed.
+- âŒ Dependencies are never installed.
+- âŒ Shell commands from uploaded repositories are never run.
+- âŒ Docker containers are never executed.
+- âœ… Only text files are read.
+- âœ… ZIP files are validated before extraction.
+- âœ… Path traversal is prevented.
+- âœ… Secrets are redacted before AI analysis.
 
 ---
 
-## 🆕 What's New
+## ðŸ†• What's New
 
 ### Recent Updates
 
-#### ✅ Progressive Validation System
+#### âœ… Progressive Validation System
 
 - Added `POST /api/scans/validate`.
 - Added real-time validation feedback.
@@ -2593,28 +2593,28 @@ CloudShift Radar follows a zero-execution security model:
 - Added repository metadata detection.
 - Added network error handling and retry behavior.
 
-#### ✅ Hosted Demo Mode
+#### âœ… Hosted Demo Mode
 
 - Added cached demo results for consistent judging.
 - Avoids repeated Bobcoin consumption.
 - Provides deterministic demo results.
 - Keeps the public Vercel app stable even without Bob Shell installed on the serverless runtime.
 
-#### ✅ Vercel Deployment Fixes
+#### âœ… Vercel Deployment Fixes
 
 - Added frontend SPA rewrite support through `frontend/vercel.json`.
 - Added Vercel runtime storage support using `/tmp/cloudshift-radar`.
 - Added separate frontend/backend deployment configuration.
 - Added production frontend-to-backend API configuration using `VITE_API_URL`.
 
-#### ✅ Export Functionality
+#### âœ… Export Functionality
 
 - Added JSON export.
 - Added CSV export.
 - Added Markdown export.
 - Added downloadable report filenames with project name and timestamp.
 
-#### ✅ UI/UX Improvements
+#### âœ… UI/UX Improvements
 
 - Added progressive CTA states.
 - Added validation progress indicators.
@@ -2626,19 +2626,19 @@ CloudShift Radar follows a zero-execution security model:
 
 ---
 
-## 🏗️ Architecture
+## ðŸ—ï¸ Architecture
 
 CloudShift Radar is built as a monorepo using pnpm workspaces.
 
 ```
 CloudShift_Radar/
-├── frontend/       React + Vite application
-├── backend/        Fastify API + scanner + Bob integration
-├── shared/         Shared TypeScript types
-├── demo-repos/     Demo scan context
-├── bob_sessions/   IBM Bob IDE task session evidence
-├── uploads/        Local generated scan workspace
-└── scan-results/   Local generated scan results
+â”œâ”€â”€ frontend/       React + Vite application
+â”œâ”€â”€ backend/        Fastify API + scanner + Bob integration
+â”œâ”€â”€ shared/         Shared TypeScript types
+â”œâ”€â”€ demo-repos/     Demo scan context
+â”œâ”€â”€ bob_sessions/   IBM Bob IDE task session evidence
+â”œâ”€â”€ uploads/        Local generated scan workspace
+â””â”€â”€ scan-results/   Local generated scan results
 ```
 
 High-level architecture:
@@ -2701,7 +2701,7 @@ Shared TypeScript package containing:
 
 ---
 
-## 🛠️ Technology Stack
+## ðŸ› ï¸ Technology Stack
 
 ### Backend
 
@@ -2737,58 +2737,58 @@ Shared TypeScript package containing:
 
 ---
 
-## 🔒 Security Model
+## ðŸ”’ Security Model
 
 CloudShift Radar follows a zero-execution security model.
 
 ### What CloudShift Radar Does Not Do
 
-- ❌ Does not execute uploaded code.
-- ❌ Does not install uploaded dependencies.
-- ❌ Does not run npm, pip, Docker, shell scripts, or package managers from uploaded repositories.
-- ❌ Does not evaluate dynamic code.
-- ❌ Does not trust user-provided paths.
-- ❌ Does not expose uploaded files publicly.
+- âŒ Does not execute uploaded code.
+- âŒ Does not install uploaded dependencies.
+- âŒ Does not run npm, pip, Docker, shell scripts, or package managers from uploaded repositories.
+- âŒ Does not evaluate dynamic code.
+- âŒ Does not trust user-provided paths.
+- âŒ Does not expose uploaded files publicly.
 
 ### What CloudShift Radar Does
 
-- ✅ Reads text files only.
-- ✅ Validates ZIP files before extraction.
-- ✅ Prevents path traversal attacks.
-- ✅ Enforces file size limits.
-- ✅ Enforces file count limits.
-- ✅ Redacts secrets and credentials before AI analysis.
-- ✅ Stores temporary scan files in isolated runtime folders.
-- ✅ Uses `/tmp/cloudshift-radar` for runtime writes on Vercel.
-- ✅ Keeps generated local scan folders out of Git except `.gitkeep`.
+- âœ… Reads text files only.
+- âœ… Validates ZIP files before extraction.
+- âœ… Prevents path traversal attacks.
+- âœ… Enforces file size limits.
+- âœ… Enforces file count limits.
+- âœ… Redacts secrets and credentials before AI analysis.
+- âœ… Stores temporary scan files in isolated runtime folders.
+- âœ… Uses `/tmp/cloudshift-radar` for runtime writes on Vercel.
+- âœ… Keeps generated local scan folders out of Git except `.gitkeep`.
 
 ---
 
-## 🎭 Hosted Demo Behavior
+## ðŸŽ­ Hosted Demo Behavior
 
 The hosted demo is intentionally configured for reliability.
 
 In the public Vercel deployment:
 
-- ✅ The frontend is fully interactive.
-- ✅ The backend API is live.
-- ✅ Validation routes are available.
-- ⚡ Demo analysis uses cached/fallback Bob output.
-- ✅ The dashboard and exports remain usable.
-- 💡 Bob Shell is not required to be installed on Vercel.
+- âœ… The frontend is fully interactive.
+- âœ… The backend API is live.
+- âœ… Validation routes are available.
+- âš¡ Demo analysis uses cached/fallback Bob output.
+- âœ… The dashboard and exports remain usable.
+- ðŸ’¡ Bob Shell is not required to be installed on Vercel.
 
 This avoids:
 
-- 💰 Bobcoin waste from repeated public demo runs.
-- 🔐 CLI authentication issues in serverless runtime.
-- ⚠️ Instability caused by running a local CLI inside Vercel Functions.
-- ❌ Public demo failure when Bob Shell credentials are not configured.
+- ðŸ’° Bobcoin waste from repeated public demo runs.
+- ðŸ” CLI authentication issues in serverless runtime.
+- âš ï¸ Instability caused by running a local CLI inside Vercel Functions.
+- âŒ Public demo failure when Bob Shell credentials are not configured.
 
 Full Bob Shell runtime analysis is supported when running locally with valid IBM Bob credentials.
 
 ---
 
-## 🚀 Getting Started
+## ðŸš€ Getting Started
 
 ### Prerequisites
 
@@ -2846,7 +2846,7 @@ RUNTIME_STORAGE_DIR=
 # Bob AI Configuration
 # Optional locally; hosted demo works with cached/fallback Bob analysis.
 BOB_PROVIDER=shell
-BOBSHELL_API_KEY=your_real_api_key_here
+BOBSHELL_API_KEY=<BOBSHELL_API_KEY_PLACEHOLDER>
 
 # Bob Shell Command
 # Windows: use full path or ./node_modules/.bin/bob
@@ -2865,7 +2865,7 @@ BOB_PROVIDER=shell
 BOB_TIMEOUT_MS=600000
 ```
 
-⚠️ **Do not commit `.env` files or credentials.**
+âš ï¸ **Do not commit `.env` files or credentials.**
 
 #### Frontend Environment
 
@@ -2909,7 +2909,7 @@ pnpm dev:backend
 
 ---
 
-## ☁️ Vercel Deployment
+## â˜ï¸ Vercel Deployment
 
 CloudShift Radar is deployed as two separate Vercel projects.
 
@@ -2978,7 +2978,7 @@ Only `.gitkeep` files should be committed in `uploads/` and `scan-results/`.
 
 ---
 
-## 🌐 API Endpoints
+## ðŸŒ API Endpoints
 
 ### Health
 
@@ -3123,70 +3123,70 @@ Supported formats:
 
 ---
 
-## 📁 Project Structure
+## ðŸ“ Project Structure
 
 ```
 CloudShift_Radar/
-├── bob_sessions/               # IBM Bob IDE task session reports
-│   ├── README.md               # Instructions for task session exports
-│   └── Dev-dan/                # Exported Bob IDE task histories and screenshots
-│
-├── backend/                    # Fastify API + Scanner
-│   ├── src/
-│   │   ├── server.ts           # Main server entry point
-│   │   ├── bob/                # IBM Bob AI integration
-│   │   │   ├── bobClient.ts
-│   │   │   ├── bobShellClient.ts
-│   │   │   ├── buildBobAnalysisPrompt.ts
-│   │   │   ├── normalizeBobResponse.ts
-│   │   │   └── checkBobShell.ts
-│   │   ├── config/             # Environment configuration
-│   │   ├── demo/               # Demo repository loader and fallback data
-│   │   ├── export/             # Export format generators
-│   │   ├── routes/             # API route handlers
-│   │   ├── scanner/            # Static code analysis engine
-│   │   ├── security/           # ZIP validation and safe file handling
-│   │   └── storage/            # Scan result persistence
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── .vercelignore
-│
-├── frontend/                   # React UI + Dashboard
-│   ├── src/
-│   │   ├── main.tsx
-│   │   ├── App.tsx
-│   │   ├── api/
-│   │   ├── components/
-│   │   ├── routes/
-│   │   ├── styles/
-│   │   └── utils/
-│   ├── index.html
-│   ├── vercel.json             # Vercel SPA rewrite configuration
-│   ├── package.json
-│   ├── tsconfig.json
-│   └── vite.config.ts
-│
-├── shared/                     # Shared TypeScript types
-│   ├── src/
-│   │   ├── index.ts
-│   │   └── scan.ts
-│   ├── package.json
-│   └── tsconfig.json
-│
-├── demo-repos/                 # Demo repositories / demo context
-├── uploads/                    # Local generated ZIP extraction workspace (.gitkeep only)
-├── scan-results/               # Local generated scan results (.gitkeep only)
-├── .env.example
-├── .gitignore
-├── .vercelignore
-├── package.json
-├── pnpm-workspace.yaml
-└── README.md
+â”œâ”€â”€ bob_sessions/               # IBM Bob IDE task session reports
+â”‚   â”œâ”€â”€ README.md               # Instructions for task session exports
+â”‚   â””â”€â”€ Dev-dan/                # Exported Bob IDE task histories and screenshots
+â”‚
+â”œâ”€â”€ backend/                    # Fastify API + Scanner
+â”‚   â”œâ”€â”€ src/
+â”‚   â”‚   â”œâ”€â”€ server.ts           # Main server entry point
+â”‚   â”‚   â”œâ”€â”€ bob/                # IBM Bob AI integration
+â”‚   â”‚   â”‚   â”œâ”€â”€ bobClient.ts
+â”‚   â”‚   â”‚   â”œâ”€â”€ bobShellClient.ts
+â”‚   â”‚   â”‚   â”œâ”€â”€ buildBobAnalysisPrompt.ts
+â”‚   â”‚   â”‚   â”œâ”€â”€ normalizeBobResponse.ts
+â”‚   â”‚   â”‚   â””â”€â”€ checkBobShell.ts
+â”‚   â”‚   â”œâ”€â”€ config/             # Environment configuration
+â”‚   â”‚   â”œâ”€â”€ demo/               # Demo repository loader and fallback data
+â”‚   â”‚   â”œâ”€â”€ export/             # Export format generators
+â”‚   â”‚   â”œâ”€â”€ routes/             # API route handlers
+â”‚   â”‚   â”œâ”€â”€ scanner/            # Static code analysis engine
+â”‚   â”‚   â”œâ”€â”€ security/           # ZIP validation and safe file handling
+â”‚   â”‚   â””â”€â”€ storage/            # Scan result persistence
+â”‚   â”œâ”€â”€ package.json
+â”‚   â”œâ”€â”€ tsconfig.json
+â”‚   â””â”€â”€ .vercelignore
+â”‚
+â”œâ”€â”€ frontend/                   # React UI + Dashboard
+â”‚   â”œâ”€â”€ src/
+â”‚   â”‚   â”œâ”€â”€ main.tsx
+â”‚   â”‚   â”œâ”€â”€ App.tsx
+â”‚   â”‚   â”œâ”€â”€ api/
+â”‚   â”‚   â”œâ”€â”€ components/
+â”‚   â”‚   â”œâ”€â”€ routes/
+â”‚   â”‚   â”œâ”€â”€ styles/
+â”‚   â”‚   â””â”€â”€ utils/
+â”‚   â”œâ”€â”€ index.html
+â”‚   â”œâ”€â”€ vercel.json             # Vercel SPA rewrite configuration
+â”‚   â”œâ”€â”€ package.json
+â”‚   â”œâ”€â”€ tsconfig.json
+â”‚   â””â”€â”€ vite.config.ts
+â”‚
+â”œâ”€â”€ shared/                     # Shared TypeScript types
+â”‚   â”œâ”€â”€ src/
+â”‚   â”‚   â”œâ”€â”€ index.ts
+â”‚   â”‚   â””â”€â”€ scan.ts
+â”‚   â”œâ”€â”€ package.json
+â”‚   â””â”€â”€ tsconfig.json
+â”‚
+â”œâ”€â”€ demo-repos/                 # Demo repositories / demo context
+â”œâ”€â”€ uploads/                    # Local generated ZIP extraction workspace (.gitkeep only)
+â”œâ”€â”€ scan-results/               # Local generated scan results (.gitkeep only)
+â”œâ”€â”€ .env.example
+â”œâ”€â”€ .gitignore
+â”œâ”€â”€ .vercelignore
+â”œâ”€â”€ package.json
+â”œâ”€â”€ pnpm-workspace.yaml
+â””â”€â”€ README.md
 ```
 
 ---
 
-## 📜 Available Scripts
+## ðŸ“œ Available Scripts
 
 ### Root Level
 
@@ -3216,7 +3216,7 @@ pnpm clean
 
 ---
 
-## 🤖 Bob AI Integration
+## ðŸ¤– Bob AI Integration
 
 IBM Bob is the AI reasoning engine at the heart of CloudShift Radar.
 
@@ -3247,7 +3247,7 @@ For full local Bob Shell analysis, configure:
 
 ```env
 BOB_PROVIDER=shell
-BOBSHELL_API_KEY=your_api_key_with_inference_scope
+BOBSHELL_API_KEY=<BOBSHELL_API_KEY_PLACEHOLDER>
 BOB_SHELL_COMMAND=./node_modules/.bin/bob
 BOB_TIMEOUT_MS=600000
 ```
@@ -3270,7 +3270,7 @@ CloudShift Radar is designed to remain usable even when IBM Bob Shell is unavail
 
 ---
 
-## 🏆 IBM Bob Hackathon Compliance
+## ðŸ† IBM Bob Hackathon Compliance
 
 CloudShift Radar was built specifically for the IBM Bob Hackathon and uses IBM Bob as a core part of the development and analysis workflow.
 
@@ -3330,7 +3330,7 @@ These exports demonstrate how IBM Bob IDE was used throughout the project lifecy
 
 ---
 
-## 📤 Export Formats
+## ðŸ“¤ Export Formats
 
 CloudShift Radar supports multiple export formats for scan results.
 
@@ -3366,12 +3366,12 @@ GET /api/scans/:scanId/export?format=markdown
 Via UI:
 
 ```
-Open Report Dashboard → Export Report → Select format
+Open Report Dashboard â†’ Export Report â†’ Select format
 ```
 
 ---
 
-## ⚠️ MVP Limitations
+## âš ï¸ MVP Limitations
 
 CloudShift Radar is an MVP proof of concept.
 
@@ -3401,7 +3401,7 @@ CloudShift Radar is an MVP proof of concept.
 
 ---
 
-## 🗺️ Future Roadmap
+## ðŸ—ºï¸ Future Roadmap
 
 ### Phase 1: Enhanced Analysis
 
@@ -3440,36 +3440,36 @@ CloudShift Radar is an MVP proof of concept.
 
 ---
 
-## 🧹 Repository Hygiene
+## ðŸ§¹ Repository Hygiene
 
 Before public submission, verify:
 
-- ✅ No `.env` files are committed.
-- ✅ No IBM Bob credentials are committed.
-- ✅ No IBM Cloud credentials are committed.
-- ✅ No API keys or secrets appear in screenshots.
-- ✅ `uploads/` contains only `.gitkeep`.
-- ✅ `scan-results/` contains only `.gitkeep`.
-- ✅ `bob_sessions/Dev-dan/` contains only relevant CloudShift Radar Bob evidence.
-- ✅ `.vercel/` is not committed.
-- ✅ Generated runtime files are not committed.
+- âœ… No `.env` files are committed.
+- âœ… No IBM Bob credentials are committed.
+- âœ… No IBM Cloud credentials are committed.
+- âœ… No API keys or secrets appear in screenshots.
+- âœ… `uploads/` contains only `.gitkeep`.
+- âœ… `scan-results/` contains only `.gitkeep`.
+- âœ… `bob_sessions/Dev-dan/` contains only relevant CloudShift Radar Bob evidence.
+- âœ… `.vercel/` is not committed.
+- âœ… Generated runtime files are not committed.
 
 ---
 
-## 📋 Submission Checklist
+## ðŸ“‹ Submission Checklist
 
 Required for lablab.ai submission:
 
-- ✅ Project title.
-- ✅ Short description.
-- ✅ Long description.
-- ✅ Technology and category tags.
-- ✅ Cover image, PNG or JPG, 16:9 recommended.
-- ✅ Video presentation, MP4, maximum 5 minutes.
-- ✅ Slide presentation PDF.
-- ✅ Public GitHub repository.
-- ✅ IBM Bob task session reports in repository.
-- ✅ Application URL.
+- âœ… Project title.
+- âœ… Short description.
+- âœ… Long description.
+- âœ… Technology and category tags.
+- âœ… Cover image, PNG or JPG, 16:9 recommended.
+- âœ… Video presentation, MP4, maximum 5 minutes.
+- âœ… Slide presentation PDF.
+- âœ… Public GitHub repository.
+- âœ… IBM Bob task session reports in repository.
+- âœ… Application URL.
 
 ### Recommended Submission Text
 
@@ -3503,7 +3503,7 @@ The goal is to help teams know what will break before they migrate, reduce disco
 
 ---
 
-## 🤝 Contributing
+## ðŸ¤ Contributing
 
 This project was created as a hackathon MVP. Contributions should preserve the zero-execution security model and avoid introducing behavior that executes uploaded user code.
 
@@ -3518,7 +3518,7 @@ This project was created as a hackathon MVP. Contributions should preserve the z
 
 ---
 
-## 📄 License
+## ðŸ“„ License
 
 This project was created as a proof of concept for the IBM Bob Hackathon.
 
@@ -3526,7 +3526,7 @@ License terms should be finalized before production or commercial use.
 
 ---
 
-## 🙏 Acknowledgments
+## ðŸ™ Acknowledgments
 
 - **IBM Bob AI**
 - **IBM Bob Hackathon**
@@ -3538,7 +3538,7 @@ License terms should be finalized before production or commercial use.
 
 ---
 
-## 📊 Project Status
+## ðŸ“Š Project Status
 
 **Current Version**: 0.1.0  
 **Status**: MVP - Hackathon Submission Ready  
@@ -3546,16 +3546,16 @@ License terms should be finalized before production or commercial use.
 
 ### Recent Improvements
 
-- ✅ Progressive validation system implemented.
-- ✅ Hosted Vercel frontend deployed.
-- ✅ Hosted Vercel backend deployed.
-- ✅ Frontend-to-backend production API routing fixed.
-- ✅ Vercel SPA route refresh fixed.
-- ✅ Vercel runtime storage moved to `/tmp/cloudshift-radar`.
-- ✅ Demo mode with cached/fallback Bob analysis.
-- ✅ Export functionality added.
-- ✅ Graceful Bob AI fallback added.
-- ✅ IBM Bob IDE evidence included in `/bob_sessions/Dev-dan/`.
+- âœ… Progressive validation system implemented.
+- âœ… Hosted Vercel frontend deployed.
+- âœ… Hosted Vercel backend deployed.
+- âœ… Frontend-to-backend production API routing fixed.
+- âœ… Vercel SPA route refresh fixed.
+- âœ… Vercel runtime storage moved to `/tmp/cloudshift-radar`.
+- âœ… Demo mode with cached/fallback Bob analysis.
+- âœ… Export functionality added.
+- âœ… Graceful Bob AI fallback added.
+- âœ… IBM Bob IDE evidence included in `/bob_sessions/Dev-dan/`.
 
 ---
 
@@ -3563,7 +3563,7 @@ License terms should be finalized before production or commercial use.
 
 **Built for the IBM Bob Hackathon**
 
-[🌐 Live Demo](https://cloud-shift-radar.vercel.app) • [📚 Documentation](#-table-of-contents) • [🚀 API Reference](#-api-endpoints) • [🗺️ Roadmap](#-future-roadmap)
+[ðŸŒ Live Demo](https://cloud-shift-radar.vercel.app) â€¢ [ðŸ“š Documentation](#-table-of-contents) â€¢ [ðŸš€ API Reference](#-api-endpoints) â€¢ [ðŸ—ºï¸ Roadmap](#-future-roadmap)
 
 </div>
 </content>
@@ -3580,7 +3580,7 @@ License terms should be finalized before production or commercial use.
 <operation>modified</operation>
 <user_edits>@@ -1175,4 +1175,4 @@
  
- [🌐 Live Demo](https://cloud-shift-radar.vercel.app) • [📚 Documentation](#-table-of-contents) • [🚀 API Reference](#-api-endpoints) • [🗺️ Roadmap](#-future-roadmap)
+ [ðŸŒ Live Demo](https://cloud-shift-radar.vercel.app) â€¢ [ðŸ“š Documentation](#-table-of-contents) â€¢ [ðŸš€ API Reference](#-api-endpoints) â€¢ [ðŸ—ºï¸ Roadmap](#-future-roadmap)
  
 -&lt;/div&gt;
 \ No newline at end of file
@@ -3614,8 +3614,8 @@ $0.13
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -3645,13 +3645,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -3661,38 +3661,38 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 
 <attempt_completion>
 <result>
-✅ README.md actualizado exitosamente con el nuevo contenido.
+âœ… README.md actualizado exitosamente con el nuevo contenido.
 
 **Cambios principales realizados:**
 
-📋 **Estructura mejorada:**
-- Añadido badge de IBM Bob
-- Nueva sección "Live Demo" con URLs de Vercel
-- Sección "Hosted Demo Behavior" explicando el comportamiento del demo
-- Sección "Vercel Deployment" con configuración detallada
-- Sección "Repository Hygiene" para mantener el repo limpio
-- Sección "Submission Checklist" con textos recomendados para lablab.ai
+ðŸ“‹ **Estructura mejorada:**
+- AÃ±adido badge de IBM Bob
+- Nueva secciÃ³n "Live Demo" con URLs de Vercel
+- SecciÃ³n "Hosted Demo Behavior" explicando el comportamiento del demo
+- SecciÃ³n "Vercel Deployment" con configuraciÃ³n detallada
+- SecciÃ³n "Repository Hygiene" para mantener el repo limpio
+- SecciÃ³n "Submission Checklist" con textos recomendados para lablab.ai
 
-🎨 **Formato visual mejorado:**
-- Emojis consistentes en todos los títulos
+ðŸŽ¨ **Formato visual mejorado:**
+- Emojis consistentes en todos los tÃ­tulos
 - Tablas bien formateadas
-- Bloques de código con sintaxis clara
-- Secciones con checkmarks (✅) y advertencias (⚠️)
+- Bloques de cÃ³digo con sintaxis clara
+- Secciones con checkmarks (âœ…) y advertencias (âš ï¸)
 - Enlaces internos y externos bien organizados
 
-📝 **Contenido actualizado:**
-- Información completa sobre el despliegue en Vercel
-- Explicación clara del modo demo con caché
+ðŸ“ **Contenido actualizado:**
+- InformaciÃ³n completa sobre el despliegue en Vercel
+- ExplicaciÃ³n clara del modo demo con cachÃ©
 - Detalles sobre el almacenamiento runtime (`/tmp/cloudshift-radar`)
-- Configuración de variables de entorno para producción
+- ConfiguraciÃ³n de variables de entorno para producciÃ³n
 - Evidencia de IBM Bob IDE en `/bob_sessions/Dev-dan/`
 - Textos sugeridos para la submission del hackathon
 
-🔗 **Footer mejorado:**
-- Enlaces rápidos a demo, documentación, API y roadmap
+ðŸ”— **Footer mejorado:**
+- Enlaces rÃ¡pidos a demo, documentaciÃ³n, API y roadmap
 - Mensaje "Built for the IBM Bob Hackathon"
 
-El README ahora está completo, profesional y listo para la submission del hackathon. 🚀
+El README ahora estÃ¡ completo, profesional y listo para la submission del hackathon. ðŸš€
 </result>
 </attempt_completion>
 
@@ -3726,8 +3726,8 @@ $0.22
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -3757,13 +3757,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>orchestrator</slug>
-<name>🔀 Orchestrator</name>
+<name>ðŸ”€ Orchestrator</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -3771,13 +3771,13 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 
 **Assistant:**
 
-Entiendo. Necesito revisar el proyecto completo para actualizar el README con información precisa sobre:
+Entiendo. Necesito revisar el proyecto completo para actualizar el README con informaciÃ³n precisa sobre:
 
 1. El login simulado (ya que es MVP)
-2. La versión desktop como la más desarrollada
-3. La versión mobile planificada para futuras producciones
+2. La versiÃ³n desktop como la mÃ¡s desarrollada
+3. La versiÃ³n mobile planificada para futuras producciones
 
-Déjame explorar el proyecto para entender mejor la implementación actual.
+DÃ©jame explorar el proyecto para entender mejor la implementaciÃ³n actual.
 
 <read_file>
 <path>frontend/src/routes/Home.tsx</path>
@@ -3819,8 +3819,8 @@ $0.32
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -3850,13 +3850,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>orchestrator</slug>
-<name>🔀 Orchestrator</name>
+<name>ðŸ”€ Orchestrator</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -3868,15 +3868,15 @@ Necesito cambiar al modo Code para poder leer los archivos del proyecto y actual
 
 <switch_mode>
 <mode_slug>code</mode_slug>
-<reason>Necesito leer archivos del proyecto para entender la implementación actual del login y las características desktop/mobile antes de actualizar el README</reason>
+<reason>Necesito leer archivos del proyecto para entender la implementaciÃ³n actual del login y las caracterÃ­sticas desktop/mobile antes de actualizar el README</reason>
 </switch_mode>
 
 ---
 
 **User:**
 
-[switch_mode to 'code' because: Necesito leer archivos del proyecto para entender la implementación actual del login y las características desktop/mobile antes de actualizar el README] Result:
-Successfully switched from 🔀 Orchestrator mode to 💻 Code mode because: Necesito leer archivos del proyecto para entender la implementación actual del login y las características desktop/mobile antes de actualizar el README.
+[switch_mode to 'code' because: Necesito leer archivos del proyecto para entender la implementaciÃ³n actual del login y las caracterÃ­sticas desktop/mobile antes de actualizar el README] Result:
+Successfully switched from ðŸ”€ Orchestrator mode to ðŸ’» Code mode because: Necesito leer archivos del proyecto para entender la implementaciÃ³n actual del login y las caracterÃ­sticas desktop/mobile antes de actualizar el README.
 <environment_details>
 # VSCode Visible Files
 README.md
@@ -3894,8 +3894,8 @@ $0.43
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -3925,13 +3925,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -4244,14 +4244,14 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 198 | 
 199 |       {healthCheckState === "checking" ? (
 200 |         <Card className="info-card">
-201 |           <h3>⏳ Checking system status...</h3>
+201 |           <h3>â³ Checking system status...</h3>
 202 |           <p>Verifying Bob Shell configuration and backend connectivity.</p>
 203 |         </Card>
 204 |       ) : null}
 205 | 
 206 |       {healthCheckState === "error" ? (
 207 |         <Card className="error-card">
-208 |           <h3>⚠️ Unable to connect to backend</h3>
+208 |           <h3>âš ï¸ Unable to connect to backend</h3>
 209 |           <p>The backend service is not responding. Please ensure the server is running and try refreshing the page.</p>
 210 |           <Button variant="secondary" onClick={() => window.location.reload()}>
 211 |             Refresh Page
@@ -4261,7 +4261,7 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 215 | 
 216 |       {healthCheckState === "not-configured" ? (
 217 |         <Card className="error-card">
-218 |           <h3>⚙️ Hosted demo mode active</h3>
+218 |           <h3>âš™ï¸ Hosted demo mode active</h3>
 219 |           <p>This public demo uses cached IBM Bob analysis results to provide a stable judging experience and avoid repeated Bobcoin consumption. Full Bob Shell runtime analysis is available in local setup when IBM Bob credentials are configured.</p>
 220 |           <p style={{ marginTop: "0.5rem", fontSize: "0.9em", opacity: 0.8 }}>
 221 |             The system will use demo fallback data if Bob is unavailable during analysis.
@@ -4356,7 +4356,7 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 310 | 
 311 |           <div className="progressive-action">
 312 |             <Button disabled={!formComplete || validationState === "validating"} onClick={handlePrimaryAction}>
-313 |               {showSpinner && <span className="spinner">⏳</span>}
+313 |               {showSpinner && <span className="spinner">â³</span>}
 314 |               {ctaLabel}
 315 |             </Button>
 316 |           </div>
@@ -4407,7 +4407,7 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 361 |                       opacity: isComplete ? 1 : isCurrent ? 0.8 : 0.5,
 362 |                       fontWeight: isCurrent ? 'bold' : 'normal'
 363 |                     }}>
-364 |                       {isComplete ? '✓' : isCurrent ? '⏳' : '○'} {step}
+364 |                       {isComplete ? 'âœ“' : isCurrent ? 'â³' : 'â—‹'} {step}
 365 |                     </li>
 366 |                   );
 367 |                 })}
@@ -4446,7 +4446,7 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 400 |           ) : null}
 401 |           {validationState === "error" && validationResult ? (
 402 |             <>
-403 |               <p><strong>⚠️ Project validation failed.</strong> CloudShift Radar could not process this package.</p>
+403 |               <p><strong>âš ï¸ Project validation failed.</strong> CloudShift Radar could not process this package.</p>
 404 |               <ul className="clean-list">
 405 |                 {validationResult.errors.map((error, idx) => (
 406 |                   <li key={idx}>
@@ -4471,7 +4471,7 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 425 |           ) : null}
 426 |           {validationState === "invalid" && validationResult ? (
 427 |             <>
-428 |               <p><strong>❌ Validation errors detected.</strong> The following issues were found:</p>
+428 |               <p><strong>âŒ Validation errors detected.</strong> The following issues were found:</p>
 429 |               <ul className="clean-list">
 430 |                 {validationResult.errors.map((error, idx) => (
 431 |                   <li key={`error-${idx}`}>
@@ -5089,8 +5089,8 @@ $0.53
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -5120,13 +5120,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -5134,14 +5134,14 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 
 **Assistant:**
 
-Perfecto, ahora entiendo la implementación actual. Veo que:
+Perfecto, ahora entiendo la implementaciÃ³n actual. Veo que:
 
-1. **Login simulado**: El login en `Home.tsx` es completamente simulado (no valida credenciales reales), solo requiere llenar campos y aceptar términos
-2. **Usuario fijo**: En `App.tsx` línea 33 hay un usuario demo fijo: `"Demo User"`
-3. **Responsive design**: El archivo `responsive.css` muestra que hay soporte responsive con breakpoints para mobile, pero la experiencia está optimizada para desktop
-4. **Mobile menu**: Existe un menú mobile básico en el Header
+1. **Login simulado**: El login en `Home.tsx` es completamente simulado (no valida credenciales reales), solo requiere llenar campos y aceptar tÃ©rminos
+2. **Usuario fijo**: En `App.tsx` lÃ­nea 33 hay un usuario demo fijo: `"Demo User"`
+3. **Responsive design**: El archivo `responsive.css` muestra que hay soporte responsive con breakpoints para mobile, pero la experiencia estÃ¡ optimizada para desktop
+4. **Mobile menu**: Existe un menÃº mobile bÃ¡sico en el Header
 
-Ahora actualizaré el README para reflejar esta información correctamente:
+Ahora actualizarÃ© el README para reflejar esta informaciÃ³n correctamente:
 
 <apply_diff>
 <path>README.md</path>
@@ -5225,21 +5225,21 @@ Search Content:
 - No team workspace support yet.
 
 Best Match Found:
-757 | │   │   ├── scanner/            # Static code analysis engine
-758 | │   │   ├── security/           # ZIP validation and safe file handling
-759 | │   │   └── storage/            # Scan result persistence
-760 | │   ├── package.json
-761 | │   ├── tsconfig.json
-762 | │   └── .vercelignore
-763 | │
-764 | ├── frontend/                   # React UI + Dashboard
-765 | │   ├── src/
-766 | │   │   ├── main.tsx
-767 | │   │   ├── App.tsx
-768 | │   │   ├── api/
-769 | │   │   ├── components/
-770 | │   │   ├── routes/
-771 | │   │   ├── styles/
+757 | â”‚   â”‚   â”œâ”€â”€ scanner/            # Static code analysis engine
+758 | â”‚   â”‚   â”œâ”€â”€ security/           # ZIP validation and safe file handling
+759 | â”‚   â”‚   â””â”€â”€ storage/            # Scan result persistence
+760 | â”‚   â”œâ”€â”€ package.json
+761 | â”‚   â”œâ”€â”€ tsconfig.json
+762 | â”‚   â””â”€â”€ .vercelignore
+763 | â”‚
+764 | â”œâ”€â”€ frontend/                   # React UI + Dashboard
+765 | â”‚   â”œâ”€â”€ src/
+766 | â”‚   â”‚   â”œâ”€â”€ main.tsx
+767 | â”‚   â”‚   â”œâ”€â”€ App.tsx
+768 | â”‚   â”‚   â”œâ”€â”€ api/
+769 | â”‚   â”‚   â”œâ”€â”€ components/
+770 | â”‚   â”‚   â”œâ”€â”€ routes/
+771 | â”‚   â”‚   â”œâ”€â”€ styles/
 
 
 Original Content:
@@ -5300,44 +5300,44 @@ Original Content:
 733 | 
 734 | ---
 735 | 
-736 | ## 📁 Project Structure
+736 | ## ðŸ“ Project Structure
 737 | 
 738 | ```
 739 | CloudShift_Radar/
-740 | ├── bob_sessions/               # IBM Bob IDE task session reports
-741 | │   ├── README.md               # Instructions for task session exports
-742 | │   └── Dev-dan/                # Exported Bob IDE task histories and screenshots
-743 | │
-744 | ├── backend/                    # Fastify API + Scanner
-745 | │   ├── src/
-746 | │   │   ├── server.ts           # Main server entry point
-747 | │   │   ├── bob/                # IBM Bob AI integration
-748 | │   │   │   ├── bobClient.ts
-749 | │   │   │   ├── bobShellClient.ts
-750 | │   │   │   ├── buildBobAnalysisPrompt.ts
-751 | │   │   │   ├── normalizeBobResponse.ts
-752 | │   │   │   └── checkBobShell.ts
-753 | │   │   ├── config/             # Environment configuration
-754 | │   │   ├── demo/               # Demo repository loader and fallback data
-755 | │   │   ├── export/             # Export format generators
-756 | │   │   ├── routes/             # API route handlers
-757 | │   │   ├── scanner/            # Static code analysis engine
-758 | │   │   ├── security/           # ZIP validation and safe file handling
-759 | │   │   └── storage/            # Scan result persistence
-760 | │   ├── package.json
-761 | │   ├── tsconfig.json
-762 | │   └── .vercelignore
-763 | │
-764 | ├── frontend/                   # React UI + Dashboard
-765 | │   ├── src/
-766 | │   │   ├── main.tsx
-767 | │   │   ├── App.tsx
-768 | │   │   ├── api/
-769 | │   │   ├── components/
-770 | │   │   ├── routes/
-771 | │   │   ├── styles/
-772 | │   │   └── utils/
-773 | │   ├── index.html
+740 | â”œâ”€â”€ bob_sessions/               # IBM Bob IDE task session reports
+741 | â”‚   â”œâ”€â”€ README.md               # Instructions for task session exports
+742 | â”‚   â””â”€â”€ Dev-dan/                # Exported Bob IDE task histories and screenshots
+743 | â”‚
+744 | â”œâ”€â”€ backend/                    # Fastify API + Scanner
+745 | â”‚   â”œâ”€â”€ src/
+746 | â”‚   â”‚   â”œâ”€â”€ server.ts           # Main server entry point
+747 | â”‚   â”‚   â”œâ”€â”€ bob/                # IBM Bob AI integration
+748 | â”‚   â”‚   â”‚   â”œâ”€â”€ bobClient.ts
+749 | â”‚   â”‚   â”‚   â”œâ”€â”€ bobShellClient.ts
+750 | â”‚   â”‚   â”‚   â”œâ”€â”€ buildBobAnalysisPrompt.ts
+751 | â”‚   â”‚   â”‚   â”œâ”€â”€ normalizeBobResponse.ts
+752 | â”‚   â”‚   â”‚   â””â”€â”€ checkBobShell.ts
+753 | â”‚   â”‚   â”œâ”€â”€ config/             # Environment configuration
+754 | â”‚   â”‚   â”œâ”€â”€ demo/               # Demo repository loader and fallback data
+755 | â”‚   â”‚   â”œâ”€â”€ export/             # Export format generators
+756 | â”‚   â”‚   â”œâ”€â”€ routes/             # API route handlers
+757 | â”‚   â”‚   â”œâ”€â”€ scanner/            # Static code analysis engine
+758 | â”‚   â”‚   â”œâ”€â”€ security/           # ZIP validation and safe file handling
+759 | â”‚   â”‚   â””â”€â”€ storage/            # Scan result persistence
+760 | â”‚   â”œâ”€â”€ package.json
+761 | â”‚   â”œâ”€â”€ tsconfig.json
+762 | â”‚   â””â”€â”€ .vercelignore
+763 | â”‚
+764 | â”œâ”€â”€ frontend/                   # React UI + Dashboard
+765 | â”‚   â”œâ”€â”€ src/
+766 | â”‚   â”‚   â”œâ”€â”€ main.tsx
+767 | â”‚   â”‚   â”œâ”€â”€ App.tsx
+768 | â”‚   â”‚   â”œâ”€â”€ api/
+769 | â”‚   â”‚   â”œâ”€â”€ components/
+770 | â”‚   â”‚   â”œâ”€â”€ routes/
+771 | â”‚   â”‚   â”œâ”€â”€ styles/
+772 | â”‚   â”‚   â””â”€â”€ utils/
+773 | â”‚   â”œâ”€â”€ index.html
 
 </error_details>
 <environment_details>
@@ -5357,8 +5357,8 @@ $0.66
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -5388,13 +5388,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -5402,7 +5402,7 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 
 **Assistant:**
 
-Necesito leer el README actualizado para encontrar la sección correcta:
+Necesito leer el README actualizado para encontrar la secciÃ³n correcta:
 
 <read_file>
 <args>
@@ -5450,12 +5450,12 @@ Necesito leer el README actualizado para encontrar la sección correcta:
  976 | Via UI:
  977 | 
  978 | ```
- 979 | Open Report Dashboard → Export Report → Select format
+ 979 | Open Report Dashboard â†’ Export Report â†’ Select format
  980 | ```
  981 | 
  982 | ---
  983 | 
- 984 | ## ⚠️ MVP Limitations
+ 984 | ## âš ï¸ MVP Limitations
  985 | 
  986 | CloudShift Radar is an MVP proof of concept.
  987 | 
@@ -5492,8 +5492,8 @@ $0.81
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -5523,13 +5523,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -5568,7 +5568,7 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 1011 | 
 1012 | ---
 1013 | 
-1014 | ## 🗺️ Future Roadmap
+1014 | ## ðŸ—ºï¸ Future Roadmap
 1015 | 
 1016 | ### Phase 1: Enhanced Analysis
 1017 | 
@@ -5595,8 +5595,8 @@ $0.96
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -5626,13 +5626,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -5640,7 +5640,7 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 
 **Assistant:**
 
-Perfecto, ahora puedo actualizar la sección correcta:
+Perfecto, ahora puedo actualizar la secciÃ³n correcta:
 
 <apply_diff>
 <path>README.md</path>
@@ -5712,8 +5712,8 @@ $1.11
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -5743,13 +5743,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -5757,7 +5757,7 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 
 **Assistant:**
 
-Excelente! Ahora voy a agregar también información sobre el login simulado en la sección de "Key Features" para que sea más visible:
+Excelente! Ahora voy a agregar tambiÃ©n informaciÃ³n sobre el login simulado en la secciÃ³n de "Key Features" para que sea mÃ¡s visible:
 
 <apply_diff>
 <path>README.md</path>
@@ -5765,33 +5765,33 @@ Excelente! Ahora voy a agregar también información sobre el login simulado en 
 <<<<<<< SEARCH
 :start_line:94
 -------
-### 🔒 Security-First Design
+### ðŸ”’ Security-First Design
 
 CloudShift Radar follows a zero-execution security model:
 
-- ❌ Uploaded code is never executed.
-- ❌ Dependencies are never installed.
-- ❌ Shell commands from uploaded repositories are never run.
-- ❌ Docker containers are never executed.
-- ✅ Only text files are read.
-- ✅ ZIP files are validated before extraction.
-- ✅ Path traversal is prevented.
-- ✅ Secrets are redacted before AI analysis.
+- âŒ Uploaded code is never executed.
+- âŒ Dependencies are never installed.
+- âŒ Shell commands from uploaded repositories are never run.
+- âŒ Docker containers are never executed.
+- âœ… Only text files are read.
+- âœ… ZIP files are validated before extraction.
+- âœ… Path traversal is prevented.
+- âœ… Secrets are redacted before AI analysis.
 =======
-### 🔒 Security-First Design
+### ðŸ”’ Security-First Design
 
 CloudShift Radar follows a zero-execution security model:
 
-- ❌ Uploaded code is never executed.
-- ❌ Dependencies are never installed.
-- ❌ Shell commands from uploaded repositories are never run.
-- ❌ Docker containers are never executed.
-- ✅ Only text files are read.
-- ✅ ZIP files are validated before extraction.
-- ✅ Path traversal is prevented.
-- ✅ Secrets are redacted before AI analysis.
+- âŒ Uploaded code is never executed.
+- âŒ Dependencies are never installed.
+- âŒ Shell commands from uploaded repositories are never run.
+- âŒ Docker containers are never executed.
+- âœ… Only text files are read.
+- âœ… ZIP files are validated before extraction.
+- âœ… Path traversal is prevented.
+- âœ… Secrets are redacted before AI analysis.
 
-### 🎭 MVP Authentication
+### ðŸŽ­ MVP Authentication
 
 - **Simulated login**: Authentication is simulated for demonstration purposes.
 - **No credential validation**: Any email/password combination works when terms are accepted.
@@ -5817,18 +5817,18 @@ Debug Info:
 - Tip: Use the read_file tool to get the latest content of the file before attempting to use the apply_diff tool again, as the file content may have changed
 
 Search Content:
-### 🔒 Security-First Design
+### ðŸ”’ Security-First Design
 
 CloudShift Radar follows a zero-execution security model:
 
-- ❌ Uploaded code is never executed.
-- ❌ Dependencies are never installed.
-- ❌ Shell commands from uploaded repositories are never run.
-- ❌ Docker containers are never executed.
-- ✅ Only text files are read.
-- ✅ ZIP files are validated before extraction.
-- ✅ Path traversal is prevented.
-- ✅ Secrets are redacted before AI analysis.
+- âŒ Uploaded code is never executed.
+- âŒ Dependencies are never installed.
+- âŒ Shell commands from uploaded repositories are never run.
+- âŒ Docker containers are never executed.
+- âœ… Only text files are read.
+- âœ… ZIP files are validated before extraction.
+- âœ… Path traversal is prevented.
+- âœ… Secrets are redacted before AI analysis.
 
 Best Match Found:
 60 | 
@@ -5847,11 +5847,11 @@ Best Match Found:
 
 Original Content:
  54 | 
- 55 | - 🔍 What will break before migration?
- 56 | - ✅ Which features are likely to survive?
- 57 | - 🔧 Which dependencies need refactoring?
- 58 | - ⚠️ Which risks require human review?
- 59 | - 📋 What should the team fix before moving to the target cloud?
+ 55 | - ðŸ” What will break before migration?
+ 56 | - âœ… Which features are likely to survive?
+ 57 | - ðŸ”§ Which dependencies need refactoring?
+ 58 | - âš ï¸ Which risks require human review?
+ 59 | - ðŸ“‹ What should the team fix before moving to the target cloud?
  60 | 
  61 | ### Value Proposition
  62 | 
@@ -5868,7 +5868,7 @@ Original Content:
  73 | 
  74 | ---
  75 | 
- 76 | ## 🌐 Live Demo
+ 76 | ## ðŸŒ Live Demo
  77 | 
  78 | CloudShift Radar is deployed as a hosted hackathon demo on Vercel.
  79 | 
@@ -5904,9 +5904,9 @@ Original Content:
 109 | 
 110 | ---
 111 | 
-112 | ## ✨ Key Features
+112 | ## âœ¨ Key Features
 113 | 
-114 | ### 🔍 Repository Scanning
+114 | ### ðŸ” Repository Scanning
 115 | 
 116 | - Secure ZIP upload processing.
 117 | - Static code analysis only.
@@ -5918,7 +5918,7 @@ Original Content:
 123 | - Automatic language and framework detection.
 124 | - Repository structure validation before analysis.
 125 | 
-126 | ### 📊 Progressive Validation
+126 | ### ðŸ“Š Progressive Validation
 127 | 
 128 | - Validates project packages before scan execution.
 129 | - Shows validation errors and warnings inline.
@@ -5926,7 +5926,7 @@ Original Content:
 131 | - Supports warning-based progression when the repository is usable but incomplete.
 132 | - Provides clear validation states before analysis begins.
 133 | 
-134 | ### 🤖 IBM Bob AI Integration
+134 | ### ðŸ¤– IBM Bob AI Integration
 135 | 
 136 | IBM Bob is used as the migration reasoning engine.
 137 | 
@@ -5957,8 +5957,8 @@ $1.26
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -5988,13 +5988,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -6025,7 +6025,7 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 168 | - Bob reasoning trace.
 169 | - Export menu.
 170 | 
-171 | ### 📤 Export Capabilities
+171 | ### ðŸ“¤ Export Capabilities
 172 | 
 173 | Reports can be exported as:
 174 | 
@@ -6033,13 +6033,13 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 176 | - **CSV**: Spreadsheet-compatible format
 177 | - **Markdown**: Human-readable report
 178 | 
-179 | ### 🔒 Security-First Design
+179 | ### ðŸ”’ Security-First Design
 180 | 
 181 | CloudShift Radar follows a zero-execution security model:
 182 | 
-183 | - ❌ Uploaded code is never executed.
-184 | - ❌ Dependencies are never installed.
-185 | - ❌ Shell commands from uploaded repositories are never run.
+183 | - âŒ Uploaded code is never executed.
+184 | - âŒ Dependencies are never installed.
+185 | - âŒ Shell commands from uploaded repositories are never run.
 </content>
 </file>
 </files>
@@ -6060,8 +6060,8 @@ $1.42
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -6091,13 +6091,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -6122,20 +6122,20 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 <files>
 <file><path>README.md</path>
 <content lines="185-200">
-185 | - ❌ Shell commands from uploaded repositories are never run.
-186 | - ❌ Docker containers are never executed.
-187 | - ✅ Only text files are read.
-188 | - ✅ ZIP files are validated before extraction.
-189 | - ✅ Path traversal is prevented.
-190 | - ✅ Secrets are redacted before AI analysis.
+185 | - âŒ Shell commands from uploaded repositories are never run.
+186 | - âŒ Docker containers are never executed.
+187 | - âœ… Only text files are read.
+188 | - âœ… ZIP files are validated before extraction.
+189 | - âœ… Path traversal is prevented.
+190 | - âœ… Secrets are redacted before AI analysis.
 191 | 
 192 | ---
 193 | 
-194 | ## 🆕 What's New
+194 | ## ðŸ†• What's New
 195 | 
 196 | ### Recent Updates
 197 | 
-198 | #### ✅ Progressive Validation System
+198 | #### âœ… Progressive Validation System
 199 | 
 200 | - Added `POST /api/scans/validate`.
 </content>
@@ -6158,8 +6158,8 @@ $1.58
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -6189,13 +6189,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -6209,35 +6209,35 @@ You have not created a todo list yet. Create one with `update_todo_list` if your
 <<<<<<< SEARCH
 :start_line:179
 -------
-### 🔒 Security-First Design
+### ðŸ”’ Security-First Design
 
 CloudShift Radar follows a zero-execution security model:
 
-- ❌ Uploaded code is never executed.
-- ❌ Dependencies are never installed.
-- ❌ Shell commands from uploaded repositories are never run.
-- ❌ Docker containers are never executed.
-- ✅ Only text files are read.
-- ✅ ZIP files are validated before extraction.
-- ✅ Path traversal is prevented.
-- ✅ Secrets are redacted before AI analysis.
+- âŒ Uploaded code is never executed.
+- âŒ Dependencies are never installed.
+- âŒ Shell commands from uploaded repositories are never run.
+- âŒ Docker containers are never executed.
+- âœ… Only text files are read.
+- âœ… ZIP files are validated before extraction.
+- âœ… Path traversal is prevented.
+- âœ… Secrets are redacted before AI analysis.
 
 ---
 =======
-### 🔒 Security-First Design
+### ðŸ”’ Security-First Design
 
 CloudShift Radar follows a zero-execution security model:
 
-- ❌ Uploaded code is never executed.
-- ❌ Dependencies are never installed.
-- ❌ Shell commands from uploaded repositories are never run.
-- ❌ Docker containers are never executed.
-- ✅ Only text files are read.
-- ✅ ZIP files are validated before extraction.
-- ✅ Path traversal is prevented.
-- ✅ Secrets are redacted before AI analysis.
+- âŒ Uploaded code is never executed.
+- âŒ Dependencies are never installed.
+- âŒ Shell commands from uploaded repositories are never run.
+- âŒ Docker containers are never executed.
+- âœ… Only text files are read.
+- âœ… ZIP files are validated before extraction.
+- âœ… Path traversal is prevented.
+- âœ… Secrets are redacted before AI analysis.
 
-### 🎭 MVP Authentication
+### ðŸŽ­ MVP Authentication
 
 - **Simulated login**: Authentication is simulated for demonstration purposes.
 - **No credential validation**: Any email/password combination works when terms are accepted.
@@ -6281,8 +6281,8 @@ $1.75
 # Review Exclusions
 The following file patterns are excluded from code reviews:
 - .vscode/**
-- ��#   A r c h i v o s   a   i g n o r a r  
--  #   I n f o r m a c i � n   s e n s i b l e  
+- ï¿½ï¿½#   A r c h i v o s   a   i g n o r a r  
+-  #   I n f o r m a c i ï¿½ n   s e n s i b l e  
 -  . e n v  
 -  s e c r e t s /  
 -  * p a s s w o r d *  
@@ -6312,13 +6312,13 @@ The following file patterns are excluded from code reviews:
 -  #   E x c l u i r   t o d o s   l o s   d i r e c t o r i o s   n o d e _ m o d u l e s   e n   c u a l q u i e r   l u g a r   d e l   p r o y e c t o  
 -  * * / n o d e _ m o d u l e s /  
 -   
--  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a � z  
+-  #   E x c l u i r   e l   d i r e c t o r i o   d i s t   s o l o   a   n i v e l   r a ï¿½ z  
 -  / d i s t / 
 - uploads/
 
 # Current Mode
 <slug>code</slug>
-<name>💻 Code</name>
+<name>ðŸ’» Code</name>
 You have not created a todo list yet. Create one with `update_todo_list` if your task is complicated or involves multiple steps.
 </environment_details>
 
@@ -6330,42 +6330,43 @@ Perfecto! Ahora voy a completar la tarea presentando el resultado final:
 
 <attempt_completion>
 <result>
-✅ **README.md actualizado exitosamente con información sobre autenticación y experiencia desktop/mobile**
+âœ… **README.md actualizado exitosamente con informaciÃ³n sobre autenticaciÃ³n y experiencia desktop/mobile**
 
 ## Cambios realizados:
 
-### 1. **Nueva sección "MVP Authentication" en Key Features** (línea ~191)
-   - Explica que el login es simulado para demostración
-   - Aclara que no hay validación real de credenciales
+### 1. **Nueva secciÃ³n "MVP Authentication" en Key Features** (lÃ­nea ~191)
+   - Explica que el login es simulado para demostraciÃ³n
+   - Aclara que no hay validaciÃ³n real de credenciales
    - Menciona el usuario fijo "Demo User"
-   - Indica que el estado de login es basado en sesión
+   - Indica que el estado de login es basado en sesiÃ³n
 
-### 2. **Sección "Product Scope" actualizada en MVP Limitations** (línea ~1004)
-   - ✅ Agregado: "Simulated authentication" con explicación clara
-   - ✅ Agregado: Usuario demo fijo para todas las sesiones
+### 2. **SecciÃ³n "Product Scope" actualizada en MVP Limitations** (lÃ­nea ~1004)
+   - âœ… Agregado: "Simulated authentication" con explicaciÃ³n clara
+   - âœ… Agregado: Usuario demo fijo para todas las sesiones
    - Mantiene las limitaciones existentes del MVP
 
-### 3. **Nueva sección "UI/UX Scope" en MVP Limitations** (línea ~1012)
-   - ✅ **Desktop-first experience**: Optimizado para pantallas 1024px+
-   - ✅ **Basic mobile support**: Layout responsive con funcionalidad limitada
-   - ✅ **Mobile version planned**: Apps móviles nativas en roadmap futuro
-   - ✅ Breakpoints responsive: 1040px y 720px
-   - ✅ Menú mobile disponible pero experiencia desktop recomendada
+### 3. **Nueva secciÃ³n "UI/UX Scope" en MVP Limitations** (lÃ­nea ~1012)
+   - âœ… **Desktop-first experience**: Optimizado para pantallas 1024px+
+   - âœ… **Basic mobile support**: Layout responsive con funcionalidad limitada
+   - âœ… **Mobile version planned**: Apps mÃ³viles nativas en roadmap futuro
+   - âœ… Breakpoints responsive: 1040px y 720px
+   - âœ… MenÃº mobile disponible pero experiencia desktop recomendada
 
-## Resumen de la implementación actual:
+## Resumen de la implementaciÃ³n actual:
 
-**Autenticación:**
+**AutenticaciÃ³n:**
 - Login completamente simulado (no valida credenciales reales)
-- Cualquier email/password funciona si se aceptan los términos
+- Cualquier email/password funciona si se aceptan los tÃ©rminos
 - Usuario fijo: "Demo User" para todas las sesiones
-- Estado persiste solo durante la sesión del navegador
+- Estado persiste solo durante la sesiÃ³n del navegador
 
 **Experiencia de usuario:**
-- **Versión desktop**: Completamente funcional y optimizada
-- **Versión mobile**: Soporte básico responsive, funcionalidad limitada
-- **Futuro**: Apps móviles nativas y experiencia mobile completa planificadas
+- **VersiÃ³n desktop**: Completamente funcional y optimizada
+- **VersiÃ³n mobile**: Soporte bÃ¡sico responsive, funcionalidad limitada
+- **Futuro**: Apps mÃ³viles nativas y experiencia mobile completa planificadas
 
-El README ahora refleja con precisión el estado actual del MVP y las limitaciones de autenticación y experiencia mobile. 🚀
+El README ahora refleja con precisiÃ³n el estado actual del MVP y las limitaciones de autenticaciÃ³n y experiencia mobile. ðŸš€
 </result>
 </attempt_completion>
+
 
