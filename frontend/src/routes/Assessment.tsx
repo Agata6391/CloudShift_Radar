@@ -65,6 +65,17 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
     );
   }, [applicationType, currentProvider, customDescription, projectName, selectedFile, targetProvider]);
 
+  const getMissingFields = useMemo(() => {
+    const missing: string[] = [];
+    if (!projectName.trim()) missing.push("Project name");
+    if (!selectedFile) missing.push("Project ZIP file");
+    if (!currentProvider) missing.push("Source cloud/service");
+    if (!targetProvider) missing.push("Destination cloud/service");
+    const hasApplicationType = applicationType === "Custom" ? customDescription.trim().length > 0 : applicationType.length > 0;
+    if (!hasApplicationType) missing.push("Application type");
+    return missing;
+  }, [projectName, selectedFile, currentProvider, targetProvider, applicationType, customDescription]);
+
   useEffect(() => {
     if (!formComplete && validationState !== "validating") {
       setValidationState("incomplete");
@@ -162,16 +173,16 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
   };
 
   const ctaLabel = (() => {
-    if (validationState === "validating") return "Validating...";
-    if (validationState === "success") return "✓ Start Analysis";
-    if (validationState === "warning") return "⚠ Start Analysis (with warnings)";
+    if (validationState === "validating") return "Validating package...";
+    if (validationState === "success") return "Start Analysis";
+    if (validationState === "warning") return "Start Analysis with warnings";
     if ((validationState === "error" || validationState === "invalid") && selectedFile && !selectedFile.name.toLowerCase().endsWith(".zip")) {
-      return "Upload Another File";
+      return "Upload another file";
     }
     if (validationState === "error" || validationState === "invalid") {
-      return retryCount > 0 ? `Retry Validation (Attempt ${retryCount + 1})` : "Retry Validation";
+      return "Validate again";
     }
-    return "Upload & Validate Repository";
+    return "Validate project package";
   })();
 
   const showSpinner = validationState === "validating";
@@ -312,7 +323,20 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
           </div>
 
           {validationState === "incomplete" ? (
-            <p>Complete the required fields to validate your project.</p>
+            <>
+              <p>Complete the required fields before validation.</p>
+              {getMissingFields.length > 0 && (
+                <>
+                  <p><strong>Missing:</strong></p>
+                  <ul className="clean-list">
+                    {getMissingFields.map((field) => (
+                      <li key={field}>- {field}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              <p><strong>Next:</strong> Fill in the required fields to enable validation.</p>
+            </>
           ) : null}
           {validationState === "ready" ? (
             <p>Validate your project package before starting the migration analysis.</p>
@@ -360,7 +384,7 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
                   <li>Repository structure validated</li>
                 </ul>
               )}
-              <p>Estimated analysis time: 2-4 minutes</p>
+              <p>Analysis time depends on repository size and Bob availability.</p>
             </>
           ) : null}
           {validationState === "warning" && validationResult ? (
@@ -426,7 +450,6 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
               )}
             </>
           ) : null}
-          <Button variant="ghost" onClick={() => onNavigate("/login")}>Back to login</Button>
         </Card>
       </div>
     </div>
