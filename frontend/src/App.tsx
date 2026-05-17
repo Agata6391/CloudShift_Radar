@@ -29,6 +29,8 @@ export default function App() {
   const [latestResult, setLatestResult] = useState<ScanResult | null>(() => readStoredResult());
   const [previewMode, setPreviewMode] = useState(() => window.sessionStorage.getItem(PREVIEW_STORAGE_KEY) === "true");
   const [pendingScan, setPendingScan] = useState<ProjectInputPayload | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const username = "Demo User"; // Fixed simulated user for hackathon MVP
 
   useEffect(() => {
     const handleRouteChange = () => setRoute(getCurrentRoute());
@@ -38,6 +40,26 @@ export default function App() {
 
   const navigate = (nextRoute: Route) => {
     navigateTo(nextRoute);
+  };
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    navigateTo("/project-input");
+  };
+
+  const handleSignOut = () => {
+    // Clear sessionStorage
+    window.sessionStorage.removeItem(RESULT_STORAGE_KEY);
+    window.sessionStorage.removeItem(PREVIEW_STORAGE_KEY);
+    
+    // Clear state
+    setIsAuthenticated(false);
+    setLatestResult(null);
+    setPreviewMode(false);
+    setPendingScan(null);
+    
+    // Navigate to login
+    navigateTo("/login");
   };
 
   const handleScanComplete = (result: ScanResult, preview = false) => {
@@ -53,9 +75,22 @@ export default function App() {
     navigateTo("/analysis-running");
   };
 
+  const handleNewAnalysis = () => {
+    setPendingScan(null);
+    navigateTo("/project-input");
+  };
+
   return (
-    <AppShell activeRoute={route} onNavigate={navigate}>
-      {route === "/" || route === "/login" ? <Home onNavigate={navigate} /> : null}
+    <AppShell
+      activeRoute={route}
+      onNavigate={navigate}
+      isAuthenticated={isAuthenticated}
+      username={username}
+      hasReport={latestResult !== null}
+      onSignOut={handleSignOut}
+      onNewAnalysis={handleNewAnalysis}
+    >
+      {route === "/" || route === "/login" ? <Home onLogin={handleLogin} /> : null}
       {route === "/project-input" || route === "/assessment" ? (
         <Assessment onNavigate={navigate} onStartAnalysis={handleStartAnalysis} />
       ) : null}

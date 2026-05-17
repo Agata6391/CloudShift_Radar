@@ -1,24 +1,27 @@
 import { useState } from "react";
-import { BobBadge } from "../components/bob/BobBadge";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
-import type { Route } from "../utils/navigation";
 
 interface HomeProps {
-  onNavigate: (route: Route) => void;
+  onLogin: () => void;
 }
 
-export function Home({ onNavigate }: HomeProps) {
+export function Home({ onLogin }: HomeProps) {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const canLogin = userId.trim().length > 0 && password.trim().length > 0 && acceptedTerms;
 
+  const handleLogin = () => {
+    if (canLogin) {
+      onLogin();
+    }
+  };
+
   return (
     <div className="page login-page">
       <section className="login-layout">
         <div className="login-copy">
-          <BobBadge />
           <span className="eyebrow">CloudShift Radar</span>
           <h1>Analyze cloud migration risks before moving your application.</h1>
           <p>
@@ -57,7 +60,7 @@ export function Home({ onNavigate }: HomeProps) {
             />
             I accept the Terms & Services
           </label>
-          <Button disabled={!canLogin} onClick={() => onNavigate("/project-input")}>
+          <Button disabled={!canLogin} onClick={handleLogin}>
             Log in
           </Button>
           <button className="text-button" type="button">
