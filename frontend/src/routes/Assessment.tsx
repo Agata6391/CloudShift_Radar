@@ -215,8 +215,8 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
 
       {healthCheckState === "not-configured" ? (
         <Card className="error-card">
-          <h3>⚙️ Bob Shell configuration required</h3>
-          <p>Bob Shell is required for this assessment. Configure BOBSHELL_API_KEY in your environment before running a real scan.</p>
+          <h3>⚙️ Hosted demo mode active</h3>
+          <p>This public demo uses cached IBM Bob analysis results to provide a stable judging experience and avoid repeated Bobcoin consumption. Full Bob Shell runtime analysis is available in local setup when IBM Bob credentials are configured.</p>
           <p style={{ marginTop: "0.5rem", fontSize: "0.9em", opacity: 0.8 }}>
             The system will use demo fallback data if Bob is unavailable during analysis.
           </p>
