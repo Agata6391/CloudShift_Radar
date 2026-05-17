@@ -12,7 +12,7 @@ CloudShift Radar is an AI-powered cloud migration assessment tool that combines 
 
 ---
 
-## ðŸ“‹ Table of Contents
+## ✨ Table of Contents
 
 - [Overview](#-overview)
 - [Live Demo](#-live-demo)
@@ -44,7 +44,7 @@ CloudShift Radar is an AI-powered cloud migration assessment tool that combines 
 
 ---
 
-## ðŸŽ¯ Overview
+## ✨ Overview
 
 **CloudShift Radar** is designed for CTOs, technical leads, DevOps engineers, platform engineers, and development teams who need to assess the viability of migrating legacy applications to the cloud.
 
@@ -52,11 +52,11 @@ Traditional cloud migration assessments are time-consuming, manual, error-prone,
 
 CloudShift Radar answers questions such as:
 
-- ðŸ” What will break before migration?
-- âœ… Which features are likely to survive?
-- ðŸ”§ Which dependencies need refactoring?
-- âš ï¸ Which risks require human review?
-- ðŸ“‹ What should the team fix before moving to the target cloud?
+- ❓ What will break before migration?
+- … Which features are likely to survive?
+- 🧩 Which dependencies need refactoring?
+- ⚠️ Which risks require human review?
+- ↔ What should the team fix before moving to the target cloud?
 
 ### Value Proposition
 
@@ -73,7 +73,7 @@ CloudShift Radar provides:
 
 ---
 
-## ðŸŒ Live Demo
+## 🚀 Live Demo
 
 CloudShift Radar is deployed as a hosted hackathon demo on Vercel.
 
@@ -109,9 +109,9 @@ Full IBM Bob Shell runtime analysis is supported in local setup when IBM Bob She
 
 ---
 
-## âœ¨ Key Features
+## 🔧 Key Features
 
-### ðŸ” Repository Scanning
+### 🔍 Repository Scanning
 
 - Secure ZIP upload processing.
 - Static code analysis only.
@@ -123,7 +123,7 @@ Full IBM Bob Shell runtime analysis is supported in local setup when IBM Bob She
 - Automatic language and framework detection.
 - Repository structure validation before analysis.
 
-### ðŸ“Š Progressive Validation
+### ✅ Progressive Validation
 
 - Validates project packages before scan execution.
 - Shows validation errors and warnings inline.
@@ -131,7 +131,7 @@ Full IBM Bob Shell runtime analysis is supported in local setup when IBM Bob She
 - Supports warning-based progression when the repository is usable but incomplete.
 - Provides clear validation states before analysis begins.
 
-### ðŸ¤– IBM Bob AI Integration
+### 🤖 IBM Bob AI Integration
 
 IBM Bob is used as the migration reasoning engine.
 
@@ -148,13 +148,13 @@ Bob evaluates scanner findings and generates:
 
 Bob uses a five-tier decision framework:
 
-- âœ… **Proceed**: Safe to migrate.
-- âš ï¸ **Proceed with Caution**: Manageable risks identified.
-- ðŸ› ï¸ **Prepare First**: Requires preparation work.
-- ðŸš« **Block Migration**: Critical blockers detected.
-- ðŸ‘¤ **Requires Human Review**: Complex scenarios needing expert evaluation.
+- ✅ **Proceed**: Safe to migrate.
+- ⚠️ **Proceed with Caution**: Manageable risks identified.
+- 🛠️ **Prepare First**: Requires preparation work.
+- 🛑 **Block Migration**: Critical blockers detected.
+- 👤 **Requires Human Review**: Complex scenarios needing expert evaluation.
 
-### ðŸ“ˆ Interactive Dashboard
+### ✨ Interactive Dashboard
 
 The report dashboard includes:
 
@@ -168,7 +168,7 @@ The report dashboard includes:
 - Bob reasoning trace.
 - Export menu.
 
-### ðŸ“¤ Export Capabilities
+### 🧾 Export Capabilities
 
 Reports can be exported as:
 
@@ -176,20 +176,20 @@ Reports can be exported as:
 - **CSV**: Spreadsheet-compatible format
 - **Markdown**: Human-readable report
 
-### ðŸ”’ Security-First Design
+### 🛡️ Security-First Design
 
 CloudShift Radar follows a zero-execution security model:
 
-- âŒ Uploaded code is never executed.
-- âŒ Dependencies are never installed.
-- âŒ Shell commands from uploaded repositories are never run.
-- âŒ Docker containers are never executed.
-- âœ… Only text files are read.
-- âœ… ZIP files are validated before extraction.
-- âœ… Path traversal is prevented.
-- âœ… Secrets are redacted before AI analysis.
+- 🔒 Uploaded code is never executed.
+- 🔒 Dependencies are never installed.
+- 🔒 Shell commands from uploaded repositories are never run.
+- 🔒 Docker containers are never executed.
+- 📝 Only text files are read.
+- 🧰 ZIP files are validated before extraction.
+- 🧱 Path traversal is prevented.
+- 🔐 Secrets are redacted before AI analysis.
 
-### ðŸŽ­ MVP Authentication
+### 🔐 MVP Authentication
 
 - **Simulated login**: Authentication is simulated for demonstration purposes.
 - **No credential validation**: Any email/password combination works when terms are accepted.
@@ -198,11 +198,11 @@ CloudShift Radar follows a zero-execution security model:
 
 ---
 
-## ðŸ†• What's New
+## 🆕 What's New
 
 ### Recent Updates
 
-#### âœ… Progressive Validation System
+#### ✅ Progressive Validation System
 
 - Added `POST /api/scans/validate`.
 - Added real-time validation feedback.
@@ -210,28 +210,28 @@ CloudShift Radar follows a zero-execution security model:
 - Added repository metadata detection.
 - Added network error handling and retry behavior.
 
-#### âœ… Hosted Demo Mode
+#### 🧩 Hosted Demo Mode
 
 - Added cached demo results for consistent judging.
 - Avoids repeated Bobcoin consumption.
 - Provides deterministic demo results.
 - Keeps the public Vercel app stable even without Bob Shell installed on the serverless runtime.
 
-#### âœ… Vercel Deployment Fixes
+#### 🧰 Vercel Deployment Fixes
 
 - Added frontend SPA rewrite support through `frontend/vercel.json`.
 - Added Vercel runtime storage support using `/tmp/cloudshift-radar`.
 - Added separate frontend/backend deployment configuration.
 - Added production frontend-to-backend API configuration using `VITE_API_URL`.
 
-#### âœ… Export Functionality
+#### 🧾 Export Functionality
 
 - Added JSON export.
 - Added CSV export.
 - Added Markdown export.
 - Added downloadable report filenames with project name and timestamp.
 
-#### âœ… UI/UX Improvements
+#### ✨ UI/UX Improvements
 
 - Added progressive CTA states.
 - Added validation progress indicators.
@@ -243,19 +243,19 @@ CloudShift Radar follows a zero-execution security model:
 
 ---
 
-## ðŸ—ï¸ Architecture
+## 🏗️ Architecture
 
 CloudShift Radar is built as a monorepo using pnpm workspaces.
 
 ```
 CloudShift_Radar/
-â”œâ”€â”€ frontend/       React + Vite application
-â”œâ”€â”€ backend/        Fastify API + scanner + Bob integration
-â”œâ”€â”€ shared/         Shared TypeScript types
-â”œâ”€â”€ demo-repos/     Demo scan context
-â”œâ”€â”€ bob_sessions/   IBM Bob IDE task session evidence
-â”œâ”€â”€ uploads/        Local generated scan workspace
-â””â”€â”€ scan-results/   Local generated scan results
+├─ frontend/       React + Vite application
+├─ backend/        Fastify API + scanner + Bob integration
+├─ shared/         Shared TypeScript types
+├─ demo-repos/     Demo scan context
+├─ bob_sessions/   IBM Bob IDE task session evidence
+├─ uploads/        Local generated scan workspace
+└─ scan-results/   Local generated scan results
 ```
 
 High-level architecture:
@@ -318,7 +318,7 @@ Shared TypeScript package containing:
 
 ---
 
-## ðŸ› ï¸ Technology Stack
+## 🧩 Technology Stack
 
 ### Backend
 
@@ -354,58 +354,58 @@ Shared TypeScript package containing:
 
 ---
 
-## ðŸ”’ Security Model
+## 🛡️ Security Model
 
 CloudShift Radar follows a zero-execution security model.
 
 ### What CloudShift Radar Does Not Do
 
-- âŒ Does not execute uploaded code.
-- âŒ Does not install uploaded dependencies.
-- âŒ Does not run npm, pip, Docker, shell scripts, or package managers from uploaded repositories.
-- âŒ Does not evaluate dynamic code.
-- âŒ Does not trust user-provided paths.
-- âŒ Does not expose uploaded files publicly.
+- ❌ Does not execute uploaded code.
+- ❌ Does not install uploaded dependencies.
+- ❌ Does not run npm, pip, Docker, shell scripts, or package managers from uploaded repositories.
+- ❌ Does not evaluate dynamic code.
+- ❌ Does not trust user-provided paths.
+- ❌ Does not expose uploaded files publicly.
 
 ### What CloudShift Radar Does
 
-- âœ… Reads text files only.
-- âœ… Validates ZIP files before extraction.
-- âœ… Prevents path traversal attacks.
-- âœ… Enforces file size limits.
-- âœ… Enforces file count limits.
-- âœ… Redacts secrets and credentials before AI analysis.
-- âœ… Stores temporary scan files in isolated runtime folders.
-- âœ… Uses `/tmp/cloudshift-radar` for runtime writes on Vercel.
-- âœ… Keeps generated local scan folders out of Git except `.gitkeep`.
+- ✅ Reads text files only.
+- ✅ Validates ZIP files before extraction.
+- ✅ Prevents path traversal attacks.
+- ✅ Enforces file size limits.
+- ✅ Enforces file count limits.
+- ✅ Redacts secrets and credentials before AI analysis.
+- ✅ Stores temporary scan files in isolated runtime folders.
+- ✅ Uses `/tmp/cloudshift-radar` for runtime writes on Vercel.
+- ✅ Keeps generated local scan folders out of Git except `.gitkeep`.
 
 ---
 
-## ðŸŽ­ Hosted Demo Behavior
+## 🧠 Hosted Demo Behavior
 
 The hosted demo is intentionally configured for reliability.
 
 In the public Vercel deployment:
 
-- âœ… The frontend is fully interactive.
-- âœ… The backend API is live.
-- âœ… Validation routes are available.
-- âš¡ Demo analysis uses cached/fallback Bob output.
-- âœ… The dashboard and exports remain usable.
-- ðŸ’¡ Bob Shell is not required to be installed on Vercel.
+- ✅ The frontend is fully interactive.
+- ✅ The backend API is live.
+- ✅ Validation routes are available.
+- 🧩 Demo analysis uses cached/fallback Bob output.
+- ✅ The dashboard and exports remain usable.
+- 👤 Bob Shell is not required to be installed on Vercel.
 
 This avoids:
 
-- ðŸ’° Bobcoin waste from repeated public demo runs.
-- ðŸ” CLI authentication issues in serverless runtime.
-- âš ï¸ Instability caused by running a local CLI inside Vercel Functions.
-- âŒ Public demo failure when Bob Shell credentials are not configured.
+- 💸 Bobcoin waste from repeated public demo runs.
+- 🧾 CLI authentication issues in serverless runtime.
+- 🧯 Instability caused by running a local CLI inside Vercel Functions.
+- 🌐 Public demo failure when Bob Shell credentials are not configured.
 
 Full Bob Shell runtime analysis is supported when running locally with valid IBM Bob credentials.
 
 ---
 
-## ðŸš€ Getting Started
+## 🧭 Getting Started
 
 ### Prerequisites
 
@@ -482,7 +482,7 @@ BOB_PROVIDER=shell
 BOB_TIMEOUT_MS=600000
 ```
 
-âš ï¸ **Do not commit `.env` files or credentials.**
+🛑 **Do not commit `.env` files or credentials.**
 
 #### Frontend Environment
 
@@ -526,7 +526,7 @@ pnpm dev:backend
 
 ---
 
-## â˜ï¸ Vercel Deployment
+## 🌍 Vercel Deployment
 
 CloudShift Radar is deployed as two separate Vercel projects.
 
@@ -595,7 +595,7 @@ Only `.gitkeep` files should be committed in `uploads/` and `scan-results/`.
 
 ---
 
-## ðŸŒ API Endpoints
+## 🌐 API Endpoints
 
 ### Health
 
@@ -740,70 +740,66 @@ Supported formats:
 
 ---
 
-## ðŸ“ Project Structure
+## 🗂️ Project Structure
 
 ```
 CloudShift_Radar/
-â”œâ”€â”€ bob_sessions/               # IBM Bob IDE task session reports
-â”‚   â”œâ”€â”€ README.md               # Instructions for task session exports
-â”‚   â””â”€â”€ Dev-dan/                # Exported Bob IDE task histories and screenshots
-â”‚
-â”œâ”€â”€ backend/                    # Fastify API + Scanner
-â”‚   â”œâ”€â”€ src/
-â”‚   â”‚   â”œâ”€â”€ server.ts           # Main server entry point
-â”‚   â”‚   â”œâ”€â”€ bob/                # IBM Bob AI integration
-â”‚   â”‚   â”‚   â”œâ”€â”€ bobClient.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ bobShellClient.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ buildBobAnalysisPrompt.ts
-â”‚   â”‚   â”‚   â”œâ”€â”€ normalizeBobResponse.ts
-â”‚   â”‚   â”‚   â””â”€â”€ checkBobShell.ts
-â”‚   â”‚   â”œâ”€â”€ config/             # Environment configuration
-â”‚   â”‚   â”œâ”€â”€ demo/               # Demo repository loader and fallback data
-â”‚   â”‚   â”œâ”€â”€ export/             # Export format generators
-â”‚   â”‚   â”œâ”€â”€ routes/             # API route handlers
-â”‚   â”‚   â”œâ”€â”€ scanner/            # Static code analysis engine
-â”‚   â”‚   â”œâ”€â”€ security/           # ZIP validation and safe file handling
-â”‚   â”‚   â””â”€â”€ storage/            # Scan result persistence
-â”‚   â”œâ”€â”€ package.json
-â”‚   â”œâ”€â”€ tsconfig.json
-â”‚   â””â”€â”€ .vercelignore
-â”‚
-â”œâ”€â”€ frontend/                   # React UI + Dashboard
-â”‚   â”œâ”€â”€ src/
-â”‚   â”‚   â”œâ”€â”€ main.tsx
-â”‚   â”‚   â”œâ”€â”€ App.tsx
-â”‚   â”‚   â”œâ”€â”€ api/
-â”‚   â”‚   â”œâ”€â”€ components/
-â”‚   â”‚   â”œâ”€â”€ routes/
-â”‚   â”‚   â”œâ”€â”€ styles/
-â”‚   â”‚   â””â”€â”€ utils/
-â”‚   â”œâ”€â”€ index.html
-â”‚   â”œâ”€â”€ vercel.json             # Vercel SPA rewrite configuration
-â”‚   â”œâ”€â”€ package.json
-â”‚   â”œâ”€â”€ tsconfig.json
-â”‚   â””â”€â”€ vite.config.ts
-â”‚
-â”œâ”€â”€ shared/                     # Shared TypeScript types
-â”‚   â”œâ”€â”€ src/
-â”‚   â”‚   â”œâ”€â”€ index.ts
-â”‚   â”‚   â””â”€â”€ scan.ts
-â”‚   â”œâ”€â”€ package.json
-â”‚   â””â”€â”€ tsconfig.json
-â”‚
-â”œâ”€â”€ demo-repos/                 # Demo repositories / demo context
-â”œâ”€â”€ uploads/                    # Local generated ZIP extraction workspace (.gitkeep only)
-â”œâ”€â”€ scan-results/               # Local generated scan results (.gitkeep only)
-â”œâ”€â”€ .env.example
-â”œâ”€â”€ .gitignore
-â”œâ”€â”€ .vercelignore
-â”œâ”€â”€ package.json
-â”œâ”€â”€ pnpm-workspace.yaml
-â””â”€â”€ README.md
+├─ bob_sessions/              # IBM Bob IDE task session reports
+├─ README.md                  # Instructions for task session exports
+├─ Dev-dan/                   # Exported Bob IDE task histories and screenshots
+├─ backend/                   # Fastify API + Scanner
+│  └─ src/
+│     └─ server.ts           # Main server entry point
+│  └─ bob/                   # IBM Bob AI integration
+│  │  ├─ bobClient.ts
+│  │  ├─ bobShellClient.ts
+│  │  ├─ buildBobAnalysisPrompt.ts
+│  │  ├─ normalizeBobResponse.ts
+│  │  └─ checkBobShell.ts
+│  └─ config/                # Environment configuration
+│  └─ demo/                  # Demo repository loader and fallback data
+│  └─ export/                # Export format generators
+│  └─ routes/                # API route handlers
+│  └─ scanner/               # Static code analysis engine
+│  └─ security/              # ZIP validation and safe file handling
+│  └─ storage/               # Scan result persistence
+│  ├─ package.json
+│  └─ tsconfig.json
+│  └─ .vercelignore
+├─ frontend/                  # React UI + Dashboard
+│  └─ src/
+│     └─ main.tsx
+│     └─ App.tsx
+│     └─ api/
+│     └─ components/
+│     └─ routes/
+│     └─ styles/
+│     └─ utils/
+│     └─ index.html
+│  └─ vercel.json             # Vercel SPA rewrite configuration
+│  ├─ package.json
+│  ├─ tsconfig.json
+│  └─ vite.config.ts
+├─ shared/                    # Shared TypeScript types
+│  └─ src/
+│     ├─ index.ts
+│     └─ scan.ts
+│  ├─ package.json
+│  └─ tsconfig.json
+├─ demo-repos/                # Demo repositories / demo context
+├─ uploads/                   # Local generated ZIP extraction workspace (.gitkeep only)
+└─ scan-results/             # Local generated scan results (.gitkeep only)
+└─ .env.example
+└─ .gitignore
+└─ .vercelignore
+└─ package.json
+└─ pnpm-workspace.yaml
+└─ README.md
 ```
 
 ---
 
-## ðŸ“œ Available Scripts
+## 🧰 Available Scripts
 
 ### Root Level
 
@@ -833,7 +829,7 @@ pnpm clean
 
 ---
 
-## ðŸ¤– Bob AI Integration
+## 🤖 IBM Bob Integration
 
 IBM Bob is the AI reasoning engine at the heart of CloudShift Radar.
 
@@ -887,7 +883,7 @@ CloudShift Radar is designed to remain usable even when IBM Bob Shell is unavail
 
 ---
 
-## ðŸ† IBM Bob Hackathon Compliance
+## 🧾 IBM Bob Hackathon Compliance
 
 CloudShift Radar was built specifically for the IBM Bob Hackathon and uses IBM Bob as a core part of the development and analysis workflow.
 
@@ -947,7 +943,7 @@ These exports demonstrate how IBM Bob IDE was used throughout the project lifecy
 
 ---
 
-## ðŸ“¤ Export Formats
+## 🧾 Export Formats
 
 CloudShift Radar supports multiple export formats for scan results.
 
@@ -983,12 +979,12 @@ GET /api/scans/:scanId/export?format=markdown
 Via UI:
 
 ```
-Open Report Dashboard â†’ Export Report â†’ Select format
+Open Report Dashboard → Export Report → Select format
 ```
 
 ---
 
-## âš ï¸ MVP Limitations
+## ⚠️ MVP Limitations
 
 CloudShift Radar is an MVP proof of concept.
 
@@ -1027,7 +1023,7 @@ CloudShift Radar is an MVP proof of concept.
 
 ---
 
-## ðŸ—ºï¸ Future Roadmap
+## 🗺️ Future Roadmap
 
 ### Phase 1: Enhanced Analysis
 
@@ -1066,36 +1062,36 @@ CloudShift Radar is an MVP proof of concept.
 
 ---
 
-## ðŸ§¹ Repository Hygiene
+## 🧼 Repository Hygiene
 
 Before public submission, verify:
 
-- âœ… No `.env` files are committed.
-- âœ… No IBM Bob credentials are committed.
-- âœ… No IBM Cloud credentials are committed.
-- âœ… No API keys or secrets appear in screenshots.
-- âœ… `uploads/` contains only `.gitkeep`.
-- âœ… `scan-results/` contains only `.gitkeep`.
-- âœ… `bob_sessions/Dev-dan/` contains only relevant CloudShift Radar Bob evidence.
-- âœ… `.vercel/` is not committed.
-- âœ… Generated runtime files are not committed.
+- ✅ No `.env` files are committed.
+- ✅ No IBM Bob credentials are committed.
+- ✅ No IBM Cloud credentials are committed.
+- ✅ No API keys or secrets appear in screenshots.
+- ✅ `uploads/` contains only `.gitkeep`.
+- ✅ `scan-results/` contains only `.gitkeep`.
+- ✅ `bob_sessions/Dev-dan/` contains only relevant CloudShift Radar Bob evidence.
+- ✅ `.vercel/` is not committed.
+- ✅ Generated runtime files are not committed.
 
 ---
 
-## ðŸ“‹ Submission Checklist
+## ‹ Submission Checklist
 
 Required for lablab.ai submission:
 
-- âœ… Project title.
-- âœ… Short description.
-- âœ… Long description.
-- âœ… Technology and category tags.
-- âœ… Cover image, PNG or JPG, 16:9 recommended.
-- âœ… Video presentation, MP4, maximum 5 minutes.
-- âœ… Slide presentation PDF.
-- âœ… Public GitHub repository.
-- âœ… IBM Bob task session reports in repository.
-- âœ… Application URL.
+- ✅ Project title.
+- ✅ Short description.
+- ✅ Long description.
+- ✅ Technology and category tags.
+- ✅ Cover image, PNG or JPG, 16:9 recommended.
+- ✅ Video presentation, MP4, maximum 5 minutes.
+- ✅ Slide presentation PDF.
+- ✅ Public GitHub repository.
+- ✅ IBM Bob task session reports in repository.
+- ✅ Application URL.
 
 ### Recommended Submission Text
 
@@ -1129,7 +1125,7 @@ The goal is to help teams know what will break before they migrate, reduce disco
 
 ---
 
-## ðŸ¤ Contributing
+## 🤝 Contributing
 
 This project was created as a hackathon MVP. Contributions should preserve the zero-execution security model and avoid introducing behavior that executes uploaded user code.
 
@@ -1144,7 +1140,7 @@ This project was created as a hackathon MVP. Contributions should preserve the z
 
 ---
 
-## ðŸ“„ License
+## 📄 License
 
 This project was created as a proof of concept for the IBM Bob Hackathon.
 
@@ -1152,7 +1148,7 @@ License terms should be finalized before production or commercial use.
 
 ---
 
-## ðŸ™ Acknowledgments
+## 👏 Acknowledgments
 
 - **IBM Bob AI**
 - **IBM Bob Hackathon**
@@ -1164,7 +1160,7 @@ License terms should be finalized before production or commercial use.
 
 ---
 
-## ðŸ“Š Project Status
+## 📊 Project Status
 
 **Current Version**: 0.1.0  
 **Status**: MVP - Hackathon Submission Ready  
@@ -1172,16 +1168,16 @@ License terms should be finalized before production or commercial use.
 
 ### Recent Improvements
 
-- âœ… Progressive validation system implemented.
-- âœ… Hosted Vercel frontend deployed.
-- âœ… Hosted Vercel backend deployed.
-- âœ… Frontend-to-backend production API routing fixed.
-- âœ… Vercel SPA route refresh fixed.
-- âœ… Vercel runtime storage moved to `/tmp/cloudshift-radar`.
-- âœ… Demo mode with cached/fallback Bob analysis.
-- âœ… Export functionality added.
-- âœ… Graceful Bob AI fallback added.
-- âœ… IBM Bob IDE evidence included in `/bob_sessions/Dev-dan/`.
+- ✅ Progressive validation system implemented.
+- ✅ Hosted Vercel frontend deployed.
+- ✅ Hosted Vercel backend deployed.
+- ✅ Frontend-to-backend production API routing fixed.
+- ✅ Vercel SPA route refresh fixed.
+- ✅ Vercel runtime storage moved to `/tmp/cloudshift-radar`.
+- ✅ Demo mode with cached/fallback Bob analysis.
+- ✅ Export functionality added.
+- ✅ Graceful Bob AI fallback added.
+- ✅ IBM Bob IDE evidence included in `/bob_sessions/Dev-dan/`.
 
 ---
 
@@ -1189,7 +1185,7 @@ License terms should be finalized before production or commercial use.
 
 **Built for the IBM Bob Hackathon**
 
-[ðŸŒ Live Demo](https://cloud-shift-radar.vercel.app) â€¢ [ðŸ“š Documentation](#-table-of-contents) â€¢ [ðŸš€ API Reference](#-api-endpoints) â€¢ [ðŸ—ºï¸ Roadmap](#-future-roadmap)
+[🚀 Live Demo](https://cloud-shift-radar.vercel.app) → [✨ Documentation](#-table-of-contents) → [🧾 API Reference](#-api-endpoints) → [🗺️ Roadmap](#-future-roadmap)
 
 </div>
 
