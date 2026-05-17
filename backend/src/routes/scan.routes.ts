@@ -17,7 +17,11 @@ import { getScanResult, storeScanResult } from "../storage/scanResultStore";
 import { validateZip } from "../security/validateZip";
 import { generateCSV, generateMarkdown, generateJSON } from "../export/exportFormats";
 
-const UPLOADS_DIR = path.resolve(process.cwd(), "..", "uploads");
+const RUNTIME_STORAGE_ROOT =
+  process.env.RUNTIME_STORAGE_DIR ??
+  (process.env.VERCEL ? "/tmp/cloudshift-radar" : path.resolve(process.cwd(), ".."));
+
+const UPLOADS_DIR = path.join(RUNTIME_STORAGE_ROOT, "uploads");
 
 function readField(fields: Record<string, string>, field: keyof MigrationContext, fallback: string): string {
   const value = fields[field];
