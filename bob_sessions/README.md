@@ -17,7 +17,7 @@ These files demonstrate how IBM Bob IDE was used during the development lifecycl
 
 The current IBM Bob evidence is stored in:
 
-```txt
+
 bob_sessions/
 ├── Moni/
 │   ├── bob_task_*.md
