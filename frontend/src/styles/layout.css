@@ -191,7 +191,7 @@ main {
 
 .metric-grid {
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  margin: 18px 0;
+  margin: 18px 0 48px 0;
 }
 
 .wide-card {

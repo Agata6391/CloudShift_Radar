@@ -1126,7 +1126,7 @@ td {
   min-width: 0;
   padding: 20px;
   border: 1px solid var(--line);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius);
   background: var(--surface);
   box-sizing: border-box;
   overflow-wrap: anywhere;
@@ -1282,4 +1282,12 @@ td {
 
 .finding-card__file-list li:last-child {
   margin-bottom: 0;
+}
+
+
+/* Scoped Visual Refinement - Findings Section Wrapper */
+.impact-findings .card.wide-card {
+  border: 0;
+  background: none;
+  padding: 48px 0 0;
 }
