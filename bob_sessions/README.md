@@ -16,9 +16,10 @@ These files demonstrate how IBM Bob IDE was used during the development lifecycl
 ## Current Evidence
 
 - `Dev-dan/` contains 36 exported Bob task session reports.
-- The exported reports use the naming pattern `Summary_XX_<short-task-description>.md`.
 - `Dev-dan/` also contains 6 Bob consumption/task summary screenshots.
-- `Moni/` is currently present but empty.
+- `Moni/` contains 8 exported Bob task session reports.
+- `Moni/` also contains 8 Bob consumption/task summary screenshots.
+- Exported reports use the naming pattern `Summary_XX_<short-task-description>.md`.
 
 ## Folder Structure
 
@@ -33,6 +34,13 @@ bob_sessions/
 |   |-- ...
 |   `-- Screenshot 2026-05-16 174136.png
 |-- Moni/
+|   |-- Summary_01_Auditoria_del_proyecto_sin_modificar_archivos.md
+|   |-- Summary_02_Analysis_Running_como_paso_significativo.md
+|   |-- ...
+|   |-- Summary_08_Panel_de_validacion_Project_Input_y_explainability.md
+|   |-- Screenshot 2026-05-17 002151.png
+|   |-- ...
+|   `-- Screenshot 2026-05-17 002947.png
 `-- README.md
 ```
 
@@ -62,4 +70,4 @@ bob_sessions/
 
 ## Notes
 
-The `Summary_*.md` files are exported Bob IDE sessions with descriptive filenames added for judge readability. The screenshots provide additional usage evidence, but the markdown exports are the primary task/session reports.
+The `Summary_*.md` files are exported Bob IDE sessions with descriptive filenames added for judge readability. The screenshots provide additional usage evidence, but the markdown exports are the primary task/session reports. Evidence is grouped by contributor/session owner under `Dev-dan/` and `Moni/`.
