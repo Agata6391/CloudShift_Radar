@@ -130,3 +130,92 @@
     width: 100%;
   }
 }
+
+
+/* Dashboard Responsive Containment - UX-004C */
+@media (max-width: 1040px) {
+  /* Dashboard tabs horizontal scroll */
+  .dashboard-tabs {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .dashboard-tabs::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .dashboard-tabs::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .dashboard-tabs::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+  }
+
+  /* Table scroll wrapper */
+  .table-scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .table-scroll table {
+    min-width: 800px;
+  }
+}
+
+@media (max-width: 720px) {
+  /* Finding card metadata stacks on mobile */
+  .finding-card__metadata {
+    grid-template-columns: 1fr;
+  }
+
+  /* Finding card title scales down */
+  .finding-card__title {
+    font-size: 18px;
+  }
+
+  /* Detail sections have better spacing on mobile */
+  .finding-card__detail-section {
+    margin-bottom: 20px;
+  }
+
+  /* File list better readability on mobile */
+  .finding-card__file-list {
+    font-size: 12px;
+  }
+
+  /* Ensure page doesn't scroll horizontally */
+  .page {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Dashboard sections stack properly */
+  .report-header,
+  .verdict-hero,
+  .metric-grid,
+  .tab-surface {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Metric grid responsive */
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* Scoped Visual Refinement - Mobile Adjustment */
+@media (max-width: 768px) {
+  .impact-findings .card.wide-card {
+    padding: 32px 0 0;
+  }
+}

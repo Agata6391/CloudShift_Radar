@@ -272,6 +272,7 @@
   border-radius: var(--radius-sm);
   background: rgba(3, 10, 16, 0.58);
   color: var(--text);
+  align-content: center;
 }
 
 .bob-side-panel h3 {
@@ -538,21 +539,23 @@
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding: 8px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.04);
+  overflow-y: hidden;
+  padding: 8px 0;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
 .dashboard-tabs button {
   flex: 0 0 auto;
   min-height: 38px;
-  padding: 0 12px;
+  padding: 0 16px;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted-strong);
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .dashboard-tabs button.active {
@@ -562,16 +565,26 @@
 }
 
 .table-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 .table-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  display: block;
 }
 
 table {
   width: 100%;
-  min-width: 1100px;
+  min-width: 720px;
   border-collapse: collapse;
 }
 
@@ -611,6 +624,9 @@ td {
 }
 
 .impact-findings {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   display: grid;
   gap: 16px;
 }
@@ -840,15 +856,81 @@ td {
 }
 
 .radio-card {
-  display: flex !important;
+  position: relative;
+  display: flex;
   align-items: center;
-  gap: 8px !important;
-  min-height: 44px;
-  margin: 0 !important;
-  padding: 0 10px;
+  gap: 10px;
+  min-height: 48px;
+  margin: 0;
+  padding: 12px 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease, box-shadow 200ms ease;
+}
+
+.radio-card:hover {
+  border-color: var(--line-strong);
+  background: var(--surface-strong);
+}
+
+.radio-card:focus-within {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+.radio-card--selected {
+  border-color: var(--cyan);
+  background: rgba(57, 215, 232, 0.08);
+}
+
+.radio-card--selected:hover {
+  border-color: var(--cyan);
+  background: rgba(57, 215, 232, 0.12);
+}
+
+/* Visually hide the native radio input while keeping it accessible */
+.radio-card__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Custom radio indicator */
+.radio-card__indicator {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--line-strong);
+  border-radius: 50%;
+  background: transparent;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.radio-card--selected .radio-card__indicator {
+  border-color: var(--cyan);
+  background: var(--cyan);
+  box-shadow: inset 0 0 0 2px var(--surface);
+}
+
+/* Label text */
+.radio-card__label {
+  flex: 1;
+  color: var(--muted-strong);
+  font-weight: 500;
+  transition: color 150ms ease;
+}
+
+.radio-card--selected .radio-card__label {
+  color: var(--text);
+  font-weight: 600;
 }
 
 .progressive-action {
@@ -1034,4 +1116,178 @@ td {
   font-weight: 700;
   color: var(--cyan);
 }
+}
+
+
+/* Finding Card Styles - UX-004B */
+.finding-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+
+.finding-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.finding-card__title {
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.finding-card__summary {
+  margin-bottom: 16px;
+}
+
+.finding-card__summary-label {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.finding-card__summary p {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.finding-card__metadata {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.finding-card__metadata div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.finding-card__metadata-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.finding-card__metadata strong {
+  color: var(--text);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.finding-card__details {
+  margin-top: 16px;
+}
+
+.finding-card__details-toggle {
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted-strong);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.finding-card__details-toggle:hover {
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.finding-card__details[open] .details-close-label {
+  display: inline;
+}
+
+.finding-card__details[open] .details-open-label {
+  display: none;
+}
+
+.details-close-label {
+  display: none;
+}
+
+.finding-card__details-content {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.finding-card__detail-section {
+  margin-bottom: 24px;
+}
+
+.finding-card__detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.finding-card__detail-title {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.finding-card__detail-body {
+  color: var(--text);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.finding-card__detail-body p {
+  margin: 0;
+}
+
+.finding-card__file-list {
+  margin: 0;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.finding-card__file-list li {
+  margin-bottom: 6px;
+  color: var(--text);
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+.finding-card__file-list li:last-child {
+  margin-bottom: 0;
+}
+
+
+/* Scoped Visual Refinement - Findings Section Wrapper */
+.impact-findings .card.wide-card {
+  border: 0;
+  background: none;
+  padding: 48px 0 0;
 }
