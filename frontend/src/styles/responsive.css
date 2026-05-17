@@ -1,11 +1,23 @@
 @media (max-width: 1040px) {
-  .app-header {
-    grid-template-columns: 1fr;
+  .header-right {
+    display: none;
   }
 
-  .nav-links {
-    justify-content: flex-start;
-    overflow-x: auto;
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .mobile-menu-toggle:hover {
+    background: rgba(255, 255, 255, 0.05);
   }
 
   .home-hero,
