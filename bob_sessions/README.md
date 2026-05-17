@@ -19,6 +19,10 @@ The current IBM Bob evidence is stored in:
 
 ```txt
 bob_sessions/
+├── Moni/
+│   ├── bob_task_*.md
+│   ├── *.png
+│   └── other exported Bob session evidence
 ├── Dev-dan/
 │   ├── bob_task_*.md
 │   ├── *.png
