@@ -1529,3 +1529,223 @@ td {
 .human-review-card__detail-body p:last-child {
   margin-bottom: 0;
 }
+
+/* AI Summary Evidence Relationship Styles */
+.ai-summary-layout {
+  display: grid;
+  gap: 24px;
+}
+
+.ai-summary-executive {
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(78, 165, 255, 0.08), rgba(61, 220, 151, 0.06));
+  border-left: 3px solid var(--blue);
+}
+
+.ai-summary-executive h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--cyan);
+}
+
+.ai-summary-executive p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.ai-summary-section {
+  display: grid;
+  gap: 16px;
+}
+
+.ai-summary-section-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.evidence-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.evidence-card__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.evidence-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.evidence-card__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.evidence-card__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.evidence-card__value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.evidence-card__note {
+  margin: 8px 0 0;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(78, 165, 255, 0.08);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted-strong);
+}
+
+.evidence-card__action {
+  margin: 0;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(61, 220, 151, 0.08);
+  border-left: 3px solid var(--green);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.evidence-card__empty {
+  margin: 0;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.evidence-card__findings {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.evidence-finding {
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+}
+
+.evidence-finding__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.evidence-finding__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.evidence-finding__summary {
+  margin: 0 0 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted-strong);
+}
+
+.evidence-finding__feature {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(78, 165, 255, 0.12);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cyan);
+}
+
+.evidence-matrix-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.evidence-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.evidence-matrix th {
+  padding: 12px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--line-strong);
+}
+
+.evidence-matrix td {
+  padding: 14px 12px;
+  color: var(--text);
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.evidence-matrix tr:last-child td {
+  border-bottom: none;
+}
+
+.evidence-matrix td:first-child {
+  font-weight: 600;
+}
+
+.decision-path {
+  margin: 0;
+  padding-left: 24px;
+  list-style: decimal;
+}
+
+.decision-path li {
+  margin-bottom: 12px;
+  padding-left: 8px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.decision-path li:last-child {
+  margin-bottom: 0;
+}
