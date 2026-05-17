@@ -1,28 +1,37 @@
-/* Export Menu Styles */
+/* Export Menu Styles - Updated with CloudShift Radar token system */
 .export-menu {
   position: relative;
   display: inline-block;
 }
 
-.export-button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+/* Ghost button refinement for export context */
+.export-button.button-ghost,
+.export-menu__button.button-ghost {
+  color: var(--text);
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.03);
 }
 
-.export-button:hover:not(:disabled) {
-  background: var(--color-primary-dark);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+.export-button.button-ghost:hover:not(:disabled),
+.export-menu__button.button-ghost:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--line-strong);
+  background: rgba(57, 215, 232, 0.08);
+  transform: none;
+  box-shadow: none;
+}
+
+.export-button.button-ghost:focus-visible,
+.export-menu__button.button-ghost:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+.export-button.button-ghost[aria-expanded="true"],
+.export-menu__button.button-ghost[aria-expanded="true"] {
+  color: var(--text);
+  border-color: var(--line-strong);
+  background: rgba(57, 215, 232, 0.12);
 }
 
 .export-button:disabled {
@@ -35,10 +44,10 @@
   top: calc(100% + 0.5rem);
   right: 0;
   min-width: 240px;
-  background: white;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
   z-index: 1000;
   overflow: hidden;
   animation: slideDown 0.2s ease;
@@ -61,9 +70,9 @@
   gap: 1rem;
   width: 100%;
   padding: 1rem;
-  background: white;
+  background: transparent;
   border: none;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--line);
   cursor: pointer;
   transition: background 0.2s ease;
   text-align: left;
@@ -74,7 +83,12 @@
 }
 
 .export-option:hover:not(:disabled) {
-  background: var(--color-surface);
+  background: var(--surface-strong);
+}
+
+.export-option:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: -2px;
 }
 
 .export-option:disabled {
@@ -96,12 +110,12 @@
 .export-details strong {
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text);
 }
 
 .export-details small {
   font-size: 0.85rem;
-  color: var(--color-text-secondary);
+  color: var(--muted);
 }
 
 /* Responsive adjustments */
@@ -109,6 +123,7 @@
   .export-dropdown {
     right: auto;
     left: 0;
+    max-width: calc(100vw - 32px);
   }
 }
 

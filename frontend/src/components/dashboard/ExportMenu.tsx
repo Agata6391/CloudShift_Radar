@@ -43,11 +43,14 @@ export function ExportMenu({ scanId, projectName }: ExportMenuProps) {
   return (
     <div className="export-menu">
       <Button
+        variant="ghost"
         onClick={() => setIsOpen(!isOpen)}
         disabled={isExporting}
         className="export-button"
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
       >
-        {isExporting ? "Exporting..." : "📥 Export Report"}
+        {isExporting ? "Exporting..." : "Export Report"}
       </Button>
       
       {isOpen && (

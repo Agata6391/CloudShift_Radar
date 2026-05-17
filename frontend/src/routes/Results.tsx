@@ -53,10 +53,11 @@ export function Results({ latestResult, previewMode }: ResultsProps) {
 
       <section className="report-header">
         <div>
-          <span className="eyebrow">Report Dashboard</span>
-          <h1 className="internal-page-title">CloudShift Radar Report</h1>
-          <p>{result.projectName}</p>
-          <p>{result.currentProvider} &rarr; {result.targetProvider}</p>
+          <span className="eyebrow">CloudShift Radar Report</span>
+          <h1 className="internal-page-title">{result.projectName || "Migration"} dashboard</h1>
+          {(result.currentProvider && result.targetProvider) && (
+            <p>{result.currentProvider} &rarr; {result.targetProvider}</p>
+          )}
         </div>
         <div className="report-meta">
           <span>Analysis status</span>
