@@ -274,3 +274,63 @@
     margin-bottom: 20px;
   }
 }
+
+/* AI Summary Evidence Relationship - Mobile Responsive */
+@media (max-width: 1040px) {
+  .evidence-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .ai-summary-executive {
+    padding: 20px;
+  }
+  
+  .ai-summary-executive h3 {
+    font-size: 16px;
+  }
+  
+  .ai-summary-executive p {
+    font-size: 15px;
+  }
+  
+  .ai-summary-section-title {
+    font-size: 18px;
+  }
+  
+  .evidence-card {
+    padding: 16px;
+  }
+  
+  .evidence-card__value {
+    font-size: 16px;
+  }
+  
+  .evidence-finding {
+    padding: 12px;
+  }
+  
+  .evidence-matrix-wrapper {
+    margin: 0 -16px;
+    padding: 0 16px;
+  }
+  
+  .evidence-matrix {
+    font-size: 13px;
+  }
+  
+  .evidence-matrix th,
+  .evidence-matrix td {
+    padding: 10px 8px;
+  }
+  
+  .decision-path {
+    padding-left: 20px;
+  }
+  
+  .decision-path li {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+}
