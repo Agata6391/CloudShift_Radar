@@ -189,6 +189,13 @@ CloudShift Radar follows a zero-execution security model:
 - ✅ Path traversal is prevented.
 - ✅ Secrets are redacted before AI analysis.
 
+### 🎭 MVP Authentication
+
+- **Simulated login**: Authentication is simulated for demonstration purposes.
+- **No credential validation**: Any email/password combination works when terms are accepted.
+- **Fixed demo user**: All sessions use "Demo User" as the authenticated user.
+- **Session-based**: Login state persists during browser session only.
+
 ---
 
 ## 🆕 What's New
@@ -1005,9 +1012,18 @@ CloudShift Radar is an MVP proof of concept.
 
 - Manual ZIP upload only.
 - No GitHub OAuth import yet.
-- No user authentication yet.
+- **Simulated authentication**: Login is simulated for MVP demonstration purposes (no real credential validation).
+- Fixed demo user: "Demo User" for all sessions.
 - No persistent multi-user scan history yet.
 - No team workspace support yet.
+
+### UI/UX Scope
+
+- **Desktop-first experience**: The application is optimized for desktop browsers (1024px+ screens).
+- **Basic mobile support**: Mobile responsive layout exists with limited functionality.
+- **Mobile version planned**: Full mobile experience and native mobile apps are planned for future releases.
+- Responsive breakpoints at 1040px and 720px for basic mobile compatibility.
+- Mobile menu available but desktop experience is recommended for full functionality.
 
 ---
 
