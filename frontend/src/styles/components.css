@@ -473,6 +473,74 @@
   font-weight: 700;
 }
 
+/* Verdict Hero - Key Signals Section */
+.verdict-hero__summary {
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.verdict-hero__key-signals {
+  margin: 24px 0;
+}
+
+.verdict-hero__key-signals-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cyan);
+  margin: 0 0 12px;
+}
+
+.verdict-hero__key-signals-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.verdict-hero__key-signal {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.verdict-hero__key-signal .status-pill {
+  flex-shrink: 0;
+}
+
+.verdict-hero__key-signal span {
+  line-height: 1.4;
+}
+
+.verdict-hero__key-signal-empty {
+  font-size: 15px;
+  color: var(--muted-strong);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Verdict Hero - Next Review Section */
+.verdict-hero__next-review {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 15px;
+  color: var(--muted-strong);
+  line-height: 1.5;
+}
+
+.verdict-hero__next-review strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
 .verdict-panel {
   display: grid;
   gap: 16px;
