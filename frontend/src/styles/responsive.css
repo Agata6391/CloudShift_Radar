@@ -244,3 +244,33 @@
     padding: 32px 0 0;
   }
 }
+
+/* Human Review Queue - Mobile Responsive */
+@media (max-width: 1040px) {
+  .human-review-summary__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .human-review-summary__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .human-review-card {
+    padding: 20px;
+  }
+  
+  .human-review-card__title {
+    font-size: 18px;
+  }
+  
+  .human-review-card__decision {
+    padding: 14px;
+  }
+  
+  .human-review-card__detail-section {
+    margin-bottom: 20px;
+  }
+}
