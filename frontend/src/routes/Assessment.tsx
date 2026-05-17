@@ -268,14 +268,20 @@ export function Assessment({ onNavigate, onStartAnalysis }: AssessmentProps) {
 
           <div className="app-type-options">
             {applicationTypes.map((option) => (
-              <label key={option} className="radio-card">
+              <label
+                key={option}
+                className={`radio-card ${applicationType === option ? "radio-card--selected" : ""}`}
+              >
                 <input
+                  className="radio-card__input"
                   type="radio"
                   name="applicationType"
+                  value={option}
                   checked={applicationType === option}
                   onChange={() => setApplicationType(option)}
                 />
-                {option}
+                <span className="radio-card__indicator" aria-hidden="true" />
+                <span className="radio-card__label">{option}</span>
               </label>
             ))}
           </div>
