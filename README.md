@@ -457,8 +457,8 @@ Check system status and Bob configuration.
 ```
 CloudShift_Radar/
 ├── bob_sessions/               # IBM Bob IDE task session reports (Hackathon evidence)
-│   ├── README.md              # Instructions for task session exports
-│   └── .gitkeep               # Ensures folder is tracked by git
+│   ├── Dev-dan/               # Exported IBM Bob IDE task session evidence
+│   └── README.md              # Instructions and evidence inventory
 │
 ├── backend/                    # Fastify API + Scanner
 │   ├── src/
@@ -649,7 +649,7 @@ This project fulfills the IBM Bob Hackathon requirements by:
    - Architecture design decisions
    - Problem-solving and debugging
    - Documentation creation
-   - Task session reports exported to `/bob_sessions` folder
+   - Task session reports exported to `/bob_sessions/Dev-dan/`
 
 2. **IBM Bob Shell Integration**: IBM Bob Shell serves as the **AI reasoning engine** at runtime, providing:
    - **Migration Verdict**: Five-tier decision framework (Proceed, Proceed with Caution, Prepare First, Block Migration, Requires Human Review)
@@ -673,7 +673,7 @@ This project fulfills the IBM Bob Hackathon requirements by:
 
 ### Judging Evidence
 
-All IBM Bob IDE task session reports and consumption summaries are stored in the `/bob_sessions` folder as required for hackathon judging. These exports demonstrate how IBM Bob IDE was used throughout the development process.
+All IBM Bob IDE task session reports and consumption summaries are stored in the `/bob_sessions/Dev-dan/` folder as required for hackathon judging. IBM Bob IDE task session evidence is available in `/bob_sessions/Dev-dan/`. These exports demonstrate how IBM Bob IDE was used throughout the development process.
 
 ---
 
