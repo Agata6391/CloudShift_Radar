@@ -1,6 +1,8 @@
 uploads/
-backend/uploads/
 scan-results/
-backend/scan-results/
+../uploads/
+../scan-results/
 .env
 .env.local
+.env*.local
+*.log
