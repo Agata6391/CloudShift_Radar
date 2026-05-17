@@ -539,18 +539,23 @@
   display: flex;
   gap: 8px;
   overflow-x: auto;
+  overflow-y: hidden;
   padding: 8px 0;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
 .dashboard-tabs button {
   flex: 0 0 auto;
   min-height: 38px;
-  padding: 0 12px;
+  padding: 0 16px;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   background: transparent;
   color: var(--muted-strong);
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .dashboard-tabs button.active {
@@ -560,16 +565,26 @@
 }
 
 .table-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 .table-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  display: block;
 }
 
 table {
   width: 100%;
-  min-width: 1100px;
+  min-width: 720px;
   border-collapse: collapse;
 }
 
@@ -609,6 +624,9 @@ td {
 }
 
 .impact-findings {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   display: grid;
   gap: 16px;
 }
@@ -1098,4 +1116,170 @@ td {
   font-weight: 700;
   color: var(--cyan);
 }
+}
+
+
+/* Finding Card Styles - UX-004B */
+.finding-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+}
+
+.finding-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.finding-card__title {
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.finding-card__summary {
+  margin-bottom: 16px;
+}
+
+.finding-card__summary-label {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.finding-card__summary p {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.finding-card__metadata {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.finding-card__metadata div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.finding-card__metadata-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.finding-card__metadata strong {
+  color: var(--text);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.finding-card__details {
+  margin-top: 16px;
+}
+
+.finding-card__details-toggle {
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted-strong);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.finding-card__details-toggle:hover {
+  border-color: var(--line-strong);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+}
+
+.finding-card__details[open] .details-close-label {
+  display: inline;
+}
+
+.finding-card__details[open] .details-open-label {
+  display: none;
+}
+
+.details-close-label {
+  display: none;
+}
+
+.finding-card__details-content {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.finding-card__detail-section {
+  margin-bottom: 24px;
+}
+
+.finding-card__detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.finding-card__detail-title {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.finding-card__detail-body {
+  color: var(--text);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.finding-card__detail-body p {
+  margin: 0;
+}
+
+.finding-card__file-list {
+  margin: 0;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.finding-card__file-list li {
+  margin-bottom: 6px;
+  color: var(--text);
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+.finding-card__file-list li:last-child {
+  margin-bottom: 0;
 }

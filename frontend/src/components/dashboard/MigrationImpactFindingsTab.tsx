@@ -112,86 +112,119 @@ export function MigrationImpactFindingsTab({ result }: MigrationImpactFindingsTa
         const risk = finding.risk as RiskValue;
 
         return (
-          <Card key={finding.id} className="impact-card">
-            <div className="impact-summary-grid">
+          <Card key={finding.id} className="finding-card">
+            <div className="finding-card__header">
+              <StatusPill tone={riskTone(risk)}>{risk}</StatusPill>
+              <StatusPill tone={stateTone(finding.featureStatus)}>{finding.featureStatus}</StatusPill>
+              <StatusPill>Confidence: {finding.confidence}</StatusPill>
+              {finding.requiresHumanReview && <StatusPill tone="critical">Human review: Yes</StatusPill>}
+            </div>
+
+            <h3 className="finding-card__title">{finding.title}</h3>
+
+            <div className="finding-card__summary">
+              <p className="finding-card__summary-label">Summary</p>
+              <p>{finding.shortSummary}</p>
+            </div>
+
+            <div className="finding-card__metadata">
               <div>
-                <span>Risk</span>
-                <StatusPill tone={riskTone(risk)}>{risk}</StatusPill>
-              </div>
-              <div className="impact-title">
-                <span>Finding</span>
-                <strong>{finding.title}</strong>
-              </div>
-              <div>
-                <span>Affected feature</span>
+                <span className="finding-card__metadata-label">Affected feature</span>
                 <strong>{finding.affectedFeature}</strong>
               </div>
               <div>
-                <span>Feature status</span>
-                <StatusPill tone={stateTone(finding.featureStatus)}>{finding.featureStatus}</StatusPill>
-              </div>
-              <div>
-                <span>Provider / Service</span>
+                <span className="finding-card__metadata-label">Provider / service</span>
                 <strong>{finding.provider} / {finding.service}</strong>
               </div>
-              <div>
-                <span>Confidence</span>
-                <strong>{finding.confidence}</strong>
-              </div>
-              <div>
-                <span>Human review</span>
-                <strong>{finding.requiresHumanReview ? "Yes" : "No"}</strong>
-              </div>
+              {!finding.requiresHumanReview && (
+                <div>
+                  <span className="finding-card__metadata-label">Human review</span>
+                  <strong>No</strong>
+                </div>
+              )}
             </div>
-            <p className="impact-short-summary">{finding.shortSummary}</p>
 
-            <details className="impact-details">
-              <summary>
+            <details className="finding-card__details">
+              <summary className="finding-card__details-toggle">
                 <span className="details-open-label">See details</span>
                 <span className="details-close-label">Hide details</span>
               </summary>
-              <dl className="detail-list">
-                <div>
-                  <dt>Detected files</dt>
-                  <dd>{finding.affectedFiles.length > 0 ? finding.affectedFiles.join(", ") : "No specific files reported"}</dd>
+              <div className="finding-card__details-content">
+                <div className="finding-card__detail-section">
+                  <h4 className="finding-card__detail-title">Detected files</h4>
+                  <div className="finding-card__detail-body">
+                    {finding.affectedFiles.length > 0 ? (
+                      <ul className="finding-card__file-list">
+                        {finding.affectedFiles.map((file, idx) => (
+                          <li key={idx}>{file}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>No specific files reported</p>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <dt>Technical issue</dt>
-                  <dd>{finding.technicalIssue}</dd>
+
+                <div className="finding-card__detail-section">
+                  <h4 className="finding-card__detail-title">Technical issue</h4>
+                  <div className="finding-card__detail-body">
+                    <p>{finding.technicalIssue}</p>
+                  </div>
                 </div>
-                <div>
-                  <dt>Feature impact</dt>
-                  <dd>{finding.migrationImpact}</dd>
+
+                <div className="finding-card__detail-section">
+                  <h4 className="finding-card__detail-title">Feature impact</h4>
+                  <div className="finding-card__detail-body">
+                    <p>{finding.migrationImpact}</p>
+                  </div>
                 </div>
-                <div>
-                  <dt>Technical Complexity</dt>
-                  <dd>{finding.technicalComplexity || 'Not specified'}</dd>
+
+                <div className="finding-card__detail-section">
+                  <h4 className="finding-card__detail-title">Technical complexity</h4>
+                  <div className="finding-card__detail-body">
+                    <p>{finding.technicalComplexity || 'Not specified'}</p>
+                  </div>
                 </div>
-                <div>
-                  <dt>Recommended action</dt>
-                  <dd>{finding.recommendedAction}</dd>
+
+                <div className="finding-card__detail-section">
+                  <h4 className="finding-card__detail-title">Recommended action</h4>
+                  <div className="finding-card__detail-body">
+                    <p>{finding.recommendedAction}</p>
+                  </div>
                 </div>
-                <div>
-                  <dt>Bob notes</dt>
-                  <dd>{finding.bobNotes}</dd>
+
+                <div className="finding-card__detail-section">
+                  <h4 className="finding-card__detail-title">Bob notes</h4>
+                  <div className="finding-card__detail-body">
+                    <p>{finding.bobNotes}</p>
+                  </div>
                 </div>
-                <div>
-                  <dt>Business impact</dt>
-                  <dd>{finding.businessImpact}</dd>
+
+                <div className="finding-card__detail-section">
+                  <h4 className="finding-card__detail-title">Business impact</h4>
+                  <div className="finding-card__detail-body">
+                    <p>{finding.businessImpact}</p>
+                  </div>
                 </div>
+
                 {suggestedReviewer ? (
-                  <div>
-                    <dt>Suggested reviewer</dt>
-                    <dd>{suggestedReviewer}</dd>
+                  <div className="finding-card__detail-section">
+                    <h4 className="finding-card__detail-title">Suggested reviewer</h4>
+                    <div className="finding-card__detail-body">
+                      <p>{suggestedReviewer}</p>
+                    </div>
                   </div>
                 ) : null}
+
                 {humanReviewReason ? (
-                  <div>
-                    <dt>Human review reason</dt>
-                    <dd>{humanReviewReason}</dd>
+                  <div className="finding-card__detail-section">
+                    <h4 className="finding-card__detail-title">Human review reason</h4>
+                    <div className="finding-card__detail-body">
+                      <p>{humanReviewReason}</p>
+                    </div>
                   </div>
                 ) : null}
-              </dl>
+              </div>
             </details>
           </Card>
         );
