@@ -1,4 +1,4 @@
-# Scripts Directory
+﻿# Scripts Directory
 
 This directory contains automation scripts for Cloud_Radar project setup and maintenance.
 
@@ -37,20 +37,20 @@ The npm scripts automatically detect your operating system:
 
 **What it does:**
 
-1. ✅ Checks Node.js version compatibility
-2. 📦 Downloads and installs Bob Shell from https://bob.ibm.com
-3. 🔍 Locates `bob.cmd` in `%APPDATA%\npm\`
-4. ⚙️ Updates `.env` with:
+1. âœ… Checks Node.js version compatibility
+2. ðŸ“¦ Downloads and installs Bob Shell from https://bob.ibm.com
+3. ðŸ” Locates `bob.cmd` in `%APPDATA%\npm\`
+4. âš™ï¸ Updates `.env` with:
    - `BOB_PROVIDER=shell`
    - `BOB_SHELL_COMMAND=<path-to-bob.cmd>`
    - `BOB_TIMEOUT_MS=600000`
-5. ✔️ Tests Bob Shell executable
+5. âœ”ï¸ Tests Bob Shell executable
 
 **After running:**
 
 1. Manually add your API key to `.env`:
    ```bash
-   BOBSHELL_API_KEY=your_actual_api_key_here
+   BOBSHELL_API_KEY=<BOBSHELL_API_KEY_PLACEHOLDER>
    ```
 
 2. Verify configuration:
@@ -71,10 +71,10 @@ The npm scripts automatically detect your operating system:
 
 **Security Notes:**
 
-- ⚠️ Never commit `.env` file with real API keys
-- ⚠️ Keep `BOBSHELL_API_KEY` secret
-- ✅ Script does NOT write API keys (you add them manually)
-- ✅ `.env` is already in `.gitignore`
+- âš ï¸ Never commit `.env` file with real API keys
+- âš ï¸ Keep `BOBSHELL_API_KEY` secret
+- âœ… Script does NOT write API keys (you add them manually)
+- âœ… `.env` is already in `.gitignore`
 
 ## Parameters
 
