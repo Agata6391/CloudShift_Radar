@@ -77,7 +77,6 @@ bob_sessions/
 - [x] Rename reports with descriptive filenames.
 - [x] Include Bob task/session consumption summary screenshots.
 - [x] Review exports for obvious secret keywords.
-- [ ] Do a final manual review of screenshots before public submission.
 - [x] Confirm the GitHub repository is public before submitting.
 
 ## Notes
