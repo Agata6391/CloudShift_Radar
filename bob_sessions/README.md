@@ -15,32 +15,44 @@ These files demonstrate how IBM Bob IDE was used during the development lifecycl
 
 ## Current Evidence
 
-- `Dev-dan/` contains 36 exported Bob task session reports.
-- `Dev-dan/` also contains 6 Bob consumption/task summary screenshots.
-- `Moni/` contains 8 exported Bob task session reports.
-- `Moni/` also contains 8 Bob consumption/task summary screenshots.
+- The root of `bob_sessions/` contains copied markdown reports and screenshots from both contributors in one flat general location.
+- `Dev-dan/` contains 37 paired Bob task session folders.
+- `Moni/` contains 8 paired Bob task session folders.
+- Each specific session folder under `Dev-dan/` and `Moni/` contains one exported Bob markdown report and its matching Bob consumption/task summary screenshot.
 - Exported reports use the naming pattern `Summary_XX_<short-task-description>.md`.
+- Session folders use the naming pattern `Session_XX_<short-task-description>/`.
+- General copied files use the naming pattern `<Contributor>_Session_XX_<original-file-name>`.
 
 ## Folder Structure
 
 ```text
 bob_sessions/
+|-- Dev-dan_Session_01_Analisis_profundo_del_repo_para_documentacion_Screenshot 2026-05-18 112706.png
+|-- Dev-dan_Session_01_Analisis_profundo_del_repo_para_documentacion_Summary_01_Analisis_profundo_del_repo_para_documentacion.md
+|-- ...
+|-- Dev-dan_Session_37_Analisis_profundo_del_readme_para_documentacion_Screenshot 2026-05-18 120654.png
+|-- Dev-dan_Session_37_Analisis_profundo_del_readme_para_documentacion_Summary_37_Analisis_profundo_del_readme_para_documentacion.md
+|-- Moni_Session_01_Auditoria_del_proyecto_sin_modificar_archivos_Screenshot 2026-05-17 002151.png
+|-- Moni_Session_01_Auditoria_del_proyecto_sin_modificar_archivos_Summary_01_Auditoria_del_proyecto_sin_modificar_archivos.md
+|-- ...
+|-- Moni_Session_08_Panel_de_validacion_Project_Input_y_explainability_Screenshot 2026-05-17 002947.png
+|-- Moni_Session_08_Panel_de_validacion_Project_Input_y_explainability_Summary_08_Panel_de_validacion_Project_Input_y_explainability.md
 |-- Dev-dan/
-|   |-- Summary_01_Analisis_profundo_del_repo_para_documentacion.md
-|   |-- Summary_02_Creacion_y_mejora_del_README.md
+|   |-- Session_01_Analisis_profundo_del_repo_para_documentacion/
+|   |   |-- Summary_01_Analisis_profundo_del_repo_para_documentacion.md
+|   |   `-- Screenshot 2026-05-18 112706.png
 |   |-- ...
-|   |-- Summary_36_Documentacion_de_cumplimiento_IBM_Bob_Hackathon.md
-|   |-- Screenshot 2026-05-16 154500.png
-|   |-- ...
-|   `-- Screenshot 2026-05-16 174136.png
+|   `-- Session_37_Analisis_profundo_del_readme_para_documentacion/
+|       |-- Summary_37_Analisis_profundo_del_readme_para_documentacion.md
+|       `-- Screenshot 2026-05-18 120654.png
 |-- Moni/
-|   |-- Summary_01_Auditoria_del_proyecto_sin_modificar_archivos.md
-|   |-- Summary_02_Analysis_Running_como_paso_significativo.md
+|   |-- Session_01_Auditoria_del_proyecto_sin_modificar_archivos/
+|   |   |-- Summary_01_Auditoria_del_proyecto_sin_modificar_archivos.md
+|   |   `-- Screenshot 2026-05-17 002151.png
 |   |-- ...
-|   |-- Summary_08_Panel_de_validacion_Project_Input_y_explainability.md
-|   |-- Screenshot 2026-05-17 002151.png
-|   |-- ...
-|   `-- Screenshot 2026-05-17 002947.png
+|   `-- Session_08_Panel_de_validacion_Project_Input_y_explainability/
+|       |-- Summary_08_Panel_de_validacion_Project_Input_y_explainability.md
+|       `-- Screenshot 2026-05-17 002947.png
 `-- README.md
 ```
 
@@ -70,4 +82,6 @@ bob_sessions/
 
 ## Notes
 
-The `Summary_*.md` files are exported Bob IDE sessions with descriptive filenames added for judge readability. The screenshots provide additional usage evidence, but the markdown exports are the primary task/session reports. Evidence is grouped by contributor/session owner under `Dev-dan/` and `Moni/`.
+The `Summary_*.md` files are exported Bob IDE sessions with descriptive filenames added for judge readability. The screenshots provide additional usage evidence, but the markdown exports are the primary task/session reports.
+
+The root of `bob_sessions/` is the copied flat general view. Evidence is also grouped by contributor/session owner under `Dev-dan/` and `Moni/` for more specific review. Root-level copied files use contributor and session prefixes to keep matching markdown reports and screenshots identifiable.
