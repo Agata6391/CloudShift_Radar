@@ -25,7 +25,7 @@ These files demonstrate how IBM Bob IDE was used during the development lifecycl
 
 ## Folder Structure
 
-```text
+
 bob_sessions/
 |-- Dev-dan_Session_01_Analisis_profundo_del_repo_para_documentacion_Screenshot 2026-05-18 112706.png
 |-- Dev-dan_Session_01_Analisis_profundo_del_repo_para_documentacion_Summary_01_Analisis_profundo_del_repo_para_documentacion.md
