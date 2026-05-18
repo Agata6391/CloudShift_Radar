@@ -17,7 +17,7 @@ These files demonstrate how IBM Bob IDE was used during the development lifecycl
 
 - The root of `bob_sessions/` contains copied markdown reports and verified matching screenshots from both contributors in one flat general location.
 - `Dev-dan/` contains 37 verified Bob task session folders.
-- `Dev-dan/Continuidad/` contains 2 additional verified markdown/screenshot pairs that are related continuation exports but are not exact duplicates of the numbered session markdown files.
+
 - `Moni/` contains 8 verified Bob task session folders.
 - Each paired session folder contains one exported Bob markdown report and its matching Bob consumption/task summary screenshot.
 - Exported reports use the naming pattern `Summary_XX_<short-task-description>.md`.
@@ -26,7 +26,7 @@ These files demonstrate how IBM Bob IDE was used during the development lifecycl
 
 ## Folder Structure
 
-```text
+
 bob_sessions/
 |-- Dev-dan_Session_01_Analisis_profundo_del_repo_para_documentacion_Screenshot 2026-05-18 112706.png
 |-- Dev-dan_Session_01_Analisis_profundo_del_repo_para_documentacion_Summary_01_Analisis_profundo_del_repo_para_documentacion.md
@@ -47,12 +47,7 @@ bob_sessions/
 |-- Moni_Session_08_Panel_de_validacion_Project_Input_y_explainability_Summary_08_Panel_de_validacion_Project_Input_y_explainability.md
 |-- Dev-dan/
 |   |-- Continuidad/
-|   |   |-- Continuidad_01_Revision_inconsistencias_hackathon/
-|   |   |   |-- bob_task_may-15-2026_9-31-17-pm.md
-|   |   |   `-- Screenshot 2026-05-18 120654.png
-|   |   `-- Continuidad_02_Demo_Stability_Without_Bob/
-|   |       |-- bob_task_may-16-2026_12-02-57-pm.md
-|   |       `-- Screenshot 2026-05-18 115916.png
+
 |   |-- Session_01_Analisis_profundo_del_repo_para_documentacion/
 |   |   |-- Summary_01_Analisis_profundo_del_repo_para_documentacion.md
 |   |   `-- Screenshot 2026-05-18 112706.png
